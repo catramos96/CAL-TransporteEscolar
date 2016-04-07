@@ -1,9 +1,5 @@
-/*
- * Cliente.h
- *
- *  Created on: 06/04/2016
- *      Author: Inês Gomes
- */
+#ifndef SRC_CLIENTE_H_
+#define SRC_CLIENTE_H_
 
 #include <iostream>
 
@@ -14,7 +10,13 @@ private:
 	string nome;
 	Morada escola;
 	Morada endereco;
-	static int id;
+	static int id = 0;
 public:
-	Cliente(string nome);
+	Cliente(string nome, Morada casa, Morada escola);
+	void setNovaResidencia(Morada nova);
+	void setNovaEscola(Morada nova);
+	Morada getEscola();
+	Morada getResidencia();
 };
+
+#endif /* SRC_CLIENTE_H_ */
