@@ -6,11 +6,16 @@
 
 #include <vector>
 #include <queue>
+#include "Vertex.h"
+#include "Edge.h"
 using namespace std;
 
 template <class T> class Edge;
 template <class T> class Graph;
 
+/*
+ * GRAPH
+ */
 template <class T>
 class Graph {
 	vector<Vertex<T> *> vertexSet;
