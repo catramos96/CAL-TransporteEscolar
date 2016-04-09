@@ -16,10 +16,12 @@ public:
 	Veiculo(int numLugares, string matricula);
 	int getNumLugares()const;
 	string getMatricula()const;
+	vector<Cliente *> getClientes() const;
 	bool addCliente(Cliente *c);
 	bool sairCliente(Cliente *c);
 	bool existeCliente(Cliente *c)const;
 	bool passaNaEscola(Morada escola)const;
+	bool operator== (const Veiculo &v) const;
 };
 
 #endif /* SRC_VEICULO_H_ */

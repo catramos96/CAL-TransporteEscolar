@@ -16,6 +16,10 @@ string Veiculo::getMatricula()const {
 	return matricula;
 }
 
+vector<Cliente *> Veiculo::getClientes() const{
+	return clientes;
+}
+
 bool Veiculo::addCliente(Cliente *c){
 	//não excede o número de lugares
 	if(numLugares > clientes.size() && !existeCliente(c)){
@@ -54,6 +58,24 @@ bool Veiculo::passaNaEscola(Morada escola) const{
 		itb++;
 	}
 	return false;
+}
+
+// confirmar se está tudo fixe aqui
+bool Veiculo::operator== (const Veiculo &v) const{
+	if((numLugares == v.getNumLugares()) && (matricula == v.getMatricula()))
+	{
+		if(clientes.size() == v.getClientes().size())
+		{
+			for(unsigned int i = 0; i < clientes.size(); i++)
+			{
+				if(clientes[i] != v.getClientes()[i])
+					return false;
+			}
+			return true;
+		}
+	}
+	else
+		return false;
 }
 
 
