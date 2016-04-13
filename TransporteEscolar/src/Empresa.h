@@ -14,6 +14,8 @@ private:
 	Morada endereco;
 	vector<Veiculo *> transportes;
 	vector<Cliente *> clientes;
+	vector<Morada *> escolas;
+	//Mapa mapa; //mapa da cidade
 public:
 	Empresa(string nome, Morada endereco);
 	string getNome() const;
@@ -24,6 +26,8 @@ public:
 	bool addCliente(Cliente * cliente);
 	bool removeTransporte(Veiculo * veiculo);
 	bool removeCliente(Cliente * cliente);
+	void distribuiCliVeiculos();
+	void enviaVeiculos();
 };
 
 #endif /* SRC_EMPRESA_H_ */

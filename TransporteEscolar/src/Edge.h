@@ -23,11 +23,26 @@ public:
 	Edge(Vertex<T> *d, double w);
 	friend class Graph<T>;
 	friend class Vertex<T>;
+
+	//=================ACRESCENTADOS PARA O TRABALHO=======================//
+	Vertex<T> *getDest() const;
+	double getWeight() const;
+
 };
 
 template <class T>
 Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w){}
 
+//=================ACRESCENTADOS PARA O TRABALHO=======================//
+template <class T>
+Vertex<T> *Edge<T>::getDest() const{
+	return dest;
+}
+
+template <class T>
+double Edge<T>::getWeight() const{
+	return weight;
+}
 
 
 #endif /* SRC_EDGE_H_ */

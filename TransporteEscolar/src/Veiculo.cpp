@@ -78,4 +78,37 @@ bool Veiculo::operator== (const Veiculo &v) const{
 		return false;
 }
 
+int Veiculo::lugaresLivres(){
+	return (numLugares - clientes.size());
+}
 
+void Veiculo::setPartida(Morada partida){
+	this->partida = partida;
+}
+
+void Veiculo::setDestino(Morada destino){
+	this->destino = destino;
+}
+
+/**
+ * NAO ESTA ACABADO
+ */
+void Veiculo::makeMapa(){
+
+	//1º atualiza os pontos de interesse
+	mapa.setPontoInteresse(partida);
+	mapa.setPontoInteresse(destino);
+
+	for(int i = 0; i < clientes.size(); i++)
+		mapa.setPontoInteresse(clientes.at(i)->getResidencia());
+
+	//2º calcula o caminho mais curto
+}
+
+/**
+ * NAO ESTA ACABADO
+ */
+void Veiculo::displayMapa(){
+	//pode ser necessario funcoes que abrem e fecham as janelas
+	mapa.displayMapa();
+}
