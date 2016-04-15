@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 /**
@@ -119,4 +120,30 @@ void Mapa::setPontoInteresse(Morada m){
 bool Mapa::isPontoInteresse(Morada m){
 	Vertex<Morada> *v = mapa.getVertex(m);
 	return v->getIsPI();
+}
+
+/*int Mapa::isPonto(Morada m) const{
+	for (int var = 0; var < mapa.getNumVertex(); ++var) {
+		if(mapa.getVertexSet()[var]->getInfo().getX() == m.getX() &&
+				mapa.getVertexSet()[var]->getInfo().getY() == m.getY())
+			return mapa.getVertexSet()[var]->getInfo().getID();
+	}
+	return -1;
+}*/
+
+int Mapa::displayPontos() const{
+	for (int var = 0; var < mapa.getNumVertex(); ++var) {
+		cout << mapa.getVertexSet()[var]->getInfo() << endl;
+	}
+	return 0;
+}
+
+Morada Mapa::getPonto(int id){
+	for (int var = 0; var < mapa.getNumVertex(); ++var) {
+		if(mapa.getVertexSet()[var]->getInfo().getID() == id)
+			return mapa.getVertexSet()[var]->getInfo();
+	}
+	Morada m;
+	m.setID(-1);
+	return m;
 }

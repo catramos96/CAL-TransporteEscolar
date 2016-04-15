@@ -41,3 +41,8 @@ bool Cliente::operator== (const Cliente &c) const{
 		return false;
 }
 
+ostream & operator<<(ostream & o, const Cliente &c){
+	o << "ID - " << c.getID() << " Nome -  "<< c.getNome() << " Escola - " << c.getEscola() << " Residencia - " << c.getResidencia();
+	return o;
+}
+

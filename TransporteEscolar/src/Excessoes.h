@@ -1,6 +1,8 @@
 #ifndef SRC_EXCESSOES_H_
 #define SRC_EXCESSOES_H_
 
+#include "Morada.h"
+
 /**
 * @brief Classe que representa uma excecao da classe Main.
 * Esta excecao e lancada quando a opcao colocada nao esta entre os limites estabelecidos.
@@ -65,6 +67,44 @@ class VoltarAtras {
 */
 class InputFail {
 };
+
+class ClienteJaExiste {
+private:
+	string nome;
+	Morada escola;
+	Morada residencia;
+public:
+	ClienteJaExiste(string n, Morada e, Morada r){
+		nome = n;
+		escola = e;
+		residencia = r;
+	};
+	string getNome(){return nome;};
+	Morada getMoradaEscola(){return escola;};
+	Morada getMoradaResidencia(){return residencia;};
+};
+
+class ClienteInexistente {
+private:
+	int id;
+public:
+	ClienteInexistente(int id){
+		this->id = id;
+	};
+	int getID(){return id;};
+};
+
+class PontoInexistente {
+private:
+	Morada ponto;
+public:
+	PontoInexistente(Morada p){ponto = p;};
+	Morada getPonto(){
+		return ponto;
+	};
+};
+
+
 
 
 

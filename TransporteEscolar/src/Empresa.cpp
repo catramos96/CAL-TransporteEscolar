@@ -30,7 +30,7 @@ bool Empresa::addTransporte(Veiculo * veiculo)
 bool Empresa::addCliente(Cliente * cliente)
 {
 	for(unsigned int i = 0; i < clientes.size(); i++)
-		if(cliente == clientes[i])
+		if(*cliente == *clientes[i])
 			return false;
 	clientes.push_back(cliente);
 	return true;
@@ -50,6 +50,10 @@ bool Empresa::removeCliente(Cliente * cliente)
 {
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(cliente == clientes[i]){
+			for (int var = 0; var < transportes.size(); ++ var) {
+				transportes[i]->sairCliente(clientes[i]);
+			}
+			delete(*(clientes.begin()+i));
 			clientes.erase(clientes.begin() + i);
 			return true;
 		}
@@ -91,4 +95,22 @@ void Empresa::enviaVeiculos(){
 		transportes.at(i)->makeMapa();
 		transportes.at(i)->displayMapa();
 	}
+}
+
+void Empresa::displayClientes() const{
+	for (int i = 0; i < clientes.size(); ++i) {
+		cout << *clientes[i] << endl;
+	}
+}
+
+bool Empresa::removeCliente(int id){
+	for(unsigned int i = 0; i < clientes.size(); i++)
+		if(id == clientes[i]->getID()){
+			for (int var = 0; var < transportes.size(); ++ var) {
+				transportes[i]->sairCliente(clientes[i]);
+			}
+			clientes.erase(clientes.begin() + i);
+			return true;
+		}
+	return false;
 }

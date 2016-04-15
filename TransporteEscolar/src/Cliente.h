@@ -22,6 +22,7 @@ public:
 	void setNovaResidencia(Morada nova);
 	void setNovaEscola(Morada nova);
 	bool operator== (const Cliente &c) const;
+	friend ostream & operator<<(ostream & o, const Cliente &c);
 };
 
 #endif /* SRC_CLIENTE_H_ */

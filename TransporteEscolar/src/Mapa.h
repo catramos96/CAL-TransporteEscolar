@@ -13,6 +13,9 @@ public:
 	void displayMapa();
 	void setPontoInteresse(Morada m);
 	bool isPontoInteresse(Morada m);
+	//int isPonto(Morada m) const; // retorna o id se encontrou ou -1 caso não tenha encontrado
+	int displayPontos() const;
+	Morada getPonto(int id);
 };
 
 

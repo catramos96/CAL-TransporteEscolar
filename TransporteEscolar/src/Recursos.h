@@ -5,8 +5,14 @@
 
 using namespace std;
 
+void displayTitulo(string t){
+	cout << "///////////////////////////////\n";
+	cout << "// " << t << endl;
+	cout << "///////////////////////////////\n\n";
+}
+
 void displayMenuInicial(string nome_empresa){
-	cout << nome_empresa << endl;
+	displayTitulo(nome_empresa);
 	cout << "0 - Veiculos\n";
 	cout << "1 - Clientes\n";
 	cout << "2 - Trajetos\n";
@@ -14,7 +20,7 @@ void displayMenuInicial(string nome_empresa){
 }
 
 void displayMenuVeiculos(){
-	cout << "VEICULOS\n\n";
+	displayTitulo("VEICULOS");
 	cout << "0 - Adicionar Veiculo\n";
 	cout << "1 - Remover Veiculo\n";
 	cout << "2 - Ver Veiculos\n";
@@ -23,7 +29,7 @@ void displayMenuVeiculos(){
 }
 
 void displayMenuClientes(){
-	cout << "CLIENTES\n\n";
+	displayTitulo("CLIENTES");
 	cout << "0 - Adicionar Clientes\n";
 	cout << "1 - Remover Clientes\n";
 	cout << "2 - Ver Clientes\n";

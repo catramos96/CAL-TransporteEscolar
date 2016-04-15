@@ -24,6 +24,12 @@ public:
 	int getID() const;
 	int getX() const;
 	int getY() const;
+	void setID(int id);
+	void setX(int x);
+	void setY(int y);
+	Morada & operator=(const Morada &m);
+	friend ostream & operator<<(ostream & o, const Morada &m);
+
 };
 
 #endif /* SRC_MORADA_H_ */

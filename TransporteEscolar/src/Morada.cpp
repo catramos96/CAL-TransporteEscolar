@@ -23,3 +23,28 @@ int Morada::getX() const{
 int Morada::getY() const{
 	return y;
 }
+
+void Morada::setID(int id){
+	this->id=id;
+}
+
+void Morada::setX(int x){
+	this->x = x;
+}
+
+void Morada::setY(int y){
+	this->y = y;
+}
+
+Morada & Morada::operator=(const Morada &m){
+x = m.getX();
+y = m.getY();
+id = m.getID();
+
+return *this;
+}
+
+ostream & operator<<(ostream & o, const Morada &m){
+	o << m.getID()  << "(" << m.getX() << "," << m.getY() << ")";
+	return o;
+}

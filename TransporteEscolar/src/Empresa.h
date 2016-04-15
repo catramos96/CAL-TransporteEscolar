@@ -23,11 +23,13 @@ public:
 	void setNome(string nome);
 	void setEndereco(Morada endereco);
 	bool addTransporte(Veiculo * veiculo);
-	bool addCliente(Cliente * cliente);
+	bool addCliente(Cliente *cliente);
 	bool removeTransporte(Veiculo * veiculo);
 	bool removeCliente(Cliente * cliente);
 	void distribuiCliVeiculos();
 	void enviaVeiculos();
+	void displayClientes() const;
+	bool removeCliente(int id);
 };
 
 #endif /* SRC_EMPRESA_H_ */
