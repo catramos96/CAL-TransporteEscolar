@@ -37,11 +37,11 @@ void Morada::setY(int y){
 }
 
 Morada & Morada::operator=(const Morada &m){
-x = m.getX();
-y = m.getY();
-id = m.getID();
+	x = m.getX();
+	y = m.getY();
+	id = m.getID();
 
-return *this;
+	return *this;
 }
 
 ostream & operator<<(ostream & o, const Morada &m){

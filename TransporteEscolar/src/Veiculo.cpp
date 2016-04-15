@@ -91,24 +91,16 @@ void Veiculo::setDestino(Morada destino){
 }
 
 /**
- * NAO ESTA ACABADO
+ * cria um vetor de pontos de interesse para esse veiculo
  */
-void Veiculo::makeMapa(){
+vector<Morada> Veiculo::makePath(){
 
-	//1º atualiza os pontos de interesse
-	mapa.setPontoInteresse(partida);
-	mapa.setPontoInteresse(destino);
+	vector<Morada> points;
 
-	for(int i = 0; i < clientes.size(); i++)
-		mapa.setPontoInteresse(clientes.at(i)->getResidencia());
+	points.push_back(partida);
+	for(size_t i = 0; i < clientes.size(); i++)
+		points.push_back(clientes.at(i)->getResidencia());
+	points.push_back(destino);
 
-	//2º calcula o caminho mais curto
-}
-
-/**
- * NAO ESTA ACABADO
- */
-void Veiculo::displayMapa(){
-	//pode ser necessario funcoes que abrem e fecham as janelas
-	mapa.displayMapa();
+	return points;
 }

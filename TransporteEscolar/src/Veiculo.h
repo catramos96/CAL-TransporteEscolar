@@ -15,7 +15,7 @@ private:
 	vector<Cliente *> clientes;
 	Morada partida;
 	Morada destino;
-	Mapa mapa; //mapa que tem os pontos de interesse
+	//Mapa mapa; //mapa que tem os pontos de interesse
 public:
 	Veiculo(int numLugares, string matricula);
 	int getNumLugares()const;
@@ -29,8 +29,7 @@ public:
 	int lugaresLivres();
 	void setPartida(Morada partida);
 	void setDestino(Morada destino);
-	void makeMapa();
-	void displayMapa();
+	vector<Morada> makePath();
 };
 
 #endif /* SRC_VEICULO_H_ */

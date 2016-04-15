@@ -7,6 +7,8 @@ Empresa::Empresa(string nome, Morada endereco)
 {
 	this->nome = nome;
 	this->endereco = endereco;
+	//mapa = Mapa();
+	//mapa.setPontoInteresse(endereco);
 }
 
 string Empresa::getNome() const {return nome;}
@@ -27,12 +29,17 @@ bool Empresa::addTransporte(Veiculo * veiculo)
 	return true;
 }
 
+/**
+ * ao adicionar o cliente, adicionamos a sua morada como ponto de interesse
+ */
 bool Empresa::addCliente(Cliente * cliente)
 {
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(*cliente == *clientes[i])
 			return false;
 	clientes.push_back(cliente);
+	mapa.setPontoInteresse(cliente->getResidencia());
+
 	return true;
 }
 
@@ -66,13 +73,14 @@ bool Empresa::removeCliente(Cliente * cliente)
  */
 void Empresa::distribuiCliVeiculos(){
 
-	int i = 0, j = 0;
+	size_t i = 0, j = 0;
 	while(i != transportes.size()){
 		while(j != clientes.size()){
 			if(transportes.at(i)->lugaresLivres() != 0)
 				transportes.at(i)->addCliente(clientes.at(j));
 			else{ //ultimo lugar do veiculo
 				transportes.at(i)->setDestino(clientes.at(j)->getEscola()); //TEMPORARIO
+				mapa.setPontoInteresse(clientes.at(j)->getEscola());
 				break;
 			}
 
@@ -91,14 +99,17 @@ void Empresa::distribuiCliVeiculos(){
  */
 void Empresa::enviaVeiculos(){
 
-	for(int i = 0; i < transportes.size(); i++){
-		transportes.at(i)->makeMapa();
-		transportes.at(i)->displayMapa();
+	//falta fazer os pi -> partida, destino e clientes
+
+	for(size_t i = 0; i < transportes.size(); i++){
+		vector<Morada> res = transportes.at(i)->makePath();
+		displayMapa(mapa.shortestPath(res));
 	}
+
 }
 
 void Empresa::displayClientes() const{
-	for (int i = 0; i < clientes.size(); ++i) {
+	for (size_t i = 0; i < clientes.size(); ++i) {
 		cout << *clientes[i] << endl;
 	}
 }
@@ -106,11 +117,23 @@ void Empresa::displayClientes() const{
 bool Empresa::removeCliente(int id){
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(id == clientes[i]->getID()){
-			for (int var = 0; var < transportes.size(); ++ var) {
+			for (size_t var = 0; var < transportes.size(); ++ var) {
 				transportes[i]->sairCliente(clientes[i]);
 			}
 			clientes.erase(clientes.begin() + i);
 			return true;
 		}
 	return false;
+}
+
+/**
+ * FAZER
+ */
+void Empresa::displayMapa(vector<Morada> points){
+
+	mapa.displayMapa();
+	//temporario
+	for(size_t i = 0; i < points.size(); i++)
+		cout << points.at(i).getID() << endl;
+
 }

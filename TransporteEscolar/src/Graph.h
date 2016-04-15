@@ -37,8 +37,8 @@ class Graph {
 	void dfsVisit();
 	void getPathTo(Vertex<T> *origin, list<T> &res);
 
-	int W[100][100];
-	Vertex<T> * P[100][100];
+	int W[1000][1000];
+	Vertex<T> * P[1000][1000];
 
 public:
 	bool addVertex(const T &in);
@@ -68,6 +68,7 @@ public:
 	int edgeCost(int i, int j);
 
 	//=================== CRIADOS PARA O TRABALHO ===============//
+	vector<T> getfloydWarshallPathWithIP(vector<T> points);
 	Vertex<T>* getVertexByID(const int id) const;
 	void resetIsPI();
 };
@@ -482,14 +483,95 @@ void Graph<T>::dijkstraShortestPath(const T &s){
 	}
 }
 
+/**
+ * IMPORTANTE :
+ * 	- se o veiculo deixa de ter mapa, esta funcao deve receber um vetor de pontos
+ * recebe um lugar de partida e um lugar de partida, analisa o grafo e cria um vetor com os pontos de interesse.
+ * De seguidacalcula o caminho mais curto que passa nesses pontos.
+ * O primeiro ponto de interesse é a origem e o ultimo o destino.
+ */
+template<class T>
+vector<T> Graph<T>::getfloydWarshallPathWithIP(vector<T> points){
+
+	vector<T> res; //vetor que guarda o path e será retornado
+	vector<T> temp;
+
+	//inicializa todos os vertices a falso (valor de processo)
+	for(size_t j = 0; j < vertexSet.size(); j++){
+		if(vertexSet.at(j)->getInfo() == points.at(0))
+			vertexSet.at(j)->processing = true;
+		else
+			vertexSet.at(j)->processing = false;
+	}
+
+	unsigned int pi = 0; //posicao do ponto de interesse atual no vetor points -> comeca na origem
+
+	//o primeiro valor do vetor res é a origem e é processada
+	res.push_back(points.at(0));
+
+	//enquanto a posicao atual nao for a posicao no vetor points do detino, executa a rotina
+	while(pi != points.size()-1){
+
+		//ver qual dos PI esta mais proximo da origem (nao inclui o primeiro ponto e o ultimo)
+		int dist = INT_INFINITY;
+		int min = 0; //pi mais proximo
+		for(size_t i = 1; i < points.size()-1; i++){
+			Vertex<T> *v = getVertex(points.at(i)); // vertice correpondente à morada
+			//a pesquisa na tablela é feita pelo id de cada nó
+			if(W[points.at(pi).getID()][points.at(i).getID()] < dist && v->processing == false){
+				dist = W[points.at(pi).getID()][points.at(i).getID()];
+				min = i;
+			}
+		}
+
+		//caso em que já percorreu todos os pontos de interesse
+		if(dist == INT_INFINITY)
+			min = points.size()-1;
+
+		//coloca o pi que se encontra na pos min como processado
+		for(size_t j = 0; j < vertexSet.size(); j++)
+			if(vertexSet.at(j)->getInfo() == points.at(min)){
+				vertexSet.at(j)->processing = true;
+				break;
+			}
+
+		//fazer o path até esse caminho
+		temp = getfloydWarshallPath(points.at(pi), points.at(min));
+		for(size_t k = 0; k < temp.size(); k++)
+			if(k != 0)
+				res.push_back(temp.at(k));
+
+		//atualiza o ponto de interesse atual
+		pi = min;
+	}
+
+	return res;
+}
+
 template<class T>
 vector<T> Graph<T>::getfloydWarshallPath(const T &origin, const T &dest){
-	Vertex<T>* vOrigin = getVertex(origin);
-	Vertex<T>* vDest = getVertex(dest);
+	//so serve para interpretar a matriz P[i][j]
 
-	//atualizar o P[i][j] com o vertex anterior mais curto, e W[i][j] com o menor peso
+	vector<T> res;
+	vector<T> invert;
+	Vertex<T> *v = P[origin.getID()][dest.getID()];
 
+	res.push_back(dest);
+	while(true){
+		if(v->getInfo() == origin)
+			break;
+		else{
+			res.push_back(v->getInfo());
+			v = P[origin.getID()][v->getInfo().getID()];
+		}
+	}
+	res.push_back(origin);
 
+	//inverter res
+	for(int j = res.size()-1; j >= 0; j--)
+		invert.push_back(res.at(j));
+
+	return invert;
 }
 
 template<class T>
@@ -497,34 +579,52 @@ int Graph<T>::edgeCost(int i, int j){
 	Vertex<T>* vi = vertexSet[i];
 	Vertex<T>* vf = vertexSet[j];
 
-	for(int i = 0; i < vi->adj.size(); i++){
+	for(size_t i = 0; i < vi->adj.size(); i++){
 		if(vi->adj[i].dest == vf)
 			return vi->adj[i].weight;
 	}
 	return 0;
 }
 
+
 /**
- * Preenche W[i][j]
+ * Preenche W[i][j] e P[i][j]
  */
 template<class T>
 void Graph<T>::floydWarshallShortestPath(){
 
-	for(int i = 0 ; i < vertexSet.size() ; i++){
-		for(int j = 0 ; j < vertexSet.size() ; j++){
-			if( i == j)
+	//inicializacao
+	for(unsigned int i = 0 ; i < vertexSet.size(); i++){
+		for(unsigned int j = 0 ; j < vertexSet.size() ; j++){
+			if( i == j){
+				P[i][j] = NULL;
 				W[i][j] = 0;
-			else{
+			}else{
 				int peso = edgeCost(i,j);
 				if(peso > 0){ // existe ligacao direta
 					W[i][j] = peso;
 					P[i][j] = vertexSet[i];
 				}
-				else
+				else{
 					W[i][j] = INT_INFINITY;
+					P[i][j] = NULL;
+				}
 			}
 		}
 	}
+
+	//forumula : D[i][j]^k = min( D[i][j]^(k-1) , D[i][k]^(k-1) + D[k][j]^(k-1 )
+	for(size_t k = 0; k < vertexSet.size(); k++)
+		for(size_t i = 0; i < vertexSet.size(); i++)
+			for(size_t j = 0; j < vertexSet.size(); j++){
+				if((W[i][j] == INT_INFINITY && W[i][k] != INT_INFINITY && W[k][j] != INT_INFINITY )){
+					W[i][j] = W[i][k] + W[k][j];
+					P[i][j] = P[k][j];
+				}if(W[i][j] > W[i][k] + W[k][j] && (W[i][j] != INT_INFINITY && W[i][k] != INT_INFINITY && W[k][j] != INT_INFINITY )){
+					W[i][j] = W[i][k] + W[k][j];
+					P[i][j] = P[k][j];
+				}
+			}
 }
 
 //=================== CRIADOS PARA O TRABALHO ===============//

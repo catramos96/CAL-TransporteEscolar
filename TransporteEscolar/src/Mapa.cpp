@@ -147,3 +147,9 @@ Morada Mapa::getPonto(int id){
 	m.setID(-1);
 	return m;
 }
+
+
+vector<Morada> Mapa::shortestPath(vector<Morada> points){
+	mapa.floydWarshallShortestPath();
+	return mapa.getfloydWarshallPathWithIP(points);
+}

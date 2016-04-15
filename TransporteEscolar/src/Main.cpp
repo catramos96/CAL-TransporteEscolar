@@ -213,7 +213,7 @@ void menuInicial(Empresa *e, Mapa *m) {
 
 int main() {
 	//temp
-
+/*
 	Empresa *e = new Empresa("Transportes Escolares",Morada(1,1,0));
 	Mapa *m = new Mapa();
 	m->setPontoInteresse(Morada(200,100,1));
@@ -226,27 +226,22 @@ int main() {
 
 	delete(e);
 	delete(m);
+*/
 
 
-	/*Empresa e = Empresa("GandaEmpresa", Morada(100,100,0));
+	Empresa *e = new Empresa("GandaEmpresa", Morada(100,100,0));
 	Cliente *c1 = new Cliente("Ines Gomes", Morada(200,300,9), Morada(400,400,15));
 	Cliente *c2 = new Cliente("Andreia Rodrigues", Morada(200,400,13), Morada(400,400,15));
 	Cliente *c3 = new Cliente("Catarina Ramos", Morada(200,200,5), Morada(400,400,15));
 	Veiculo *v1 = new Veiculo(15, "xx-11-yy");
 
-	e.addTransporte(v1);
-	e.addCliente(c1);
-	e.addCliente(c2);
-	e.addCliente(c3);
+	e->addTransporte(v1);
+	e->addCliente(c1);
+	e->addCliente(c2);
+	e->addCliente(c3);
 
-	e.distribuiCliVeiculos();
-	e.enviaVeiculos();	//funcao que atualiza os mapas dos veiculos e faz display dos mesmos
-
-Mapa m = Mapa();
-	m.setPontoInteresse(Morada(200,100,1));
-	m.setPontoInteresse(Morada(100,200,4));
-
-	m.displayMapa();
-	getchar();*/
+	e->distribuiCliVeiculos();
+	e->enviaVeiculos();	//funcao que atualiza os mapas dos veiculos e faz display dos mesmos
+	getchar();
 	return 0;
 }
