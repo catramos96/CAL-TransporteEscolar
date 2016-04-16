@@ -99,8 +99,6 @@ void Empresa::distribuiCliVeiculos(){
  */
 void Empresa::enviaVeiculos(){
 
-	//falta fazer os pi -> partida, destino e clientes
-
 	for(size_t i = 0; i < transportes.size(); i++){
 		vector<Morada> res = transportes.at(i)->makePath();
 		displayMapa(mapa.shortestPath(res));

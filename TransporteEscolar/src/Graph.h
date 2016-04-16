@@ -522,6 +522,15 @@ vector<T> Graph<T>::getfloydWarshallPathWithIP(vector<T> points){
 				dist = W[points.at(pi).getID()][points.at(i).getID()];
 				min = i;
 			}
+
+			//verifica a conectividade -> para um grafo ser conexo as ligacoes entre os pontos de interesse têm de ser possiveis
+			if(v->processing == false){
+				if(P[points.at(pi).getID()][points.at(i).getID()] == NULL){
+					res.clear();
+					res.push_back(points.at(i));
+					return res; //no caso em que um grafo não é conexo enviamos o vetor com o ponto inacessivel.
+				}
+			}
 		}
 
 		//caso em que já percorreu todos os pontos de interesse

@@ -151,5 +151,10 @@ Morada Mapa::getPonto(int id){
 
 vector<Morada> Mapa::shortestPath(vector<Morada> points){
 	mapa.floydWarshallShortestPath();
-	return mapa.getfloydWarshallPathWithIP(points);
+	vector<Morada> res = mapa.getfloydWarshallPathWithIP(points);
+
+	if(res.size() == 1){ // e retornado um vetor vazio
+		cout << "ATENCAO! O GRAFO NAO PERMITE CHEGAR AO PONTO " << res.at(0).getID() << endl ; //isto tem de ir para o main mais tarde
+	}else
+		return res;
 }
