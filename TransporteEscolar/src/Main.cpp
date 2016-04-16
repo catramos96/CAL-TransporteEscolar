@@ -228,11 +228,17 @@ int main() {
 	delete(m);
 */
 
-
 	Empresa *e = new Empresa("GandaEmpresa", Morada(100,100,0));
-	Cliente *c1 = new Cliente("Ines Gomes", Morada(400,100,3), Morada(400,400,15));
-	Cliente *c2 = new Cliente("Andreia Rodrigues", Morada(200,400,13), Morada(400,400,15));
-	Cliente *c3 = new Cliente("Catarina Ramos", Morada(200,200,5), Morada(400,400,15));
+	//Cliente *c1 = new Cliente("Ines Gomes", Morada(200,100,1), Morada(400,400,15));
+	//Cliente *c2 = new Cliente("Andreia Rodrigues", Morada(200,200,5), Morada(400,400,15));
+	//Cliente *c3 = new Cliente("Catarina Ramos", Morada(200,300,9), Morada(400,400,15));
+	//Cliente *c1 = new Cliente("Ines Gomes", Morada(400,100,3), Morada(400,400,15));
+	//Cliente *c2 = new Cliente("Andreia Rodrigues", Morada(200,400,13), Morada(400,400,15));
+	//Cliente *c3 = new Cliente("Catarina Ramos", Morada(200,200,5), Morada(400,400,15));
+	Cliente *c1 = new Cliente("Ines Gomes", Morada(100,200,4), Morada(400,400,15));
+	Cliente *c2 = new Cliente("Andreia Rodrigues", Morada(100,300,8), Morada(400,400,15));
+	Cliente *c3 = new Cliente("Catarina Ramos", Morada(200,300,9), Morada(400,400,15));
+
 	Veiculo *v1 = new Veiculo(15, "xx-11-yy");
 
 	e->addTransporte(v1);
@@ -241,6 +247,12 @@ int main() {
 	e->addCliente(c3);
 
 	e->distribuiCliVeiculos();
+/*
+	cout << "olha o is pi antes de tirar "<<e->getMapa()->getPontoVertex(5)->getIsPI() << endl;
+	e->removeCliente(c1);
+	cout << "olha o is pi depois de tirar "<<e->getMapa()->getPontoVertex(5)->getIsPI() << endl;
+
+*/
 	e->enviaVeiculos();	//funcao que atualiza os mapas dos veiculos e faz display dos mesmos
 	getchar();
 	return 0;

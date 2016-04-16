@@ -7,13 +7,16 @@ Empresa::Empresa(string nome, Morada endereco)
 {
 	this->nome = nome;
 	this->endereco = endereco;
-	//mapa = Mapa();
-	//mapa.setPontoInteresse(endereco);
+	mapa = new Mapa();
+
+	mapa->setPontoInteresse(endereco);
 }
 
 string Empresa::getNome() const {return nome;}
 
 Morada Empresa::getEndereco() const {return endereco;}
+
+Mapa* Empresa::getMapa() const {return mapa;}
 
 void Empresa::setNome(string nome) {this->nome = nome;}
 
@@ -38,7 +41,7 @@ bool Empresa::addCliente(Cliente * cliente)
 		if(*cliente == *clientes[i])
 			return false;
 	clientes.push_back(cliente);
-	mapa.setPontoInteresse(cliente->getResidencia());
+	mapa->setPontoInteresse(cliente->getResidencia());
 
 	return true;
 }
@@ -57,9 +60,11 @@ bool Empresa::removeCliente(Cliente * cliente)
 {
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(cliente == clientes[i]){
+			cout << "encontrei 1" << endl;
 			for (int var = 0; var < transportes.size(); ++ var) {
 				transportes[i]->sairCliente(clientes[i]);
 			}
+			mapa->getPontoVertex(clientes[i]->getResidencia().getID())->setIsPI(0);
 			delete(*(clientes.begin()+i));
 			clientes.erase(clientes.begin() + i);
 			return true;
@@ -80,7 +85,7 @@ void Empresa::distribuiCliVeiculos(){
 				transportes.at(i)->addCliente(clientes.at(j));
 			else{ //ultimo lugar do veiculo
 				transportes.at(i)->setDestino(clientes.at(j)->getEscola()); //TEMPORARIO
-				mapa.setPontoInteresse(clientes.at(j)->getEscola());
+				mapa->setPontoInteresse(clientes.at(j)->getEscola());
 				break;
 			}
 
@@ -101,7 +106,7 @@ void Empresa::enviaVeiculos(){
 
 	for(size_t i = 0; i < transportes.size(); i++){
 		vector<Morada> res = transportes.at(i)->makePath();
-		displayMapa(mapa.shortestPath(res));
+		displayMapa(mapa->shortestPath(res));
 	}
 
 }
@@ -118,6 +123,7 @@ bool Empresa::removeCliente(int id){
 			for (size_t var = 0; var < transportes.size(); ++ var) {
 				transportes[i]->sairCliente(clientes[i]);
 			}
+			//mapa->getPontoVertex(clientes[i]->getResidencia().getID())->setIsPI(false);
 			clientes.erase(clientes.begin() + i);
 			return true;
 		}
@@ -129,7 +135,7 @@ bool Empresa::removeCliente(int id){
  */
 void Empresa::displayMapa(vector<Morada> points){
 
-	mapa.displayMapa();
+	mapa->displayMapa(points);
 	//temporario
 	for(size_t i = 0; i < points.size(); i++)
 		cout << points.at(i).getID() << endl;

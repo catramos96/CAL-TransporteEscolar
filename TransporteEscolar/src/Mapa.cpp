@@ -78,20 +78,86 @@ Mapa::Mapa(){
 	mapa.resetIsPI();
 }
 
-void Mapa::displayMapa(){
+void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(600, 600, false);
 
 	gv->createWindow(600, 600);
-
 	gv->defineEdgeColor("black");
 	gv->defineVertexColor("pink");
 
+	// Faz o mapa sem nada
 	int k = 0;
+	for(int i = 0; i < mapa.getNumVertex(); i++){
+		Vertex<Morada> * v = mapa.getVertexByID(i);
+		if(i==0)
+			gv->setVertexColor(v->getInfo().getID(), "magenta");
+		gv->addNode(i,v->getInfo().getX(),v->getInfo().getY());
+		for(int j = 0; j < v->getNumAdjacents(); j++){
+			int dest = v->getAdjacentNumber(j).getDest()->getInfo().getID();
+			gv->addEdge(k,v->getInfo().getID(),dest, EdgeType::DIRECTED);
+			stringstream label;
+			label << v->getAdjacentNumber(j).getWeight();
+			gv->setEdgeLabel(k,label.str());
+			k++;
+		}
+	}
 
+	// Começa a animação
+ /*
+	k = 0;
+	for(int i = 0; i < mapa.getNumVertex(); i++)
+	{
+			Vertex<Morada> * v = mapa.getVertexByID(i);
+			if(isPontoInteresse(v->getInfo()))
+			{
+				for(int j = 0; j < v->getNumAdjacents(); j++){
+					int dest = v->getAdjacentNumber(j).getDest()->getInfo().getID();
+					cout << "i " << i << " j " << j <<" dest " << dest << " k " << k << endl;;
+					Vertex<Morada> * destino = mapa.getVertexByID(dest);
+					if(isPontoInteresse(v->getAdjacentNumber(j).getDest()->getInfo()))
+					{
+						cout << "vou colocar" << endl;
+						gv->setEdgeColor(k,"magenta");
+						gv->rearrange();
+					}
+
+					gv->setVertexColor(v->getInfo().getID(), "magenta");
+					gv->rearrange();
+
+					Sleep(1000);
+					k++;
+				}
+			}
+			else
+				for(int j = 0; j < v->getNumAdjacents(); j++){k++;}
+		}
+
+	*/
+	for(int l = 0; l < points.size(); l++)
+	{
+		for(int i = 0; i < mapa.getNumVertex(); i++)
+		{
+			Vertex<Morada> * v = mapa.getVertexByID(i);
+			if(v->getInfo().getID() == points[l].getID())
+			{
+				gv->setVertexColor(v->getInfo().getID(), "magenta");
+				gv->rearrange();
+
+				Sleep(1000);
+			}
+		}
+	}
+
+
+
+
+
+
+/*
 	for(int i = 0; i < mapa.getNumVertex(); i++){
 		Vertex<Morada> * v = mapa.getVertexByID(i);
 		if(isPontoInteresse(v->getInfo()))
-			gv->setVertexColor(v->getInfo().getID(), "red");
+			gv->setVertexColor(v->getInfo().getID(), "magenta");
 
 		gv->addNode(i,v->getInfo().getX(),v->getInfo().getY());
 
@@ -103,7 +169,7 @@ void Mapa::displayMapa(){
 			gv->setEdgeLabel(k,label.str());
 			k++;
 		}
-	}
+	}*/
 
 	gv->rearrange();
 }
@@ -146,6 +212,17 @@ Morada Mapa::getPonto(int id){
 	Morada m;
 	m.setID(-1);
 	return m;
+}
+
+Vertex<Morada> * Mapa::getPontoVertex(int id){
+
+	Vertex<Morada> * v;
+	for (int var = 0; var < mapa.getNumVertex(); ++var) {
+		if(mapa.getVertexSet()[var]->getInfo().getID() == id)
+			return v = mapa.getVertexSet()[var];
+	}
+
+	return v;
 }
 
 

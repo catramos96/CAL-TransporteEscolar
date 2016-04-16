@@ -31,14 +31,16 @@ bool Veiculo::addCliente(Cliente *c){
 }
 
 bool Veiculo::sairCliente(Cliente *c){
-	if(!existeCliente(c))
-		return false;
-
 	vector<Cliente *>::iterator it;
-	it = find(clientes.begin(),clientes.end(),c);
-	clientes.erase(it);
-	numLugares--;
-	return true;
+	cout << "vou mandálo com o crl" << endl;
+	if(find(clientes.begin(),clientes.end(),c) != clientes.end())
+	{	clientes.erase(it);
+		numLugares--;
+		cout << "wooo encontrei" << endl;
+		return true;
+	}
+	cout << "n encontrei" << endl;
+	return false;
 }
 
 bool Veiculo::existeCliente(Cliente *c) const{
