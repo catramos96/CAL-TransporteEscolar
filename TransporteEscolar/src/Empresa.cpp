@@ -105,8 +105,9 @@ void Empresa::distribuiCliVeiculos(){
 void Empresa::enviaVeiculos(){
 
 	for(size_t i = 0; i < transportes.size(); i++){
-		vector<Morada> res = transportes.at(i)->makePath();
-		displayMapa(mapa->shortestPath(res));
+		vector<Morada> res = transportes.at(i)->makePath(); //pontos de interesse
+		res = mapa->shortestPath(res); //menor caminho que passa nesses pontos de interesse
+		mapa->displayMapa(res);
 	}
 
 }
@@ -128,16 +129,4 @@ bool Empresa::removeCliente(int id){
 			return true;
 		}
 	return false;
-}
-
-/**
- * FAZER
- */
-void Empresa::displayMapa(vector<Morada> points){
-
-	mapa->displayMapa(points);
-	//temporario
-	for(size_t i = 0; i < points.size(); i++)
-		cout << points.at(i).getID() << endl;
-
 }
