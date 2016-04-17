@@ -7,10 +7,12 @@
 #include <algorithm>
 
 using namespace std;
+
 /**
  * Construtor
  * Inicializa o grafo com os nos e arestas dos ficheiros "nos.txt" e "arestas.txt"
  */
+
 Mapa::Mapa(){
 	ifstream inFile;
 
@@ -70,22 +72,189 @@ Mapa::Mapa(){
 		Vertex<Morada>* vSource = mapa.getVertexByID(idNoOrigem);
 		Vertex<Morada>* vDest = mapa.getVertexByID(idNoDestino);
 
-		mapa.addEdge(vSource->getInfo(), vDest->getInfo(), peso);
+		mapa.addEdge(vSource->getInfo(), vDest->getInfo(), peso,1);
 	}
 	inFile.close();
 
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
 }
+ /*
+Mapa::Mapa(){
 
+	//openstreetmaps.org
+
+	vector<int > twoWays; //se uma aresta estiver neste vértice significa que a sua rua é bidirecional
+
+	ifstream inFile;
+
+	//Ler o ficheiro nos.txt
+	inFile.open("LisboaNodes.txt");
+
+	if (!inFile)
+		cerr << "Unable to open file datafile.txt";
+
+	string line;
+
+	int idNo=0;
+	double x=0;
+	double y=0;
+
+	while(getline(inFile, line))
+	{
+		stringstream linestream(line);
+		string	data;
+
+		linestream >> idNo;
+		idNo = idNo %10000; //apenas queremos os ultimos 4 digitos
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> x;
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> y;
+		Morada m = Morada(x,y+10,idNo);
+		mapa.addVertex(m);
+	}
+
+	inFile.close();
+
+	//Ler o ficheiro arestas.txt
+
+	inFile.open("LisboaRoads.txt");
+
+	if (!inFile)
+		cerr << "Unable to open file datafile.txt";
+
+	int idAresta=0;
+	string temp;
+
+	while(std::getline(inFile, line))
+	{
+		stringstream linestream(line);
+		string data;
+		string temp;
+
+		linestream >> idAresta;
+		idAresta = idAresta %10000;
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> temp;
+
+		if(temp == "True")
+			twoWays.push_back(idAresta);
+	}
+	inFile.close();
+
+	//Ler o ficheiro SubRoads.txt
+	inFile.open("LisboaSubRoads.txt");
+
+	if (!inFile)
+		cerr << "Unable to open file datafile.txt";
+
+	idAresta=0;
+	int idNoOrigem=0;
+	int idNoDestino=0;
+
+	while(std::getline(inFile, line))
+	{
+		stringstream linestream(line);
+		string data;
+
+		linestream >> idAresta;
+		idAresta = idAresta %10000;
+
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> idNoOrigem;
+		idNoOrigem = idNoOrigem %10000;
+
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> idNoDestino;
+		idNoDestino = idNoDestino %10000;
+
+		Vertex<Morada>* vSource = mapa.getVertexByID(idNoOrigem);
+		Vertex<Morada>* vDest = mapa.getVertexByID(idNoDestino);
+
+		if(vSource == vDest)
+			continue;
+		else{
+			if(vSource != NULL && vDest != NULL){
+				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), 1, idAresta);
+
+				for(size_t i = 0; i < twoWays.size(); i++)
+					if(twoWays.at(i) == idAresta){	//esta aresta está nos vetores de arestas bidirecionais
+						mapa.addEdge(vDest->getInfo(),vSource->getInfo(), 1, idAresta);
+					}
+			}
+		}
+	}
+
+	inFile.close();
+
+	//inicializa o boleano isPI( é ponto de interesse) a falso
+	mapa.resetIsPI();
+
+}
+*/
+/*
 void Mapa::displayMapa(vector<Morada> points){
-	GraphViewer *gv = new GraphViewer(600, 600, false);
+	GraphViewer *gv = new GraphViewer(1200, 1200, false);
 
-	gv->createWindow(600, 600);
+	gv->createWindow(1200, 1200);
 	gv->defineEdgeColor("black");
 	gv->defineVertexColor("pink");
 
 	// Faz o mapa sem nada
+
+	vector<Vertex<Morada> *> allVertex = mapa.getVertexSet();
+	for(int i = 0; i < mapa.getNumVertex(); i++){
+		Vertex<Morada> * v = allVertex.at(i);
+
+		gv->addNode(v->getInfo().getID(),v->getInfo().getX(),v->getInfo().getY());
+		//--------------------------------------------------------------------------//
+		for(int j = 0; j < v->getNumAdjacents(); j++){
+			int dest = v->getAdjacentNumber(j).getDest()->getInfo().getID();
+			int k = v->getAdjacentNumber(j).getID();
+			gv->addEdge(k,v->getInfo().getID(),dest, EdgeType::DIRECTED);
+			stringstream label;
+			label << v->getAdjacentNumber(j).getWeight();
+			gv->setEdgeLabel(k,label.str());
+			k++;
+		}
+
+		//--------------------------------------------------------------------------//
+	}
+
+	// Começa a animação
+
+
+	for(int l = 0; l < points.size(); l++)
+	{
+		for(int i = 0; i < mapa.getNumVertex(); i++)
+		{
+			Vertex<Morada> * v = mapa.getVertexByID(i);
+			if(v->getInfo().getID() == points[l].getID())
+			{
+				gv->setVertexColor(v->getInfo().getID(), "magenta");
+				gv->rearrange();
+
+				Sleep(1000);
+			}
+		}
+	}
+
+
+	gv->rearrange();
+}
+*/
+
+void Mapa::displayMapa(vector<Morada> points){
+	GraphViewer *gv = new GraphViewer(600, 600, false);
+
+	gv->createWindow(1200, 1200);
+	gv->defineEdgeColor("black");
+	gv->defineVertexColor("pink");
+
+	// Faz o mapa sem nada
+
 	int k = 0;
 	for(int i = 0; i < mapa.getNumVertex(); i++){
 		Vertex<Morada> * v = mapa.getVertexByID(i);
@@ -102,8 +271,8 @@ void Mapa::displayMapa(vector<Morada> points){
 		}
 	}
 
-	// Começa a animação
- /*
+/*	// Começa a animação
+//----------------------------------------------------------------------------//
 	k = 0;
 	for(int i = 0; i < mapa.getNumVertex(); i++)
 	{
@@ -131,8 +300,9 @@ void Mapa::displayMapa(vector<Morada> points){
 			else
 				for(int j = 0; j < v->getNumAdjacents(); j++){k++;}
 		}
+//----------------------------------------------------------------------------//
+*/
 
-	*/
 	for(int l = 0; l < points.size(); l++)
 	{
 		for(int i = 0; i < mapa.getNumVertex(); i++)
@@ -149,11 +319,8 @@ void Mapa::displayMapa(vector<Morada> points){
 	}
 
 
-
-
-
-
 /*
+//----------------------------------------------------------------------------//
 	for(int i = 0; i < mapa.getNumVertex(); i++){
 		Vertex<Morada> * v = mapa.getVertexByID(i);
 		if(isPontoInteresse(v->getInfo()))
@@ -169,8 +336,9 @@ void Mapa::displayMapa(vector<Morada> points){
 			gv->setEdgeLabel(k,label.str());
 			k++;
 		}
-	}*/
-
+	}
+//----------------------------------------------------------------------------//
+ * */
 	gv->rearrange();
 }
 

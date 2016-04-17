@@ -14,19 +14,19 @@ using namespace std;
 
 class Morada{
 private:
-	int x; //coordenada x
-	int y; //coordenada y
+	double x; //coordenada x
+	double y; //coordenada y
 	int id; //id da morada -> correspondente numerico a uma morada (é unico)
 public:
 	Morada(){};
-	Morada(int x, int y, int id);
+	Morada(double x, double y, int id);
 	bool operator == (const Morada &m) const;
 	int getID() const;
-	int getX() const;
-	int getY() const;
+	double getX() const;
+	double getY() const;
 	void setID(int id);
-	void setX(int x);
-	void setY(int y);
+	void setX(double x);
+	void setY(double y);
 	Morada & operator=(const Morada &m);
 	friend ostream & operator<<(ostream & o, const Morada &m);
 

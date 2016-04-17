@@ -1,0 +1,61 @@
+20427888;Largo do Chiado;False
+23658705;Rua da Bica de Duarte Belo;False
+23658687;Rua da Emenda;False
+23658647;Largo da Trindade;False
+23658744;Rua Marechal Saldanha;False
+23658692;Rua das Chagas;False
+23658670;Praça Luís de Camões;False
+23658901;Travessa da Trinidade;False
+23658779;Rua do Almada;False
+23658877;Rua Luz Soriano;False
+23658882;Rua da Barroca;False
+23686148;Rua de O Século;False
+23686879;Rua dos Caetanos;False
+24279297;Rua da Misericórdia;False
+27022504;Travessa de João de Deus;False
+23686838;Travessa das Mercês;False
+23686829;Rua Nova do Loireiro;False
+40504185;Travessa do Poço da Cidade;False
+23658851;Rua das Gáveas;False
+23658848;Rua do Norte;False
+23658801;Travessa do Poço da Cidade;False
+40506687;Travessa da Queimada;False
+23658844;Rua do Diário de Notícias;False
+23658824;Travessa da Queimada;False
+40508625;Rua do Grémio Lusitano;False
+58981261;Travessa da Hera;False
+58981256;Rua Doutor Luis de Almeida e Albuquerque;False
+20427684;Largo do Chiado;False
+96592852;Rua do Trombeta;False
+40464997;Praça Luís de Camões;False
+97006923;Rua da Rosa;False
+97006927;Rua da Rosa;False
+97306166;;False
+97306145;Praça Luis de Camóes;False
+97306162;Largo do Chiado;False
+58741981;Largo Trinitade Coelho;False
+19789398;Rua São Pedro de Alcántara;False
+149309277;Travessa André Valente;False
+149309278;Travessa André Valente;False
+58981259;Rua da Hera;False
+40504184;Travessa dos Fiéis de Deus;False
+153978452;Largo do Calhariz;True
+310008391;Travessa de Santa Catarina;False
+149309274;Rua do Loreto;True
+224411448;Rua João Pereira da Rosa;False
+23658906;Rua das Salgadeiras;False
+23658919;Travessa dos Fiéis de Deus;False
+242714122;Travessa dos Inglesinhos;False
+242888804;Rua da Atalaia;False
+243062415;;False
+336745040;Rua Nova da Trindade;False
+58741980;Rua Nova da Trindade;False
+20431455;Rua da Misericórdia;False
+149309263;Calçada do Combro;True
+97306118;Largo do Chiado;False
+344616114;Travessa da Espera;True
+23658911;Travessa da Espera;False
+345796153;Rua Luz Soriano;False
+345796154;Travessa das Mercês;False
+23658798;Rua da Rosa;False
+395892089;Rua Nova da Trindade;True

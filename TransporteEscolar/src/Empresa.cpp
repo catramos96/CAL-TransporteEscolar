@@ -101,7 +101,7 @@ bool Empresa::removerEscola(Morada *e){
 			n++;
 		itb++;
 	}
-	if(n > 1 || n=0)
+	if(n > 1 || n==0)
 		return false;
 	//ver se a escola pertence as escolas
 	while(itbm != itfm){

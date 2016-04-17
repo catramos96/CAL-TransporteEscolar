@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Morada::Morada(int x, int y, int id){
+Morada::Morada(double x, double y, int id){
 	this->x = x;
 	this->y = y;
 	this->id = id;
@@ -16,11 +16,11 @@ int Morada::getID() const{
 	return id;
 }
 
-int Morada::getX() const{
+double Morada::getX() const{
 	return x;
 }
 
-int Morada::getY() const{
+double Morada::getY() const{
 	return y;
 }
 
@@ -28,11 +28,11 @@ void Morada::setID(int id){
 	this->id=id;
 }
 
-void Morada::setX(int x){
+void Morada::setX(double x){
 	this->x = x;
 }
 
-void Morada::setY(int y){
+void Morada::setY(double y){
 	this->y = y;
 }
 

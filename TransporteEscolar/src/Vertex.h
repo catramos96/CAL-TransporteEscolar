@@ -33,7 +33,7 @@ public:
 	Vertex(T in);
 	friend class Graph<T>;
 
-	void addEdge(Vertex<T> *dest, double w);
+	void addEdge(Vertex<T> *dest, double w, int id);
 	bool removeEdgeTo(Vertex<T> *d);
 
 	T getInfo() const;
@@ -83,8 +83,8 @@ Vertex<T>::Vertex(T in): info(in), visited(false), processing(false), indegree(0
 
 
 template <class T>
-void Vertex<T>::addEdge(Vertex<T> *dest, double w) {
-	Edge<T> edgeD(dest,w);
+void Vertex<T>::addEdge(Vertex<T> *dest, double w, int id) {
+	Edge<T> edgeD(dest,w,id);
 	adj.push_back(edgeD);
 }
 

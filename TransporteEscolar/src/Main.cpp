@@ -288,7 +288,6 @@ int main() {
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	menuInicial(e);
 	esperar();
-	//falta fazer deletes ---> estamos a usar new
 
 	delete(e);
 
