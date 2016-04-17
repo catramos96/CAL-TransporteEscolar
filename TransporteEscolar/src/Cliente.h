@@ -9,18 +9,18 @@ using namespace std;
 class Cliente{
 private:
 	string nome;
-	Morada escola;
-	Morada residencia;
+	Morada * escola;
+	Morada * residencia;
 	int ID; //relativo a um objeto
 	static int id; //global
 public:
-	Cliente(string nome, Morada casa, Morada escola);
+	Cliente(string nome, Morada *casa, Morada *escola);
 	string getNome() const;
-	Morada getEscola() const;
-	Morada getResidencia() const;
+	Morada * getEscola() const;
+	Morada * getResidencia() const;
 	int getID() const;
-	void setNovaResidencia(Morada nova);
-	void setNovaEscola(Morada nova);
+	void setNovaResidencia(Morada * nova);
+	void setNovaEscola(Morada * nova);
 	bool operator== (const Cliente &c) const;
 	friend ostream & operator<<(ostream & o, const Cliente &c);
 };

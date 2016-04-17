@@ -45,6 +45,6 @@ Morada & Morada::operator=(const Morada &m){
 }
 
 ostream & operator<<(ostream & o, const Morada &m){
-	o << m.getID()  << "(" << m.getX() << "," << m.getY() << ")";
+		o << m.getID()  << "(" << m.getX() << "," << m.getY() << ")";
 	return o;
 }

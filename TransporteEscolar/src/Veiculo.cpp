@@ -35,9 +35,9 @@ bool Veiculo::sairCliente(Cliente *c){
 	cout << "vou mandálo com o crl" << endl;
 	if(find(clientes.begin(),clientes.end(),c) != clientes.end())
 	{	clientes.erase(it);
-		numLugares--;
-		cout << "wooo encontrei" << endl;
-		return true;
+	numLugares--;
+	cout << "wooo encontrei" << endl;
+	return true;
 	}
 	cout << "n encontrei" << endl;
 	return false;
@@ -50,12 +50,12 @@ bool Veiculo::existeCliente(Cliente *c) const{
 	return false;
 }
 
-bool Veiculo::passaNaEscola(Morada escola) const{
+bool Veiculo::passaNaEscola(Morada *escola) const{
 	vector<Cliente *>::const_iterator itb = clientes.begin();
 	vector<Cliente *>::const_iterator itf = clientes.end();
 
 	while(itb != itf){
-		if((*itb)->getEscola() ==escola)
+		if(*(*itb)->getEscola() == *escola)
 			return true;
 		itb++;
 	}
@@ -64,18 +64,8 @@ bool Veiculo::passaNaEscola(Morada escola) const{
 
 // confirmar se está tudo fixe aqui
 bool Veiculo::operator== (const Veiculo &v) const{
-	if((numLugares == v.getNumLugares()) && (matricula == v.getMatricula()))
-	{
-		if(clientes.size() == v.getClientes().size())
-		{
-			for(unsigned int i = 0; i < clientes.size(); i++)
-			{
-				if(clientes[i] != v.getClientes()[i])
-					return false;
-			}
-			return true;
-		}
-	}
+	if (matricula == v.getMatricula())
+		return true;
 	else
 		return false;
 }
@@ -84,11 +74,11 @@ int Veiculo::lugaresLivres(){
 	return (numLugares - clientes.size());
 }
 
-void Veiculo::setPartida(Morada partida){
+void Veiculo::setPartida(Morada *partida){
 	this->partida = partida;
 }
 
-void Veiculo::setDestino(Morada destino){
+void Veiculo::setDestino(Morada *destino){
 	this->destino = destino;
 }
 
@@ -99,10 +89,27 @@ vector<Morada> Veiculo::makePath(){
 
 	vector<Morada> points;
 
-	points.push_back(partida);
+	points.push_back(*partida);
 	for(size_t i = 0; i < clientes.size(); i++)
-		points.push_back(clientes.at(i)->getResidencia());
-	points.push_back(destino);
+		points.push_back(*clientes.at(i)->getResidencia());
+	points.push_back(*destino);
 
 	return points;
+}
+
+Morada* Veiculo::getPartida() const{
+	return partida;
+}
+
+Morada* Veiculo::getDestino() const{
+	return destino;
+}
+
+ostream & operator<<(ostream & o, const Veiculo &v){
+	o << "Matricula - " << v.getMatricula() << " Capacidade -  "<< v.getNumLugares();
+	if(v.getPartida() != NULL)
+		o << " Partida - "<< *v.getPartida() ;
+	if(v.getDestino() != NULL)
+		o << " Destino - " << *v.getDestino();
+	return o;
 }

@@ -13,9 +13,13 @@ using namespace std;
  * VERIFICAR se quando se remove um cliente, se existe mais algum cliente que marca
  * a escola ou a aquela casa , caso contrario deixam de ser pontos de interesse no mapa
  */
-void addCliente(Empresa *e, Mapa *m){
+//CLIENTE
+//==============================================================================================================
+
+void addCliente(Empresa *e){
 	string nome;
-	Morada casa, escola;
+	Morada *casa = new Morada();
+	Morada *escola = new Morada();
 	int id;
 
 	clrscr();
@@ -25,30 +29,26 @@ void addCliente(Empresa *e, Mapa *m){
 	//getline(cin,nome); ???
 	cout << "Morada Residencial: ";
 	cin >> id;
-	casa = m->getPonto(id);
+	*casa = e->getMapa()->getPonto(id);
 
-	if(casa.getID() == -1){
-		throw PontoInexistente(casa);
+	if(casa->getID() == -1){
+		throw PontoInexistente(*casa);
 	}
 	cout << "Morada Escolar: ";
 	cin >> id;
 
 
-	escola = m->getPonto(id);
+	*escola = e->getMapa()->getPonto(id);
 	cout << escola;
-	if(escola.getID() == -1){
-		throw PontoInexistente(escola);
+	if(escola->getID() == -1){
+		throw PontoInexistente(*escola);
 	}
 
 	Cliente *c = new Cliente(nome,casa,escola);
 
 	//É so a casa que passa a ser um ponto de interesse ?
-	if(e->addCliente(c) == true){
-		cout << "\n\nAdicionado com sucesso !\n";
-		m->setPontoInteresse(casa);
-	}
-	else
-		throw ClienteJaExiste(nome,escola,casa);
+	if(!e->addCliente(c))
+		throw ClienteJaExiste(nome,*escola,*casa);
 	esperar();
 	throw VoltarAtras();
 }
@@ -65,7 +65,6 @@ void removerCliente(Empresa *e){
 	if(!e->removeCliente(id) == true)
 		throw ClienteInexistente(id);
 
-	cout << "\n\nCliente Removido com sucesso !\n";
 	esperar();
 	throw VoltarAtras();
 }
@@ -74,51 +73,21 @@ void verClientes(Empresa *e){
 	clrscr();
 	displayTitulo("CLIENTES");
 	e->displayClientes();
+	cout << endl;
 	esperar();
 	throw VoltarAtras();
 }
 
-void menuTrajetos(Mapa *m){
+void menuTrajetos(Empresa *e){
 	clrscr();
 	displayTitulo("PONTOS");
-	m->displayPontos();
+	e->getMapa()->displayPontos();
+	cout << endl;
 	esperar();
 	throw VoltarAtras();
 }
 
-void menuVeiculos(Empresa *e, Mapa *m){
-	clrscr();
-	int op;
-	do {
-		displayMenuVeiculos();
-		opccao(op, 0, 4);
-		switch (op) {
-		case 0: { //add
-
-			break;
-		}
-		case 1: { //rem
-
-			break;
-		}
-		case 2: {//ver
-
-			break;
-		}
-		case 3: {//pesq. traj
-
-			break;
-		}
-		case 4: {
-			throw VoltarAtras();
-			esperar();
-			break;
-		}
-		}
-	} while (1);
-}
-
-void menuClientes(Empresa *e, Mapa *m){
+void menuClientes(Empresa *e){
 	int op;
 	do {
 		clrscr();
@@ -126,7 +95,7 @@ void menuClientes(Empresa *e, Mapa *m){
 		opccao(op, 0, 4);
 		switch (op) {
 		case 0: { //add
-			addCliente(e,m);
+			addCliente(e);
 			break;
 		}
 		case 1: { //rem
@@ -150,35 +119,129 @@ void menuClientes(Empresa *e, Mapa *m){
 	} while (1);
 }
 
-void opMenuInicial(Empresa *e, Mapa *m, int op) {
+
+//VEICULO
+//==============================================================================================================
+
+void addVeiculo(Empresa *e){
+	string matricula;
+	int capac;
+
+	clrscr();
+	displayTitulo("ADICIONAR VEICULO");
+	cout << "Matricula: ";
+	cin >> matricula;
+	cout << "Numero de Lugares: ";
+	cin >> capac;
+
+	Veiculo *v = new Veiculo(capac,matricula);
+
+	if(!e->addTransporte(v))
+		throw VeiculoJaExiste(matricula);
+	esperar();
+	throw VoltarAtras();
+}
+
+void removerVeiculo(Empresa *e){
+	string m;
+	clrscr();
+	displayTitulo("REMOVER VEICULO");
+	e->displayVeiculos();
+	cout << endl;
+	cout << "Digite a matricula do veiculo: ";
+	cin >> m;
+	Veiculo * v = new Veiculo(0,m);
+	if(!e->removeTransporte(v))
+		throw VeiculoInexistente(m);
+	esperar();
+	throw VoltarAtras();
+}
+
+void verVeiculos(Empresa *e){
+	clrscr();
+	displayTitulo("VEICULOS");
+	e->displayVeiculos();
+	cout << endl;
+	esperar();
+	throw VoltarAtras();
+}
+
+void menuVeiculos(Empresa *e){
+	clrscr();
+	int op;
+	do {
+		displayMenuVeiculos();
+		opccao(op, 0, 4);
+		switch (op) {
+		case 0: { //add
+			addVeiculo(e);
+			break;
+		}
+		case 1: { //rem
+			removerVeiculo(e);
+			break;
+		}
+		case 2: {//ver
+			verVeiculos(e);
+			break;
+		}
+		case 3: {//pesq. traj
+
+			break;
+		}
+		case 4: {
+			throw VoltarAtras();
+			esperar();
+			break;
+		}
+		}
+	} while (1);
+}
+//Escolas
+//==============================================================================================================
+void verEscolas(Empresa * e){
+	clrscr();
+		displayTitulo("ESCOLAS");
+		e->displayEscolas();
+		cout << endl;
+		esperar();
+		throw VoltarAtras();
+}
+
+//==============================================================================================================
+void opMenuInicial(Empresa *e, int op) {
 	switch (op) {
 	case 0: { //veiculos
-		menuVeiculos(e,m);
+		menuVeiculos(e);
 		break;
 	}
 	case 1: { //clientes
-		menuClientes(e,m);
+		menuClientes(e);
 		break;
 	}
 	case 2: {//trajetos
-		menuTrajetos(m);
+		menuTrajetos(e);
 		break;
 	}
-	case 3: { //sair
-		//Guardar INFORMAÇÃO
+	case 3: { //escolas
+		verEscolas(e);
+		break;
+	}
+	case 4:{
+		//GUARDAR INFO
 		break;
 	}
 	}
 }
 
-void menuInicial(Empresa *e, Mapa *m) {
+void menuInicial(Empresa *e) {
 	int op;
 	do {
 		try {
 			clrscr();
 			displayMenuInicial(e->getNome());
-			opccao(op, 0, 3);
-			opMenuInicial(e, m, op);
+			opccao(op, 0, 4);
+			opMenuInicial(e, op);
 		}
 		catch (OpccaoInvalida<int>(x)) {
 			cout << x.getOp() << " nao se encontra entre as opccoes "
@@ -205,7 +268,15 @@ void menuInicial(Empresa *e, Mapa *m) {
 			cout << "Nao existe no mapa um ponto " << e.getPonto() << endl;
 			esperar();
 		}
-	} while (op != 3);
+		catch (VeiculoJaExiste(e)){
+			cout << "Ja existe um veiculo com a matricula " << e.getMatric()<< endl;
+			esperar();
+		}
+		catch (VeiculoInexistente(e)){
+			cout << "Nao existe um veiculo com a matricula " << e.getMatric()<< endl;
+			esperar();
+		}
+	} while (op != 4);
 }
 
 
@@ -213,22 +284,16 @@ void menuInicial(Empresa *e, Mapa *m) {
 
 int main() {
 	//temp
-/*
-	Empresa *e = new Empresa("Transportes Escolares",Morada(1,1,0));
-	Mapa *m = new Mapa();
-	m->setPontoInteresse(Morada(200,100,1));
-	m->setPontoInteresse(Morada(100,200,4));
-
-	m->displayMapa();
-	menuInicial(e,m);
+	Morada * source = new Morada(100,100,0);
+	Empresa *e = new Empresa("Transportes Escolares",source);
+	menuInicial(e);
 	esperar();
 	//falta fazer deletes ---> estamos a usar new
 
 	delete(e);
-	delete(m);
-*/
 
-	Empresa *e = new Empresa("GandaEmpresa", Morada(100,100,0));
+
+	/*Empresa *e = new Empresa("GandaEmpresa", Morada(100,100,0));
 	//Cliente *c1 = new Cliente("Ines Gomes", Morada(200,100,1), Morada(400,400,15));
 	//Cliente *c2 = new Cliente("Andreia Rodrigues", Morada(200,200,5), Morada(400,400,15));
 	//Cliente *c3 = new Cliente("Catarina Ramos", Morada(200,300,9), Morada(400,400,15));
@@ -247,13 +312,13 @@ int main() {
 	e->addCliente(c3);
 
 	e->distribuiCliVeiculos();
-/*
+
 	cout << "olha o is pi antes de tirar "<<e->getMapa()->getPontoVertex(5)->getIsPI() << endl;
 	e->removeCliente(c1);
 	cout << "olha o is pi depois de tirar "<<e->getMapa()->getPontoVertex(5)->getIsPI() << endl;
 
-*/
+
 	e->enviaVeiculos();	//funcao que atualiza os mapas dos veiculos e faz display dos mesmos
-	getchar();
+	getchar();*/
 	return 0;
 }

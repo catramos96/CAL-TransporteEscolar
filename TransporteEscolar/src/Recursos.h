@@ -16,7 +16,8 @@ void displayMenuInicial(string nome_empresa){
 	cout << "0 - Veiculos\n";
 	cout << "1 - Clientes\n";
 	cout << "2 - Trajetos\n";
-	cout << "3 - Sair\n";
+	cout << "3 - Escolas\n";
+	cout << "4 - Sair\n";
 }
 
 void displayMenuVeiculos(){

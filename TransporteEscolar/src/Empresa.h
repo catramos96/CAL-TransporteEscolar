@@ -11,24 +11,28 @@ using namespace std;
 class Empresa{
 private:
 	string nome;
-	Morada endereco;
+	Morada *endereco;
 	vector<Veiculo *> transportes;
 	vector<Cliente *> clientes;
 	vector<Morada *> escolas;
 	Mapa* mapa; //mapa da cidade
 public:
-	Empresa(string nome, Morada endereco);
+	Empresa(string nome, Morada *endereco);
 	string getNome() const;
-	Morada getEndereco() const;
+	Morada* getEndereco() const;
 	void setNome(string nome);
-	void setEndereco(Morada endereco);
+	void setEndereco(Morada *endereco);
 	bool addTransporte(Veiculo * veiculo);
 	bool addCliente(Cliente *cliente);
+	bool addEscola(Morada * e);
 	bool removeTransporte(Veiculo * veiculo);
 	bool removeCliente(Cliente * cliente);
+	bool removerEscola(Morada *e);
 	void distribuiCliVeiculos();
 	void enviaVeiculos();
 	void displayClientes() const;
+	void displayVeiculos() const;
+	void displayEscolas() const;
 	bool removeCliente(int id);
 	void displayMapa(vector<Morada> points);
 	Mapa* getMapa() const;

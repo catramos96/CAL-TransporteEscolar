@@ -104,6 +104,30 @@ public:
 	};
 };
 
+class VeiculoJaExiste {
+private:
+	string matricula;
+public:
+	VeiculoJaExiste(string m){
+		matricula = m;
+	};
+	string getMatric() const{
+		return matricula;
+	}
+};
+
+class VeiculoInexistente {
+private:
+	string matricula;
+public:
+	VeiculoInexistente(string m){
+		matricula = m;
+	};
+	string getMatric() const{
+		return matricula;
+	}
+};
+
 
 
 
