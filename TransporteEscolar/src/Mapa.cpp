@@ -249,7 +249,7 @@ void Mapa::displayMapa(vector<Morada> points){
 void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(600, 600, false);
 
-	gv->createWindow(1200, 1200);
+	gv->createWindow(600, 600);
 	gv->defineEdgeColor("black");
 	gv->defineVertexColor("pink");
 
@@ -258,8 +258,11 @@ void Mapa::displayMapa(vector<Morada> points){
 	int k = 0;
 	for(int i = 0; i < mapa.getNumVertex(); i++){
 		Vertex<Morada> * v = mapa.getVertexByID(i);
-		if(i==0)
-			gv->setVertexColor(v->getInfo().getID(), "magenta");
+		/*if(v->getIsPI())
+			gv->setVertexColor(v->getInfo().getID(), "red");*/
+		if(v->getInfo() == points.at(0) || v->getInfo() == points.at(points.size()-1)) //destino e inicio
+			gv->setVertexColor(v->getInfo().getID(), "yellow");
+
 		gv->addNode(i,v->getInfo().getX(),v->getInfo().getY());
 		for(int j = 0; j < v->getNumAdjacents(); j++){
 			int dest = v->getAdjacentNumber(j).getDest()->getInfo().getID();
@@ -303,7 +306,9 @@ void Mapa::displayMapa(vector<Morada> points){
 //----------------------------------------------------------------------------//
 */
 
-	for(int l = 0; l < points.size(); l++)
+	Sleep(3000);
+
+	for(size_t l = 0; l < points.size(); l++)
 	{
 		for(int i = 0; i < mapa.getNumVertex(); i++)
 		{
