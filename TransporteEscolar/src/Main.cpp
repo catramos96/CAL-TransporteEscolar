@@ -324,12 +324,12 @@ int main() {
 	esperar();
 
 	delete(e);
+/*
 
-
-	/*Morada *m1 = new Morada(100,100,0);
+	Morada *m1 = new Morada(100,100,0);
 	Morada *m2 = new Morada(100,200,4);
 	Morada *m3 = new Morada(100,300,8);
-	Morada *m4 = new Morada(200,300,9);
+	Morada *m4 = new Morada(200,300,9); //(400,100,3);
 	Morada *esc = new Morada(400,400,15);
 
 	Empresa *e = new Empresa("GandaEmpresa", m1);

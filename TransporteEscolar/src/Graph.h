@@ -71,6 +71,8 @@ public:
 	vector<T> getfloydWarshallPathWithIP(vector<T> points);
 	Vertex<T>* getVertexByID(const int id) const;
 	void resetIsPI();
+	bool getfloydWarshallPathWithIPAux(vector<T> points, int pi, vector<T> &res);
+	void setProcessing(T info, bool estado);
 };
 
 
@@ -483,10 +485,83 @@ void Graph<T>::dijkstraShortestPath(const T &s){
 	}
 }
 
+
+template<class T>
+bool Graph<T>::getfloydWarshallPathWithIPAux(vector<T> points, int pi, vector<T> &res){
+
+	bool path = false;
+	vector<T> nop; //conjunto de vertices que não têm solucao
+
+	while(!path){
+		//ver qual dos PI esta mais proximo da origem (nao inclui o primeiro ponto e o ultimo)
+		int dist = INT_INFINITY;
+		int min = 0; //pi mais proximo
+
+		for(size_t i = 1; i < points.size()-1; i++){
+			Vertex<T> *v = getVertex(points.at(i)); // vertice correpondente à morada
+
+			//se o vertice estiver neste vetor significa que o caminho por esse vetor é impossivel
+			bool skip = false;
+			for(size_t j = 0; j < nop.size(); j++)
+				if(v->getInfo() == nop.at(j))
+					skip = true;
+
+			//a pesquisa na tablela é feita pelo id de cada nó
+			if(W[points.at(pi).getID()][points.at(i).getID()] < dist && v->processing == false && !skip){
+				dist = W[points.at(pi).getID()][points.at(i).getID()];
+				min = i;
+			}
+		}
+
+		//verifica a conectividade
+		//para um grafo ser conexo as ligacoes entre os pontos de interesse têm de ser possiveis
+		if(dist == INT_INFINITY){
+			//verifica se só o destino é que ainda nao foi processado
+			for(size_t j = 0; j < points.size()-1; j++){
+				Vertex<T> *v1 = getVertex(points.at(j)); // vertice atual
+				Vertex<T> *v2 = getVertex(points.at(pi)); // vertice que corresponde ao ponto de interesse em analise
+				if(!(v1->processing) && !(v1 == v2))
+					return false; //no caso em que um grafo não é conexo retornamos falso para escolher um novo caminho
+			}
+
+			//caso em que já percorreu todos os pontos de interesse
+			min = points.size()-1; //destino
+			if(P[points.at(pi).getID()][points.at(min).getID()] == NULL) //nao e possivel chegar a saida
+				return false;
+			path = true;
+		}
+
+		//coloca o min como processado
+		setProcessing(points.at(min), true);
+
+		//fazer o path até esse caminho
+		vector<T> temp = getfloydWarshallPath(points.at(pi), points.at(min));
+		for(size_t k = 0; k < temp.size(); k++)
+			if(k != 0)
+				res.push_back(temp.at(k));
+
+		//significa que chegamos ao destino
+		//condicao de terminacao
+		if(path)
+			return true;
+
+		if(getfloydWarshallPathWithIPAux(points, min,res))
+			return true;
+
+		//elimina o caminho acrescentado
+		for(size_t k = 0; k < temp.size()-1; k++)
+			res.erase(res.end()-1);
+
+		//retirar de processado o min
+		setProcessing(points.at(min), false);
+
+		//fazer outra vez o mesmo processo mas não pode ser igual a min
+		nop.push_back(points.at(min));
+	}
+}
+
 /**
- * IMPORTANTE :
- * 	- se o veiculo deixa de ter mapa, esta funcao deve receber um vetor de pontos
- * recebe um lugar de partida e um lugar de partida, analisa o grafo e cria um vetor com os pontos de interesse.
+ * recebe um vetor com os ponts de interess.
  * De seguidacalcula o caminho mais curto que passa nesses pontos.
  * O primeiro ponto de interesse é a origem e o ultimo o destino.
  */
@@ -497,64 +572,20 @@ vector<T> Graph<T>::getfloydWarshallPathWithIP(vector<T> points){
 	vector<T> temp;
 
 	//inicializa todos os vertices a falso (valor de processo)
-	for(size_t j = 0; j < vertexSet.size(); j++){
-		if(vertexSet.at(j)->getInfo() == points.at(0))
-			vertexSet.at(j)->processing = true;
-		else
-			vertexSet.at(j)->processing = false;
-	}
+	for(size_t j = 0; j < vertexSet.size(); j++)
+		vertexSet.at(j)->processing = false;
 
 	unsigned int pi = 0; //posicao do ponto de interesse atual no vetor points -> comeca na origem
 
-	//o primeiro valor do vetor res é a origem e é processada
-	res.push_back(points.at(0));
+	res.push_back(points.at(pi));
+	setProcessing(points.at(pi), true);
 
-	//enquanto a posicao atual nao for a posicao no vetor points do detino, executa a rotina
-	while(pi != points.size()-1){
-
-		//ver qual dos PI esta mais proximo da origem (nao inclui o primeiro ponto e o ultimo)
-		int dist = INT_INFINITY;
-		int min = 0; //pi mais proximo
-		for(size_t i = 1; i < points.size()-1; i++){
-			Vertex<T> *v = getVertex(points.at(i)); // vertice correpondente à morada
-			//a pesquisa na tablela é feita pelo id de cada nó
-			if(W[points.at(pi).getID()][points.at(i).getID()] < dist && v->processing == false){
-				dist = W[points.at(pi).getID()][points.at(i).getID()];
-				min = i;
-			}
-
-			//verifica a conectividade -> para um grafo ser conexo as ligacoes entre os pontos de interesse têm de ser possiveis
-			if(v->processing == false){
-				if(P[points.at(pi).getID()][points.at(i).getID()] == NULL){
-					res.clear();
-					res.push_back(points.at(i));
-					return res; //no caso em que um grafo não é conexo enviamos o vetor com o ponto inacessivel.
-				}
-			}
-		}
-
-		//caso em que já percorreu todos os pontos de interesse
-		if(dist == INT_INFINITY)
-			min = points.size()-1;
-
-		//coloca o pi que se encontra na pos min como processado
-		for(size_t j = 0; j < vertexSet.size(); j++)
-			if(vertexSet.at(j)->getInfo() == points.at(min)){
-				vertexSet.at(j)->processing = true;
-				break;
-			}
-
-		//fazer o path até esse caminho
-		temp = getfloydWarshallPath(points.at(pi), points.at(min));
-		for(size_t k = 0; k < temp.size(); k++)
-			if(k != 0)
-				res.push_back(temp.at(k));
-
-		//atualiza o ponto de interesse atual
-		pi = min;
+	if(getfloydWarshallPathWithIPAux(points, pi,res))
+		return res;
+	else{
+		cout << "O caminho não chega a todos os pontos de interesse\n"; //enviar por exemplo vetor vazio -> significa que é impossivel passar em todas as criancas
+		return res;
 	}
-
-	return res;
 }
 
 template<class T>
@@ -649,6 +680,15 @@ template<class T>
 void Graph<T>::resetIsPI(){
 	for(unsigned int i = 0; i < vertexSet.size(); i++)
 		vertexSet[i]->isPI = false;
+}
+
+template<class T>
+void Graph<T>::setProcessing(T info, bool estado){
+	for(size_t j = 0; j < vertexSet.size(); j++)
+		if(vertexSet.at(j)->getInfo() == info){
+			vertexSet.at(j)->processing = estado;
+			break;
+		}
 }
 
 #endif /* GRAPH_H_ */

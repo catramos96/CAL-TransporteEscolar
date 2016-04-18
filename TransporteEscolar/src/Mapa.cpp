@@ -79,7 +79,7 @@ Mapa::Mapa(){
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
 }
- /*
+/*
 Mapa::Mapa(){
 
 	//openstreetmaps.org
@@ -193,7 +193,7 @@ Mapa::Mapa(){
 	mapa.resetIsPI();
 
 }
-*/
+ */
 /*
 void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(1200, 1200, false);
@@ -244,7 +244,7 @@ void Mapa::displayMapa(vector<Morada> points){
 
 	gv->rearrange();
 }
-*/
+ */
 
 void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(600, 600, false);
@@ -274,7 +274,7 @@ void Mapa::displayMapa(vector<Morada> points){
 		}
 	}
 
-/*	// Começa a animação
+	/*	// Começa a animação
 //----------------------------------------------------------------------------//
 	k = 0;
 	for(int i = 0; i < mapa.getNumVertex(); i++)
@@ -304,7 +304,7 @@ void Mapa::displayMapa(vector<Morada> points){
 				for(int j = 0; j < v->getNumAdjacents(); j++){k++;}
 		}
 //----------------------------------------------------------------------------//
-*/
+	 */
 
 	Sleep(3000);
 
@@ -324,7 +324,7 @@ void Mapa::displayMapa(vector<Morada> points){
 	}
 
 
-/*
+	/*
 //----------------------------------------------------------------------------//
 	for(int i = 0; i < mapa.getNumVertex(); i++){
 		Vertex<Morada> * v = mapa.getVertexByID(i);
@@ -343,7 +343,7 @@ void Mapa::displayMapa(vector<Morada> points){
 		}
 	}
 //----------------------------------------------------------------------------//
- * */
+	 * */
 	gv->rearrange();
 }
 
