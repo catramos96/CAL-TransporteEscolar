@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int Cliente::id = 0;
+int Cliente::id = 1;
 
 Cliente::Cliente(string nome, Morada *casa, Morada *escola) : ID(id++){
 	this->nome = nome;

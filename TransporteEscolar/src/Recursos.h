@@ -13,29 +13,29 @@ void displayTitulo(string t){
 
 void displayMenuInicial(string nome_empresa){
 	displayTitulo(nome_empresa);
-	cout << "0 - Veiculos\n";
-	cout << "1 - Clientes\n";
-	cout << "2 - Trajetos\n";
-	cout << "3 - Escolas\n";
-	cout << "4 - Sair\n";
+	cout << "1 - Veiculos\n";
+	cout << "2 - Clientes\n";
+	cout << "3 - Trajetos\n";
+	cout << "4 - Escolas\n";
+	cout << "5 - Sair\n";
 }
 
 void displayMenuVeiculos(){
 	displayTitulo("VEICULOS");
-	cout << "0 - Adicionar Veiculo\n";
-	cout << "1 - Remover Veiculo\n";
-	cout << "2 - Ver Veiculos\n";
-	cout << "3 - Procurar por trajeto\n";
-	cout << "4 - Voltar Atras\n";
+	cout << "1 - Adicionar Veiculo\n";
+	cout << "2 - Remover Veiculo\n";
+	cout << "3 - Ver Veiculos\n";
+	cout << "4 - Ver trajeto\n";
+	cout << "5 - Voltar Atras\n";
 }
 
 void displayMenuClientes(){
 	displayTitulo("CLIENTES");
-	cout << "0 - Adicionar Clientes\n";
-	cout << "1 - Remover Clientes\n";
-	cout << "2 - Ver Clientes\n";
-	cout << "3 - Procurar por trajeto\n";
-	cout << "4 - Voltar Atras\n";
+	cout << "1 - Adicionar Clientes\n";
+	cout << "2 - Remover Clientes\n";
+	cout << "3 - Ver Clientes\n";
+	cout << "4 - Procurar por trajeto\n";
+	cout << "5 - Voltar Atras\n";
 }
 
 void opccao(int &op, int min, int max) {

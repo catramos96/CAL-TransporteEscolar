@@ -23,7 +23,7 @@ public:
 	void setNome(string nome);
 	void setEndereco(Morada *endereco);
 	bool addTransporte(Veiculo * veiculo);
-	bool addCliente(Cliente *cliente);
+	bool addCliente(Cliente *cliente);		//Verificar se a casa não é uma escola, e se a escola não é uma casa
 	bool addEscola(Morada * e);
 	bool removeTransporte(Veiculo * veiculo);
 	bool removeCliente(Cliente * cliente);
@@ -35,6 +35,8 @@ public:
 	void displayEscolas() const;
 	bool removeCliente(int id);
 	void displayMapa(vector<Morada> points);
+	void guardarInfo() const; //CRIAR FUNÇÃO
+	void carregarInfo() const; //CRIAR FUNÇÃO
 	Mapa* getMapa() const;
 };
 

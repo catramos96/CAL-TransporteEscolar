@@ -27,14 +27,14 @@ void addCliente(Empresa *e){
 	cout << "Nome: ";
 	cin >> nome;
 	//getline(cin,nome); ???
-	cout << "Morada Residencial: ";
+	cout << "Morada Residencial (id): ";
 	cin >> id;
 	*casa = e->getMapa()->getPonto(id);
 
 	if(casa->getID() == -1){
 		throw PontoInexistente(*casa);
 	}
-	cout << "Morada Escolar: ";
+	cout << "Morada Escolar (id): ";
 	cin >> id;
 
 
@@ -92,25 +92,25 @@ void menuClientes(Empresa *e){
 	do {
 		clrscr();
 		displayMenuClientes();
-		opccao(op, 0, 4);
+		opccao(op, 1, 5);
 		switch (op) {
-		case 0: { //add
+		case 1: { //add
 			addCliente(e);
 			break;
 		}
-		case 1: { //rem
+		case 2: { //rem
 			removerCliente(e);
 			break;
 		}
-		case 2: {//ver
+		case 3: {//ver
 			verClientes(e);
 			break;
 		}
-		case 3: {//pesq. traj
+		case 4: {//pesq. traj
 
 			break;
 		}
-		case 4: {
+		case 5: {
 			throw VoltarAtras();
 			esperar();
 			break;
@@ -171,25 +171,25 @@ void menuVeiculos(Empresa *e){
 	int op;
 	do {
 		displayMenuVeiculos();
-		opccao(op, 0, 4);
+		opccao(op, 1, 5);
 		switch (op) {
-		case 0: { //add
+		case 1: { //add
 			addVeiculo(e);
 			break;
 		}
-		case 1: { //rem
+		case 2: { //rem
 			removerVeiculo(e);
 			break;
 		}
-		case 2: {//ver
+		case 3: {//ver
 			verVeiculos(e);
 			break;
 		}
-		case 3: {//pesq. traj
+		case 4: {//ver traj
 
 			break;
 		}
-		case 4: {
+		case 5: {
 			throw VoltarAtras();
 			esperar();
 			break;
@@ -211,23 +211,23 @@ void verEscolas(Empresa * e){
 //==============================================================================================================
 void opMenuInicial(Empresa *e, int op) {
 	switch (op) {
-	case 0: { //veiculos
+	case 1: { //veiculos
 		menuVeiculos(e);
 		break;
 	}
-	case 1: { //clientes
+	case 2: { //clientes
 		menuClientes(e);
 		break;
 	}
-	case 2: {//trajetos
+	case 3: {//trajetos
 		menuTrajetos(e);
 		break;
 	}
-	case 3: { //escolas
+	case 4: { //escolas
 		verEscolas(e);
 		break;
 	}
-	case 4:{
+	case 5:{
 		//GUARDAR INFO
 		break;
 	}
@@ -240,7 +240,7 @@ void menuInicial(Empresa *e) {
 		try {
 			clrscr();
 			displayMenuInicial(e->getNome());
-			opccao(op, 0, 4);
+			opccao(op, 1, 5);
 			opMenuInicial(e, op);
 		}
 		catch (OpccaoInvalida<int>(x)) {
@@ -276,23 +276,23 @@ void menuInicial(Empresa *e) {
 			cout << "Nao existe um veiculo com a matricula " << e.getMatric()<< endl;
 			esperar();
 		}
-	} while (op != 4);
+	} while (op != 5);
 }
 
 
 
 
 int main() {
-/*	//temp
+	//temp
 	Morada * source = new Morada(100,100,0);
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	menuInicial(e);
 	esperar();
 
 	delete(e);
-*/
 
-	Morada *m1 = new Morada(100,100,0);
+
+	/*Morada *m1 = new Morada(100,100,0);
 	Morada *m2 = new Morada(100,200,4);
 	Morada *m3 = new Morada(100,300,8);
 	Morada *m4 = new Morada(200,300,9);
@@ -317,6 +317,6 @@ int main() {
 	e->addCliente(c3);
 	e->distribuiCliVeiculos();
 	e->enviaVeiculos();	//funcao que atualiza os mapas dos veiculos e faz display dos mesmos
-	getchar();
+	getchar();*/
 	return 0;
 }

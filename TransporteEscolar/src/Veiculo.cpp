@@ -107,9 +107,5 @@ Morada* Veiculo::getDestino() const{
 
 ostream & operator<<(ostream & o, const Veiculo &v){
 	o << "Matricula - " << v.getMatricula() << " Capacidade -  "<< v.getNumLugares();
-	if(v.getPartida() != NULL)
-		o << " Partida - "<< *v.getPartida() ;
-	if(v.getDestino() != NULL)
-		o << " Destino - " << *v.getDestino();
 	return o;
 }

@@ -38,6 +38,8 @@ bool Empresa::addTransporte(Veiculo * veiculo)
 
 bool Empresa::addCliente(Cliente * cliente)
 {
+	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
+		return false;
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(*cliente == *clientes[i])
 			return false;

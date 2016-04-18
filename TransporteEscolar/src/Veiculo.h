@@ -15,7 +15,6 @@ private:
 	vector<Cliente *> clientes;
 	Morada *partida;
 	Morada *destino;
-	//Mapa mapa; //mapa que tem os pontos de interesse
 public:
 	Veiculo(int numLugares, string matricula);
 	int getNumLugares()const;
@@ -32,6 +31,7 @@ public:
 	vector<Morada> makePath();
 	Morada* getPartida() const;
 	Morada* getDestino() const;
+	//enviar clientes, desmarcar pontos de interesse e marcar os que interessa
 	friend ostream & operator<<(ostream & o, const Veiculo &v);
 };
 
