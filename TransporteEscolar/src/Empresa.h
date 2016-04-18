@@ -20,6 +20,7 @@ public:
 	Empresa(string nome, Morada *endereco);
 	string getNome() const;
 	Morada* getEndereco() const;
+	vector<Morada *> getEscolas() const;
 	void setNome(string nome);
 	void setEndereco(Morada *endereco);
 	bool addTransporte(Veiculo * veiculo);
@@ -38,6 +39,7 @@ public:
 	void guardarInfo() const;
 	void carregarInfo() ;
 	Mapa* getMapa() const;
+	vector<Cliente *> getClientesEscola(Morada *escola) const;
 };
 
 #endif /* SRC_EMPRESA_H_ */

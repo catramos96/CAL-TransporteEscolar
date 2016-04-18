@@ -19,6 +19,10 @@ string Empresa::getNome() const {return nome;}
 
 Morada* Empresa::getEndereco() const {return endereco;}
 
+vector<Morada *> Empresa::getEscolas() const{
+	return escolas;
+}
+
 Mapa* Empresa::getMapa() const {return mapa;}
 
 void Empresa::setNome(string nome) {this->nome = nome;}
@@ -41,13 +45,20 @@ bool Empresa::addTransporte(Veiculo * veiculo)
 
 bool Empresa::addCliente(Cliente * cliente)
 {
+	//residencia = escola
 	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
 		return false;
+	//cliente já existe, id = ou residencia =
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(*cliente == *clientes[i]){
 			Cliente::id--;
 			return false;
 		}
+	//residencia = escola(Empresa->escolas)
+	for (int j = 0; j < escolas.size(); ++j) {
+		if(*cliente->getResidencia() == *escolas[j])
+			return false;
+	}
 	clientes.push_back(cliente);
 	addEscola(cliente->getEscola());
 	return true;
@@ -68,10 +79,12 @@ bool Empresa::addEscola(Morada *e){
 
 bool Empresa::removeTransporte(Veiculo * veiculo)
 {
+	Veiculo *v;
 	for(unsigned int i = 0; i < transportes.size(); i++)
 		if(*veiculo == *transportes[i]){
-			delete(*(transportes.begin()+i));
+			v = transportes[i];
 			transportes.erase(transportes.begin() + i);
+			delete(v);
 			return true;
 		}
 	return false;
@@ -79,6 +92,7 @@ bool Empresa::removeTransporte(Veiculo * veiculo)
 
 bool Empresa::removeCliente(Cliente * cliente)
 {
+	Cliente *c;
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(cliente == clientes[i]){
 			for (int var = 0; var < transportes.size(); ++ var) {
@@ -86,9 +100,18 @@ bool Empresa::removeCliente(Cliente * cliente)
 			}
 			mapa->getPontoVertex(clientes[i]->getResidencia()->getID())->setIsPI(0);
 			removerEscola(cliente->getEscola());
-			delete(*(clientes.begin()+i));
+			c = clientes[i];
 			clientes.erase(clientes.begin() + i);
+			delete(c);
 			return true;
+		}
+	return false;
+}
+
+bool Empresa::removeCliente(int id){
+	for(unsigned int i = 0; i < clientes.size(); i++)
+		if(id == clientes[i]->getID()){
+			removeCliente(clientes[i]);
 		}
 	return false;
 }
@@ -179,19 +202,6 @@ void Empresa::displayEscolas() const{
 	}
 }
 
-bool Empresa::removeCliente(int id){
-	for(unsigned int i = 0; i < clientes.size(); i++)
-		if(id == clientes[i]->getID()){
-			for (size_t var = 0; var < transportes.size(); ++ var) {
-				transportes[i]->sairCliente(clientes[i]);
-			}
-			//mapa->getPontoVertex(clientes[i]->getResidencia().getID())->setIsPI(false);
-			clientes.erase(clientes.begin() + i);
-			return true;
-		}
-	return false;
-}
-
 void Empresa::guardarInfo() const{
 	fstream file;
 	file.open("info.txt");
@@ -275,4 +285,16 @@ void Empresa::carregarInfo(){
 
 	}
 	file.close();
+}
+
+vector<Cliente *> Empresa::getClientesEscola(Morada *escola) const{
+	vector<Cliente *>::const_iterator itb = clientes.begin();
+	vector<Cliente *>::const_iterator itf = clientes.end();
+	vector<Cliente *> res;
+	while(itb != itf){
+		if(*(*itb)->getEscola() == *escola)
+			res.push_back(*itb);
+		itb++;
+	}
+	return res;
 }

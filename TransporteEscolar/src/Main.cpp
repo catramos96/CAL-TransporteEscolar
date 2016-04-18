@@ -25,8 +25,8 @@ void addCliente(Empresa *e){
 	clrscr();
 	displayTitulo("ADICIONAR CLIENTE");
 	cout << "Nome: ";
-	cin >> nome;
-	//getline(cin,nome); ???
+	cin >>nome;
+	//getline(cin,nome);??
 	cout << "Morada Residencial (id): ";
 	cin >> id;
 	*casa = e->getMapa()->getPonto(id);
@@ -61,7 +61,7 @@ void removerCliente(Empresa *e){
 	cout << "\nDigite o ID do cliente que quer remover: ";
 	cin >> id;
 
-	if(!e->removeCliente(id) == true)
+	if(!e->removeCliente(id))
 		throw ClienteInexistente(id);
 
 	esperar();
@@ -111,8 +111,6 @@ void menuClientes(Empresa *e){
 		}
 		case 5: {
 			throw VoltarAtras();
-			esperar();
-			break;
 		}
 		}
 	} while (1);
@@ -190,8 +188,6 @@ void menuVeiculos(Empresa *e){
 		}
 		case 5: {
 			throw VoltarAtras();
-			esperar();
-			break;
 		}
 		}
 	} while (1);
@@ -200,11 +196,49 @@ void menuVeiculos(Empresa *e){
 //==============================================================================================================
 void verEscolas(Empresa * e){
 	clrscr();
-		displayTitulo("ESCOLAS");
-		e->displayEscolas();
+	displayTitulo("ESCOLAS");
+	e->displayEscolas();
+	cout << endl;
+	esperar();
+	throw VoltarAtras();
+}
+
+void verAlunosEscolas(Empresa * e){
+	clrscr();
+	displayTitulo("ESCOLAS");
+	vector<Cliente *> clientes;
+	for (unsigned int i = 0; i < e->getEscolas().size(); ++i) {
+		cout << "Escola - " << *e->getEscolas()[i] << endl;
+		clientes = e->getClientesEscola(e->getEscolas()[i]);
+		for (int j = 0; j < clientes.size(); ++j) {
+			cout << *clientes[j] << endl;
+		}
 		cout << endl;
-		esperar();
-		throw VoltarAtras();
+	}
+	esperar();
+	throw VoltarAtras();
+}
+
+void menuEscolas(Empresa *e){
+	clrscr();
+	int op;
+	do {
+		displayMenuEscolas();
+		opccao(op, 1, 3);
+		switch (op) {
+		case 1: { //ver escolas
+			verEscolas(e);
+			break;
+		}
+		case 2: { //ver por alunos
+			verAlunosEscolas(e);
+			break;
+		}
+		case 3: {//ver
+			throw VoltarAtras();
+		}
+		}
+	} while (1);
 }
 
 //==============================================================================================================
@@ -223,11 +257,10 @@ void opMenuInicial(Empresa *e, int op) {
 		break;
 	}
 	case 4: { //escolas
-		verEscolas(e);
+		menuEscolas(e);
 		break;
 	}
 	case 5:{
-		//GUARDAR INFO
 		e->guardarInfo();
 		break;
 	}
@@ -255,7 +288,7 @@ void menuInicial(Empresa *e) {
 			esperar();
 		}
 		catch (ClienteJaExiste(e)){
-			cout << "Ja existe o cliente com o nome " << e.getNome() << "ou morada escolar " << e.getMoradaEscola() << " e residencia "<< e.getMoradaResidencia() << ".\n";
+			cout << "Ja existe o cliente com o nome " << e.getNome() << " ou morada escolar " << e.getMoradaEscola() << " e residencia "<< e.getMoradaResidencia() << ".\n";
 			esperar();
 		}
 

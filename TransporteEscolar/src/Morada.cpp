@@ -9,7 +9,7 @@ Morada::Morada(double x, double y, int id){
 }
 
 bool Morada::operator ==(const Morada &m) const{
-	return (m.x == x && m.y == y);
+	return (m.id == id);
 }
 
 int Morada::getID() const{

@@ -38,6 +38,13 @@ void displayMenuClientes(){
 	cout << "5 - Voltar Atras\n";
 }
 
+void displayMenuEscolas(){
+	displayTitulo("ESCOLAS");
+	cout << "1 - Ver Escolas\n";
+	cout << "2 - Ver Alunos por escola\n";
+	cout << "3 - Voltar Atras \n";
+}
+
 void opccao(int &op, int min, int max) {
 	cout << "Seleccione uma opccao: ";
 	cin >> op;
