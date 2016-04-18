@@ -1,4 +1,7 @@
 #include "Empresa.h"
+#include <sstream>
+#include <fstream>
+#include <string.h>
 
 // criar veiculo ==
 using namespace std;
@@ -41,8 +44,10 @@ bool Empresa::addCliente(Cliente * cliente)
 	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
 		return false;
 	for(unsigned int i = 0; i < clientes.size(); i++)
-		if(*cliente == *clientes[i])
+		if(*cliente == *clientes[i]){
+			Cliente::id--;
 			return false;
+		}
 	clientes.push_back(cliente);
 	addEscola(cliente->getEscola());
 	return true;
@@ -76,7 +81,6 @@ bool Empresa::removeCliente(Cliente * cliente)
 {
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(cliente == clientes[i]){
-			cout << "encontrei 1" << endl;
 			for (int var = 0; var < transportes.size(); ++ var) {
 				transportes[i]->sairCliente(clientes[i]);
 			}
@@ -171,8 +175,8 @@ void Empresa::displayVeiculos() const{
 
 void Empresa::displayEscolas() const{
 	for (size_t i = 0; i < escolas.size(); ++i) {
-			cout << *escolas[i] << endl;
-		}
+		cout << *escolas[i] << endl;
+	}
 }
 
 bool Empresa::removeCliente(int id){
@@ -186,4 +190,89 @@ bool Empresa::removeCliente(int id){
 			return true;
 		}
 	return false;
+}
+
+void Empresa::guardarInfo() const{
+	fstream file;
+	file.open("info.txt");
+
+	if(file.fail()){
+		cout << "Error at opening info.txt\n";
+	}
+
+	//empresa
+	file << nome << " " << *endereco << endl;
+	file << "=========================" << endl;
+	//transportes
+	for (int i = 0; i < transportes.size(); i++) {
+		file << transportes[i]->getMatricula() << " " << transportes[i]->getNumLugares() << endl;
+	}
+	file << "=========================" << endl;
+	//clientes
+	file << Cliente::id << endl;
+	for (int i = 0; i < clientes.size(); ++i) {
+		file << clientes[i]->getID() << " " <<clientes[i]->getNome()<< " " << *clientes[i]->getResidencia()<< " " << *clientes[i]->getEscola() << endl;
+	}
+	file.close();
+}
+
+void Empresa::carregarInfo(){
+	fstream file;
+	string tmp;
+	stringstream linha;
+	file.open("info.txt");
+	string nome;
+	string matricula;
+	int id,id2 ,coordx,coordy, nLugares, coordx2,coordy2,cliente_n;
+	char lixo;
+	string separador = "=========================";
+
+	if(file.fail()){
+		cout << "Error at opening info.txt\n";
+	}
+
+	if(!file.eof()){
+		//empresa
+		getline(file,tmp);
+		linha << tmp;
+		linha >> nome >> id >> lixo >> coordx >> lixo >> coordy >> lixo;
+		setNome(nome);
+		getEndereco()->setID(id);
+		getEndereco()->setX(coordx);
+		getEndereco()->setY(coordy);
+		linha.clear();
+		getline(file,tmp); // "========================="
+
+		//transportes
+		getline(file,tmp);
+		while(tmp != separador){
+			linha << tmp;
+			linha >> matricula >> nLugares >> nome;
+			addTransporte(new Veiculo(nLugares,matricula));
+			linha.clear();
+			getline(file,tmp);
+		}
+
+		//clientes
+		int id_tmp;
+		getline(file,tmp);//IDDD
+		linha << tmp;
+		linha >> id_tmp;
+
+		while(!file.eof()){
+			linha.clear();
+			getline(file,tmp);
+			linha << tmp;
+			linha >> cliente_n >> nome >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
+			Morada *casa = new Morada(coordx,coordy,id);
+			Morada *escola = new Morada(coordx2,coordy,id2);
+			Cliente *c = new Cliente(nome,casa,escola);
+			c->setID(cliente_n);
+			addCliente(c);
+		}
+
+		Cliente::id = id_tmp;
+
+	}
+	file.close();
 }

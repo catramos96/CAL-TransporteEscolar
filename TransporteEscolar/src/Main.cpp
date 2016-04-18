@@ -39,7 +39,6 @@ void addCliente(Empresa *e){
 
 
 	*escola = e->getMapa()->getPonto(id);
-	cout << escola;
 	if(escola->getID() == -1){
 		throw PontoInexistente(*escola);
 	}
@@ -229,6 +228,7 @@ void opMenuInicial(Empresa *e, int op) {
 	}
 	case 5:{
 		//GUARDAR INFO
+		e->guardarInfo();
 		break;
 	}
 	}
@@ -255,7 +255,7 @@ void menuInicial(Empresa *e) {
 			esperar();
 		}
 		catch (ClienteJaExiste(e)){
-			cout << "Ja existe o cliente com o nome " << e.getNome() << ", morada escolar " << e.getMoradaEscola() << " e residencia "<< e.getMoradaResidencia() << ".\n";
+			cout << "Ja existe o cliente com o nome " << e.getNome() << "ou morada escolar " << e.getMoradaEscola() << " e residencia "<< e.getMoradaResidencia() << ".\n";
 			esperar();
 		}
 
@@ -286,6 +286,7 @@ int main() {
 	//temp
 	Morada * source = new Morada(100,100,0);
 	Empresa *e = new Empresa("Transportes Escolares",source);
+	e->carregarInfo();
 	menuInicial(e);
 	esperar();
 

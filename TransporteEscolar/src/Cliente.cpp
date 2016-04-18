@@ -34,15 +34,19 @@ void Cliente::setNovaEscola(Morada *nova){
 	escola = nova;
 }
 
+void Cliente::setID(int id){
+	ID = id;
+}
+
 bool Cliente::operator== (const Cliente &c) const{
-	if(ID == c.getID())
+	if(ID == c.getID() || residencia == c.getResidencia())
 		return true;
 	else
 		return false;
 }
 
 ostream & operator<<(ostream & o, const Cliente &c){
-	o << "ID - " << c.getID() << " Nome -  "<< c.getNome() << " Escola - " << *c.getEscola() << " Residencia - " << *c.getResidencia();
+	o << "ID - " << c.getID() << " Nome -  "<< c.getNome() << " Residencia - " << *c.getResidencia()<< " Escola - " << *c.getEscola() ;
 	return o;
 }
 

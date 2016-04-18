@@ -35,8 +35,8 @@ public:
 	void displayEscolas() const;
 	bool removeCliente(int id);
 	void displayMapa(vector<Morada> points);
-	void guardarInfo() const; //CRIAR FUNÇÃO
-	void carregarInfo() const; //CRIAR FUNÇÃO
+	void guardarInfo() const;
+	void carregarInfo() ;
 	Mapa* getMapa() const;
 };
 

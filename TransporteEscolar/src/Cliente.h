@@ -12,8 +12,8 @@ private:
 	Morada * escola;
 	Morada * residencia;
 	int ID; //relativo a um objeto
-	static int id; //global
 public:
+	static int id; //global
 	Cliente(string nome, Morada *casa, Morada *escola);
 	string getNome() const;
 	Morada * getEscola() const;
@@ -21,6 +21,7 @@ public:
 	int getID() const;
 	void setNovaResidencia(Morada * nova);
 	void setNovaEscola(Morada * nova);
+	void setID(int id);
 	bool operator== (const Cliente &c) const;
 	friend ostream & operator<<(ostream & o, const Cliente &c);
 };
