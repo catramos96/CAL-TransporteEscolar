@@ -136,6 +136,10 @@ public:
 	Morada getResidencia() const {return r;};
 };
 
+class VeiculosInsuficientes{
+
+};
+
 
 
 

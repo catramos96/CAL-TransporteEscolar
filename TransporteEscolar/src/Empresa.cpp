@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string.h>
 #include "Excessoes.h"
+#include <algorithm>
 
 // criar veiculo ==
 using namespace std;
@@ -46,6 +47,13 @@ bool Empresa::addTransporte(Veiculo * veiculo)
 
 bool Empresa::addCliente(Cliente * cliente)
 {
+	//veiculos insuficientes2
+	int lugares = 0;
+			for (int i = 0; i < transportes.size(); ++i) {
+				lugares += transportes[i]->getNumLugares();
+			}
+			if(lugares < clientes.size())
+				throw VeiculosInsuficientes();
 	//residencia = escola
 	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
 		throw ResidenciaInvalida(*cliente->getResidencia());
@@ -145,16 +153,29 @@ bool Empresa::removerEscola(Morada *e){
 	return false;
 }
 
+bool compararVeiculos(Veiculo *v1 , Veiculo *v2){
+	if(v1->getNumLugares() < v2->getNumLugares())
+		return true;
+	else
+		return false;
+}
+
 void Empresa::distribuiCliVeiculos(){
 
-	vector<int> numTrans; //numero de lugares disponiveis por veiculo
+	vector<Veiculo *> veiculos = transportes; //numero de lugares disponiveis por veiculo
 	vector<int> numEsc; //numero de alunos por escola
+	//para confirmação
+	int lugares = 0;
+			for (int i = 0; i < transportes.size(); ++i) {
+				lugares += transportes[i]->getNumLugares();
+			}
+			if(lugares < clientes.size())
+				throw VeiculosInsuficientes();
+	sort(veiculos.rbegin(),veiculos.rend(),compararVeiculos); //ordem recrescente
 
-	//MUDAR ISTO -> selecionar apenas numero de veiculos necessarios
-	for(size_t i = 0; i < transportes.size(); i++)
-		numTrans.push_back(transportes.at(i)->lugaresLivres());
+	//ALGORITMO MOEDA
 
-	for(size_t j = 0; j < escolas.size(); j++){
+	/*for(size_t j = 0; j < escolas.size(); j++){
 		vector<Cliente *> temp = getClientesEscola(escolas.at(j));
 		numEsc.push_back(temp.size());
 	}
@@ -167,7 +188,7 @@ void Empresa::distribuiCliVeiculos(){
 		if(numEsc.at(k) > max){
 			max = numEsc.at(k);
 			id = k;
-		}
+		}*/
 
 }
 

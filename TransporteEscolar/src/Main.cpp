@@ -24,6 +24,7 @@ void addCliente(Empresa *e){
 
 	clrscr();
 	displayTitulo("ADICIONAR CLIENTE");
+
 	cout << "Nome: ";
 	cin.ignore(1000,'\n');
 	getline(cin,nome);
@@ -48,7 +49,6 @@ void addCliente(Empresa *e){
 	//É so a casa que passa a ser um ponto de interesse ?
 	if(e->addCliente(c) == false)
 		throw ClienteJaExiste(nome,*escola,*casa);
-	esperar();
 	throw VoltarAtras();
 }
 
@@ -64,7 +64,6 @@ void removerCliente(Empresa *e){
 	if(e->removeCliente(id) == false)
 		throw ClienteInexistente(id);
 
-	esperar();
 	throw VoltarAtras();
 }
 
@@ -135,7 +134,6 @@ void addVeiculo(Empresa *e){
 
 	if(!e->addTransporte(v))
 		throw VeiculoJaExiste(matricula);
-	esperar();
 	throw VoltarAtras();
 }
 
@@ -150,7 +148,6 @@ void removerVeiculo(Empresa *e){
 	Veiculo * v = new Veiculo(0,m);
 	if(!e->removeTransporte(v))
 		throw VeiculoInexistente(m);
-	esperar();
 	throw VoltarAtras();
 }
 
@@ -313,6 +310,10 @@ void menuInicial(Empresa *e) {
 			cout << "A residencia " << e.getResidencia() << " nao pode ser uma escola\n";
 			esperar();
 		}
+		catch (VeiculosInsuficientes()){
+			cout << "Nao ha veiculos suficientes para o numero de clientes. Adicione um novo veiculo.\n";
+			esperar();
+		}
 	} while (op != 5);
 }
 
@@ -324,6 +325,7 @@ int main() {
 	Morada * source = new Morada(100,100,0);
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	e->carregarInfo();
+	e->distribuiCliVeiculos();
 	menuInicial(e);
 	esperar();
 
