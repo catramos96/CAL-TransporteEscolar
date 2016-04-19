@@ -34,7 +34,6 @@ bool Veiculo::sairCliente(Cliente *c){
 	vector<Cliente *>::iterator it;
 	if(find(clientes.begin(),clientes.end(),c) != clientes.end())
 	{	clientes.erase(it);
-	numLugares--;
 	return true;
 	}
 	return false;

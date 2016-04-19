@@ -39,7 +39,7 @@ void Cliente::setID(int id){
 }
 
 bool Cliente::operator== (const Cliente &c) const{
-	if(ID == c.getID() || residencia == c.getResidencia())
+	if(ID == c.getID())
 		return true;
 	else
 		return false;

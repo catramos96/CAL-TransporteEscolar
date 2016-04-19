@@ -111,7 +111,7 @@ bool Empresa::removeCliente(Cliente * cliente)
 bool Empresa::removeCliente(int id){
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(id == clientes[i]->getID()){
-			removeCliente(clientes[i]);
+			return removeCliente(clientes[i]);
 		}
 	return false;
 }

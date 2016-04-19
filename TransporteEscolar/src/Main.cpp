@@ -25,8 +25,8 @@ void addCliente(Empresa *e){
 	clrscr();
 	displayTitulo("ADICIONAR CLIENTE");
 	cout << "Nome: ";
-	cin >>nome;
-	//getline(cin,nome);??
+	cin.ignore(1000,'\n');
+	getline(cin,nome);
 	cout << "Morada Residencial (id): ";
 	cin >> id;
 	*casa = e->getMapa()->getPonto(id);
@@ -56,12 +56,12 @@ void removerCliente(Empresa *e){
 	int id;
 
 	clrscr();
-	displayTitulo("ADICIONAR CLIENTE");
+	displayTitulo("REMOVER CLIENTE");
 	e->displayClientes();
 	cout << "\nDigite o ID do cliente que quer remover: ";
 	cin >> id;
 
-	if(!e->removeCliente(id))
+	if(e->removeCliente(id) == false)
 		throw ClienteInexistente(id);
 
 	esperar();
