@@ -145,10 +145,37 @@ bool Empresa::removerEscola(Morada *e){
 	return false;
 }
 
+void Empresa::distribuiCliVeiculos(){
+
+	vector<int> numTrans; //numero de lugares disponiveis por veiculo
+	vector<int> numEsc; //numero de alunos por escola
+
+	//MUDAR ISTO -> selecionar apenas numero de veiculos necessarios
+	for(size_t i = 0; i < transportes.size(); i++)
+		numTrans.push_back(transportes.at(i)->lugaresLivres());
+
+	for(size_t j = 0; j < escolas.size(); j++){
+		vector<Cliente *> temp = getClientesEscola(escolas.at(j));
+		numEsc.push_back(temp.size());
+	}
+
+	//FAZER DEPOIS
+	//funcao que procura a escola o maior numero de alunos
+	int max = 0;
+	int id = 0;
+	for(size_t k = 0; k < numEsc.size();k++)
+		if(numEsc.at(k) > max){
+			max = numEsc.at(k);
+			id = k;
+		}
+
+}
+
+
 /**
  * ainda não são consideradas formas eficientes de colocar os alunos
  * inicialmente todos os alunos vao para a mesma escola
- */
+ *
 void Empresa::distribuiCliVeiculos(){
 
 	size_t i = 0, j = 0;
@@ -170,7 +197,7 @@ void Empresa::distribuiCliVeiculos(){
 	}
 
 }
-
+*/
 /**
  * funcao que faz display dos mapas dos veiculos ou display de um só mapa com todos os veiculos
  * (decidir depois)
