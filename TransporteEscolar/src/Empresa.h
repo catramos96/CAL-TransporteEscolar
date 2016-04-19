@@ -34,12 +34,14 @@ public:
 	void displayClientes() const;
 	void displayVeiculos() const;
 	void displayEscolas() const;
+	void displayPontosRecolha() const;
 	bool removeCliente(int id);
 	void displayMapa(vector<Morada> points);
 	void guardarInfo() const;
 	void carregarInfo() ;
 	Mapa* getMapa() const;
 	vector<Cliente *> getClientesEscola(Morada *escola) const;
+	vector<Cliente *> getClientesPontoRecolha(Morada * ponto) const;
 };
 
 #endif /* SRC_EMPRESA_H_ */

@@ -691,4 +691,6 @@ void Graph<T>::setProcessing(T info, bool estado){
 		}
 }
 
+
+
 #endif /* GRAPH_H_ */

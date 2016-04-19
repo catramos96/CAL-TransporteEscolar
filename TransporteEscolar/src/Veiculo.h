@@ -16,7 +16,7 @@ private:
 	Morada *partida;
 	Morada *destino;
 public:
-	Veiculo(int numLugares, string matricula);
+	Veiculo(string matricula);
 	int getNumLugares()const;
 	string getMatricula()const;
 	vector<Cliente *> getClientes() const;

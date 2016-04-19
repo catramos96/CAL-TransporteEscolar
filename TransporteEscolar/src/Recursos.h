@@ -15,7 +15,7 @@ void displayMenuInicial(string nome_empresa){
 	displayTitulo(nome_empresa);
 	cout << "1 - Veiculos\n";
 	cout << "2 - Clientes\n";
-	cout << "3 - Trajetos\n";
+	cout << "3 - Pontos de Recolha\n";
 	cout << "4 - Escolas\n";
 	cout << "5 - Sair\n";
 }
@@ -35,6 +35,15 @@ void displayMenuClientes(){
 	cout << "2 - Remover Clientes\n";
 	cout << "3 - Ver Clientes\n";
 	cout << "4 - Procurar por trajeto\n";
+	cout << "5 - Voltar Atras\n";
+}
+
+void displayMenuPI(){
+	displayTitulo("PONTOS DE RECOLHA");
+	cout << "1 - Adicionar Ponto\n";
+	cout << "2 - Remover Ponto\n";
+	cout << "3 - Ver Pontos de recolha\n";
+	cout << "4 - Ver todos os pontos\n";
 	cout << "5 - Voltar Atras\n";
 }
 

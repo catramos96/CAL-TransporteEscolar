@@ -5,16 +5,16 @@
 #include "Excessoes.h"
 #include <algorithm>
 
-// criar veiculo ==
 using namespace std;
+/*
+ * FUNÇÕES CARRREGAR E GUARDAR A ACEITAR GETLINES
+ */
 
 Empresa::Empresa(string nome, Morada *endereco)
 {
 	this->nome = nome;
 	this->endereco = endereco;
 	mapa = new Mapa();
-
-	mapa->setPontoInteresse(*endereco);
 }
 
 string Empresa::getNome() const {return nome;}
@@ -49,11 +49,14 @@ bool Empresa::addCliente(Cliente * cliente)
 {
 	//veiculos insuficientes2
 	int lugares = 0;
-			for (int i = 0; i < transportes.size(); ++i) {
-				lugares += transportes[i]->getNumLugares();
-			}
-			if(lugares < clientes.size())
-				throw VeiculosInsuficientes();
+	for (int i = 0; i < transportes.size(); ++i) {
+		lugares += transportes[i]->getNumLugares();
+	}
+	//Residencia nao e um ponto de interesse (crasha lool)
+	//if(mapa->isPontoInteresse(*cliente->getResidencia()) == false)
+		//throw ResidenciaInvalida(*cliente->getResidencia());
+	if(lugares < clientes.size())
+		throw VeiculosInsuficientes();
 	//residencia = escola
 	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
 		throw ResidenciaInvalida(*cliente->getResidencia());
@@ -166,11 +169,11 @@ void Empresa::distribuiCliVeiculos(){
 	vector<int> numEsc; //numero de alunos por escola
 	//para confirmação
 	int lugares = 0;
-			for (int i = 0; i < transportes.size(); ++i) {
-				lugares += transportes[i]->getNumLugares();
-			}
-			if(lugares < clientes.size())
-				throw VeiculosInsuficientes();
+	for (int i = 0; i < transportes.size(); ++i) {
+		lugares += transportes[i]->getNumLugares();
+	}
+	if(lugares < clientes.size())
+		throw VeiculosInsuficientes();
 	sort(veiculos.rbegin(),veiculos.rend(),compararVeiculos); //ordem recrescente
 
 	//ALGORITMO MOEDA
@@ -218,7 +221,7 @@ void Empresa::distribuiCliVeiculos(){
 	}
 
 }
-*/
+ */
 /**
  * funcao que faz display dos mapas dos veiculos ou display de um só mapa com todos os veiculos
  * (decidir depois)
@@ -251,6 +254,13 @@ void Empresa::displayEscolas() const{
 	}
 }
 
+void Empresa::displayPontosRecolha() const{
+	vector<Morada> pi = mapa->getInterestPoints();
+	for (size_t i = 0; i < pi.size(); ++i) {
+		cout << pi[i] << " n Clientes: " << getClientesPontoRecolha(&pi[i]).size() << endl;
+	}
+}
+
 void Empresa::guardarInfo() const{
 	fstream file;
 	file.open("info.txt");
@@ -271,6 +281,12 @@ void Empresa::guardarInfo() const{
 	file << Cliente::id << endl;
 	for (int i = 0; i < clientes.size(); ++i) {
 		file << clientes[i]->getID() << " " <<clientes[i]->getNome()<< " " << *clientes[i]->getResidencia()<< " " << *clientes[i]->getEscola() << endl;
+	}
+	//pontos recolha
+	file << "=========================" << endl;
+	vector<Morada> recolha = mapa->getInterestPoints();
+	for (int i = 0; i < recolha.size(); ++i) {
+		file << recolha[i]<< endl;
 	}
 	file.close();
 }
@@ -306,8 +322,8 @@ void Empresa::carregarInfo(){
 		getline(file,tmp);
 		while(tmp != separador){
 			linha << tmp;
-			linha >> matricula >> nLugares >> nome;
-			addTransporte(new Veiculo(nLugares,matricula));
+			linha >> matricula >> nLugares;
+			addTransporte(new Veiculo(matricula));
 			linha.clear();
 			getline(file,tmp);
 		}
@@ -318,9 +334,9 @@ void Empresa::carregarInfo(){
 		linha << tmp;
 		linha >> id_tmp;
 
-		while(!file.eof()){
-			linha.clear();
-			getline(file,tmp);
+		linha.clear();
+		getline(file,tmp);
+		while(tmp != separador){
 			linha << tmp;
 			linha >> cliente_n >> nome >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
 			Morada *casa = new Morada(coordx,coordy,id);
@@ -328,6 +344,16 @@ void Empresa::carregarInfo(){
 			Cliente *c = new Cliente(nome,casa,escola);
 			c->setID(cliente_n);
 			addCliente(c);
+			linha.clear();
+			getline(file,tmp);
+		}
+		while(!file.eof()){
+			linha.clear();
+			getline(file,tmp);
+			linha << tmp;
+			linha >> id >> lixo >> coordx >> lixo >> coordy >> lixo;
+			Morada ponto(coordx,coordy,id);
+			mapa->setPontoInteresse(ponto,true);
 		}
 
 		Cliente::id = id_tmp;
@@ -346,4 +372,18 @@ vector<Cliente *> Empresa::getClientesEscola(Morada *escola) const{
 		itb++;
 	}
 	return res;
+}
+
+vector<Cliente *> Empresa::getClientesPontoRecolha(Morada * ponto) const{
+	vector<Cliente *>::const_iterator itb = clientes.begin();
+	vector<Cliente *>::const_iterator itf = clientes.end();
+	vector<Cliente *> c;
+	if(mapa->isPontoInteresse(*ponto) == false)
+		throw PontoRecolhaInvalido(*ponto);
+	while(itb != itf){
+		if(*(*itb)->getResidencia() == *ponto)
+			c.push_back(*itb);
+		itb++;
+	}
+	return c;
 }

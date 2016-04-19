@@ -76,15 +76,6 @@ void verClientes(Empresa *e){
 	throw VoltarAtras();
 }
 
-void menuTrajetos(Empresa *e){
-	clrscr();
-	displayTitulo("PONTOS");
-	e->getMapa()->displayPontos();
-	cout << endl;
-	esperar();
-	throw VoltarAtras();
-}
-
 void menuClientes(Empresa *e){
 	int op;
 	do {
@@ -121,16 +112,14 @@ void menuClientes(Empresa *e){
 
 void addVeiculo(Empresa *e){
 	string matricula;
-	int capac;
+	char classe;
 
 	clrscr();
 	displayTitulo("ADICIONAR VEICULO");
 	cout << "Matricula: ";
 	cin >> matricula;
-	cout << "Numero de Lugares: ";
-	cin >> capac;
 
-	Veiculo *v = new Veiculo(capac,matricula);
+	Veiculo *v = new Veiculo(matricula);
 
 	if(!e->addTransporte(v))
 		throw VeiculoJaExiste(matricula);
@@ -145,7 +134,7 @@ void removerVeiculo(Empresa *e){
 	cout << endl;
 	cout << "Digite a matricula do veiculo: ";
 	cin >> m;
-	Veiculo * v = new Veiculo(0,m);
+	Veiculo * v = new Veiculo(m);
 	if(!e->removeTransporte(v))
 		throw VeiculoInexistente(m);
 	throw VoltarAtras();
@@ -184,6 +173,94 @@ void menuVeiculos(Empresa *e){
 			break;
 		}
 		case 5: {
+			throw VoltarAtras();
+		}
+		}
+	} while (1);
+}
+//PONTOS DE RECOLHA
+//==============================================================================================================
+void addPontoRecolha(Empresa *e){
+	Morada ponto;
+	int id;
+
+	clrscr();
+	displayTitulo("ADICIONAR PONTO DE RECOLHA");
+
+	cout << "Morada Recolha (id): ";
+	cin >> id;
+	ponto = e->getMapa()->getPonto(id);
+
+	if(ponto.getID() == -1){
+		throw PontoInexistente(ponto);
+	}
+	e->getMapa()->setPontoInteresse(ponto,true);
+	throw VoltarAtras();
+}
+
+void removerPontoRecolha(Empresa *e){
+	Morada ponto;
+	int id;
+
+	clrscr();
+	displayTitulo("REMOVER PONTO DE RECOLHA");
+
+	e->displayPontosRecolha();
+
+	cout << "Morada Recolha (id): ";
+	cin >> id;
+	ponto = e->getMapa()->getPonto(id);
+
+	if(ponto.getID() == -1){
+		throw PontoInexistente(ponto);
+	}
+	e->getMapa()->setPontoInteresse(ponto,false);
+	throw VoltarAtras();
+}
+
+void verPontosRecolha(Empresa *e){
+	clrscr();
+	displayTitulo("PONTOS DE RECOLHA");
+	e->displayPontosRecolha();
+	cout << endl;
+	esperar();
+	throw VoltarAtras();
+}
+
+void verTodosPontos(Empresa *e){
+	clrscr();
+	displayTitulo("TODOS OS PONTOS");
+	e->getMapa()->displayPontos();
+	cout << endl;
+	esperar();
+	throw VoltarAtras();
+}
+
+void menuPontos(Empresa *e){
+	clrscr();
+	int op;
+	do {
+		displayMenuPI();
+		opccao(op, 1, 5);
+		switch (op) {
+		case 1: { //ver escolas
+			addPontoRecolha(e);
+			break;
+		}
+		case 2: { //ver por alunos
+			removerPontoRecolha(e);
+			break;
+		}
+		case 3: {//ver
+			verPontosRecolha(e);
+			break;
+		}
+		case 4:{
+			verTodosPontos(e);
+			break;
+
+		}
+		case 5:{
 			throw VoltarAtras();
 		}
 		}
@@ -250,7 +327,7 @@ void opMenuInicial(Empresa *e, int op) {
 		break;
 	}
 	case 3: {//trajetos
-		menuTrajetos(e);
+		menuPontos(e);
 		break;
 	}
 	case 4: { //escolas
@@ -313,6 +390,9 @@ void menuInicial(Empresa *e) {
 		catch (VeiculosInsuficientes()){
 			cout << "Nao ha veiculos suficientes para o numero de clientes. Adicione um novo veiculo.\n";
 			esperar();
+		}
+		catch(PontoRecolhaInvalido(e)){
+			cout << "Nao existe um ponto de recolha " << e.getPonto() << endl;
 		}
 	} while (op != 5);
 }

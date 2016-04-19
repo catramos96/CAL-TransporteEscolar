@@ -3,9 +3,9 @@
 
 using namespace std;
 
-Veiculo::Veiculo(int numLugares, string matricula){
-	this->numLugares = numLugares;
+Veiculo::Veiculo(string matricula){
 	this->matricula = matricula;
+	numLugares = 10;
 }
 
 int Veiculo::getNumLugares()const{

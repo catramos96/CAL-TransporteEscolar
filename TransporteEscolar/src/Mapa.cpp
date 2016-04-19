@@ -347,10 +347,10 @@ void Mapa::displayMapa(vector<Morada> points){
 	gv->rearrange();
 }
 
-void Mapa::setPontoInteresse(Morada m){
+void Mapa::setPontoInteresse(Morada m,bool b){
 
 	Vertex<Morada> *v = mapa.getVertex(m);
-	v->setIsPI(true);
+	v->setIsPI(b);
 
 	if(v == NULL)
 		mapa.addVertex(m);
@@ -407,4 +407,13 @@ vector<Morada> Mapa::shortestPath(vector<Morada> points){
 		cout << "ATENCAO! O GRAFO NAO PERMITE CHEGAR AO PONTO " << res.at(0).getID() << endl ; //isto tem de ir para o main mais tarde
 	}else
 		return res;
+}
+
+vector<Morada> Mapa::getInterestPoints() const{
+	vector<Morada> res;
+	for (int i = 0; i < mapa.getNumVertex(); ++i) {
+			if(mapa.getVertexSet()[i]->getIsPI())
+				res.push_back(mapa.getVertexSet().at(i)->getInfo());
+	}
+	return res;
 }

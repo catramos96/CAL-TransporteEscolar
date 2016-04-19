@@ -140,6 +140,13 @@ class VeiculosInsuficientes{
 
 };
 
+class PontoRecolhaInvalido{
+	Morada p;
+public:
+	PontoRecolhaInvalido(Morada p){this->p = p;};
+	Morada getPonto() const {return p;};
+};
+
 
 
 
