@@ -17,6 +17,7 @@ private:
 	double x; //coordenada x
 	double y; //coordenada y
 	int id; //id da morada -> correspondente numerico a uma morada (é unico)
+	int numCriancas;
 public:
 	Morada(){};
 	Morada(double x, double y, int id);
@@ -27,6 +28,9 @@ public:
 	void setID(int id);
 	void setX(double x);
 	void setY(double y);
+	void incNumCriancas();
+	void decNumCriancas();
+	int getNumCriancas() const;
 	Morada & operator=(const Morada &m);
 	friend ostream & operator<<(ostream & o, const Morada &m);
 

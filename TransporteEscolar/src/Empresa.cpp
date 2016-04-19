@@ -54,7 +54,7 @@ bool Empresa::addCliente(Cliente * cliente)
 	}
 	//Residencia nao e um ponto de interesse (crasha lool)
 	//if(mapa->isPontoInteresse(*cliente->getResidencia()) == false)
-		//throw ResidenciaInvalida(*cliente->getResidencia());
+	//throw ResidenciaInvalida(*cliente->getResidencia());
 	if(lugares < clientes.size())
 		throw VeiculosInsuficientes();
 	//residencia = escola
@@ -72,6 +72,7 @@ bool Empresa::addCliente(Cliente * cliente)
 			return false;
 	}
 	clientes.push_back(cliente);
+
 	addEscola(cliente->getEscola());
 	return true;
 }
@@ -165,6 +166,87 @@ bool compararVeiculos(Veiculo *v1 , Veiculo *v2){
 
 void Empresa::distribuiCliVeiculos(){
 
+	vector<Morada > pi = mapa->getInterestPoints(); //vetor com todos os pontos de interesse
+	bool end = false;
+
+	//marca todos os pi com 0 criancas como processados
+	for(size_t i = 0; i < pi.size(); i++){
+		vector<Cliente *> clientes = getClientesPontoRecolha(&pi.at(i));
+		if(clientes.size() != 0)//vê se o nesse ponto existem criancas
+			mapa->setPontoProcessado(pi.at(i), false);
+		else
+			mapa->setPontoProcessado(pi.at(i), true);
+	}
+
+	for(size_t j = 0; j < transportes.size(); j++){
+
+		int p = 0; // comeca sempre no ponto 0
+		int min = 0; // ponto mais proximo
+		vector<Morada > dest; //escolas destino
+		vector<Morada > path; //vetor com o caminho
+
+		//marca as escolas como não processadas
+		for(size_t i = 0; i < escolas.size(); i++)
+			mapa->setPontoProcessado(*escolas.at(i), false);
+
+		while(transportes.at(j)->lugaresLivres() != 0){
+
+			// chamar o grafo para ver se deste ponto de interesse(k), qual o que está mais proximo.
+			//Retorna o id do mais proximo.
+			min = mapa->getMinDistBetweenPoints(p,pi,path);
+
+			//se forem iguais chegamos ao fim de todos os pontos de interesse
+			if(p == min){
+				end = true;
+				break;
+			}
+
+			// adiciona as criancas desse destino ao vetor de clientes da carrinha em causa.
+			size_t n = 0;
+			vector<Cliente *> clientes; // clientes por ponto de interesse
+
+			while(transportes.at(j)->lugaresLivres() != 0 && n != clientes.size()){
+				transportes.at(j)->addCliente(clientes.at(n));
+				n++;
+				pi.at(p).decNumCriancas();
+				mapa->setPontoProcessado(*clientes.at(n)->getEscola(), true); //escola marcada como processada -> é destino
+			}
+
+			//se todas as criancas entraram no autocarro, esse ponto é marcado como processado
+			if(pi.at(p).getNumCriancas() == 0)
+				mapa->setPontoProcessado(pi.at(p), true);
+
+			p = min;
+		}
+
+		if(end)
+			break;
+
+		//descobrir quantas escolas diferentes estão no veiculo
+		for(size_t k = 0; k < escolas.size(); k++)
+			if(mapa->getPontoProcessado(*escolas.at(k))) //se foram processadas é porque existem alunos no veiculo que as frequentam
+				dest.push_back(*escolas.at(k));
+
+		//remarca as escolas como não processadas
+		for(size_t i = 0; i < escolas.size(); i++)
+			mapa->setPontoProcessado(*escolas.at(i), false);
+
+		//procurar do ultimo ponto a escola mais proxima
+		for(size_t k = 0; k < dest.size(); k++){
+			min = mapa->getMinDistBetweenPoints(p,dest,path);
+			p = min;
+		}
+
+		//marcar como destino a escola onde chegou
+		transportes.at(j)->setDestino(&dest.at(p));
+
+		//enviar o caminho para algum lado?
+	}
+}
+
+/*
+void Empresa::distribuiCliVeiculos(){
+
 	vector<Veiculo *> veiculos = transportes; //numero de lugares disponiveis por veiculo
 	vector<int> numEsc; //numero de alunos por escola
 	//para confirmação
@@ -191,7 +273,7 @@ void Empresa::distribuiCliVeiculos(){
 		if(numEsc.at(k) > max){
 			max = numEsc.at(k);
 			id = k;
-		}*/
+		}
 
 }
 
@@ -387,3 +469,4 @@ vector<Cliente *> Empresa::getClientesPontoRecolha(Morada * ponto) const{
 	}
 	return c;
 }
+

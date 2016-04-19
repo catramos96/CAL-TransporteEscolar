@@ -73,6 +73,8 @@ public:
 	void resetIsPI();
 	bool getfloydWarshallPathWithIPAux(vector<T> points, int pi, vector<T> &res);
 	void setProcessing(T info, bool estado);
+	bool getProcessing(T info);
+	int getMinDistAndPath(int pi, vector<T> points, vector<T> &res);
 };
 
 
@@ -691,6 +693,44 @@ void Graph<T>::setProcessing(T info, bool estado){
 		}
 }
 
+template<class T>
+bool Graph<T>::getProcessing(T info){
+	Vertex<T> *v = getVertex(info);
+	return v->processing;
+}
+
+/**
+ * funcao que recebe uma morada, e um vetor de moradas e retorna o indice do vetor com a morada mais proxima.
+ * também recebe um vetor que guarda o caminho entre esses 2 pontos.
+ */
+template<class T>
+int Graph<T>::getMinDistAndPath(int pi, vector<T> points, vector<T> &res){
+
+	//ver qual dos PI esta mais proximo do 'info'
+	int dist = INT_INFINITY;
+	int min = 0; //pi mais proximo
+	Vertex<T> *vInfo = getVertex(points.at(pi));
+
+	for(size_t i = 0; i < points.size(); i++){
+		Vertex<T> *v = getVertex(points.at(i)); // vertice correpondente à morada
+
+		//a pesquisa na tablela é feita pelo id de cada nó
+		if(W[points.at(pi).getID()][points.at(i).getID()] < dist && !(vInfo == v) && !(v->processing)){
+			dist = W[points.at(pi).getID()][points.at(i).getID()];
+			min = i;
+		}
+	}
+
+	if(dist == INT_INFINITY)
+		return pi; //siginifica que todos os pontos estão processados OU houve um erro
+
+	vector<T> temp = getfloydWarshallPath(points.at(pi), points.at(min));
+	for(size_t k = 0; k < temp.size(); k++)
+		if(k != 0)
+			res.push_back(temp.at(k));
+
+	return min;
+}
 
 
 #endif /* GRAPH_H_ */

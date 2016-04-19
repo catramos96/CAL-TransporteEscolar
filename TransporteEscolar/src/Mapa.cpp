@@ -417,3 +417,15 @@ vector<Morada> Mapa::getInterestPoints() const{
 	}
 	return res;
 }
+
+void Mapa::setPontoProcessado(Morada ponto, bool estado){
+	mapa.setProcessing(ponto,estado);
+}
+
+bool Mapa::getPontoProcessado(Morada ponto){
+	return mapa.getProcessing(ponto);
+}
+
+int Mapa::getMinDistBetweenPoints(int pi, vector<Morada> points, vector<Morada> &res){
+	return mapa.getMinDistAndPath(pi,points,res);
+}

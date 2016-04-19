@@ -6,6 +6,7 @@ Morada::Morada(double x, double y, int id){
 	this->x = x;
 	this->y = y;
 	this->id = id;
+	this->numCriancas = 0;
 }
 
 bool Morada::operator ==(const Morada &m) const{
@@ -47,4 +48,18 @@ Morada & Morada::operator=(const Morada &m){
 ostream & operator<<(ostream & o, const Morada &m){
 		o << m.getID()  << "(" << m.getX() << "," << m.getY() << ")";
 	return o;
+}
+
+
+void Morada::incNumCriancas(){
+	numCriancas++;
+}
+
+void Morada::decNumCriancas(){
+	if(numCriancas > 0)
+		numCriancas--;
+}
+
+int Morada::getNumCriancas() const{
+	return numCriancas;
 }

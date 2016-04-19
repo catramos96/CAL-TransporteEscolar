@@ -19,6 +19,9 @@ public:
 	vector<Morada> shortestPath(vector<Morada> points);
 	Vertex<Morada> * getPontoVertex(int id);
 	vector<Morada> getInterestPoints() const;
+	int getMinDistBetweenPoints(int pi, vector<Morada> points, vector<Morada> &res);
+	bool getPontoProcessado(Morada ponto);
+	void setPontoProcessado(Morada ponto, bool estado);
 };
 
 
