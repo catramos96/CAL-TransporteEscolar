@@ -128,6 +128,14 @@ public:
 	}
 };
 
+class ResidenciaInvalida {
+private:
+	Morada r;
+public:
+	ResidenciaInvalida(Morada m){r = m;};
+	Morada getResidencia() const {return r;};
+};
+
 
 
 

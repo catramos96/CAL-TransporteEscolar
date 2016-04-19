@@ -46,7 +46,7 @@ void addCliente(Empresa *e){
 	Cliente *c = new Cliente(nome,casa,escola);
 
 	//É so a casa que passa a ser um ponto de interesse ?
-	if(!e->addCliente(c))
+	if(e->addCliente(c) == false)
 		throw ClienteJaExiste(nome,*escola,*casa);
 	esperar();
 	throw VoltarAtras();
@@ -288,7 +288,7 @@ void menuInicial(Empresa *e) {
 			esperar();
 		}
 		catch (ClienteJaExiste(e)){
-			cout << "Ja existe o cliente com o nome " << e.getNome() << " ou morada escolar " << e.getMoradaEscola() << " e residencia "<< e.getMoradaResidencia() << ".\n";
+			cout << "Nao foi possivel adicionar o cliente com nome " << e.getNome() << " ou morada escolar " << e.getMoradaEscola() << " e residencia "<< e.getMoradaResidencia() << ".\n";
 			esperar();
 		}
 
@@ -298,7 +298,7 @@ void menuInicial(Empresa *e) {
 		}
 
 		catch (PontoInexistente(e)){
-			cout << "Nao existe no mapa um ponto " << e.getPonto() << endl;
+			cout << "Nao existe no mapa esse ponto\n";
 			esperar();
 		}
 		catch (VeiculoJaExiste(e)){
@@ -307,6 +307,10 @@ void menuInicial(Empresa *e) {
 		}
 		catch (VeiculoInexistente(e)){
 			cout << "Nao existe um veiculo com a matricula " << e.getMatric()<< endl;
+			esperar();
+		}
+		catch (ResidenciaInvalida(e)){
+			cout << "A residencia " << e.getResidencia() << " nao pode ser uma escola\n";
 			esperar();
 		}
 	} while (op != 5);
@@ -324,7 +328,7 @@ int main() {
 	esperar();
 
 	delete(e);
-/*
+	/*
 
 	Morada *m1 = new Morada(100,100,0);
 	Morada *m2 = new Morada(100,200,4);

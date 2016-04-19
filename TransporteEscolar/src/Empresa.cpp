@@ -2,6 +2,7 @@
 #include <sstream>
 #include <fstream>
 #include <string.h>
+#include "Excessoes.h"
 
 // criar veiculo ==
 using namespace std;
@@ -47,7 +48,7 @@ bool Empresa::addCliente(Cliente * cliente)
 {
 	//residencia = escola
 	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
-		return false;
+		throw ResidenciaInvalida(*cliente->getResidencia());
 	//cliente já existe, id = ou residencia =
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(*cliente == *clientes[i]){
