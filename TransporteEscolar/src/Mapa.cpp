@@ -398,6 +398,9 @@ Vertex<Morada> * Mapa::getPontoVertex(int id){
 	return v;
 }
 
+void Mapa::makefloydWarshallShortestPath(){
+	mapa.floydWarshallShortestPath();
+}
 
 vector<Morada> Mapa::shortestPath(vector<Morada> points){
 	mapa.floydWarshallShortestPath();
@@ -409,11 +412,13 @@ vector<Morada> Mapa::shortestPath(vector<Morada> points){
 		return res;
 }
 
+
 vector<Morada> Mapa::getInterestPoints() const{
 	vector<Morada> res;
 	for (int i = 0; i < mapa.getNumVertex(); ++i) {
-			if(mapa.getVertexSet()[i]->getIsPI())
+			if(mapa.getVertexSet()[i]->getIsPI()){
 				res.push_back(mapa.getVertexSet().at(i)->getInfo());
+			}
 	}
 	return res;
 }

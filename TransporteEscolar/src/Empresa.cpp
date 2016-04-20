@@ -72,7 +72,6 @@ bool Empresa::addCliente(Cliente * cliente)
 			return false;
 	}
 	clientes.push_back(cliente);
-
 	addEscola(cliente->getEscola());
 	return true;
 }
@@ -166,11 +165,19 @@ bool compararVeiculos(Veiculo *v1 , Veiculo *v2){
 
 void Empresa::distribuiCliVeiculos(){
 
-	vector<Morada > pi = mapa->getInterestPoints(); //vetor com todos os pontos de interesse
-	bool end = false;
+	mapa->makefloydWarshallShortestPath(); //crias as tabelas do path e dist entre todos os pontos
 
-	//marca todos os pi com 0 criancas como processados
-	for(size_t i = 0; i < pi.size(); i++){
+	bool end = false;
+	vector<Morada > pi; //vetor com todos os pontos de interesse
+	vector<Morada > temp = mapa->getInterestPoints();
+
+	pi.push_back(*endereco); //comeca na morada da empresa
+	mapa->setPontoProcessado(*endereco,true); //o primeiro ponto é processado
+	for(size_t i = 0; i < temp.size(); i++)
+		pi.push_back(temp.at(i));
+
+	//marca todos os pi com 0 criancas como processados (o primeiro não conta)
+	for(size_t i = 1; i < pi.size(); i++){
 		vector<Cliente *> clientes = getClientesPontoRecolha(&pi.at(i));
 		if(clientes.size() != 0)//vê se o nesse ponto existem criancas
 			mapa->setPontoProcessado(pi.at(i), false);
@@ -180,10 +187,15 @@ void Empresa::distribuiCliVeiculos(){
 
 	for(size_t j = 0; j < transportes.size(); j++){
 
+		if(end)
+			break;
+
 		int p = 0; // comeca sempre no ponto 0
 		int min = 0; // ponto mais proximo
 		vector<Morada > dest; //escolas destino
 		vector<Morada > path; //vetor com o caminho
+
+		path.push_back(*endereco); // o primeiro ponto é a empresa
 
 		//marca as escolas como não processadas
 		for(size_t i = 0; i < escolas.size(); i++)
@@ -203,13 +215,12 @@ void Empresa::distribuiCliVeiculos(){
 
 			// adiciona as criancas desse destino ao vetor de clientes da carrinha em causa.
 			size_t n = 0;
-			vector<Cliente *> clientes; // clientes por ponto de interesse
-
+			vector<Cliente *> clientes = getClientesPontoRecolha(&pi.at(min)) ; // clientes por ponto de interesse
 			while(transportes.at(j)->lugaresLivres() != 0 && n != clientes.size()){
 				transportes.at(j)->addCliente(clientes.at(n));
-				n++;
-				pi.at(p).decNumCriancas();
+				pi.at(min).decNumCriancas();
 				mapa->setPontoProcessado(*clientes.at(n)->getEscola(), true); //escola marcada como processada -> é destino
+				n++;
 			}
 
 			//se todas as criancas entraram no autocarro, esse ponto é marcado como processado
@@ -219,19 +230,19 @@ void Empresa::distribuiCliVeiculos(){
 			p = min;
 		}
 
-		if(end)
-			break;
-
 		//descobrir quantas escolas diferentes estão no veiculo
+		dest.push_back(pi.at(p)); //ultimo ponto
 		for(size_t k = 0; k < escolas.size(); k++)
-			if(mapa->getPontoProcessado(*escolas.at(k))) //se foram processadas é porque existem alunos no veiculo que as frequentam
+			if(mapa->getPontoProcessado(*escolas.at(k)) == true) //se foram processadas é porque existem alunos no veiculo que as frequentam
 				dest.push_back(*escolas.at(k));
 
 		//remarca as escolas como não processadas
 		for(size_t i = 0; i < escolas.size(); i++)
 			mapa->setPontoProcessado(*escolas.at(i), false);
 
+
 		//procurar do ultimo ponto a escola mais proxima
+		p = 0;
 		for(size_t k = 0; k < dest.size(); k++){
 			min = mapa->getMinDistBetweenPoints(p,dest,path);
 			p = min;
@@ -240,70 +251,12 @@ void Empresa::distribuiCliVeiculos(){
 		//marcar como destino a escola onde chegou
 		transportes.at(j)->setDestino(&dest.at(p));
 
-		//enviar o caminho para algum lado?
-	}
-}
-
-/*
-void Empresa::distribuiCliVeiculos(){
-
-	vector<Veiculo *> veiculos = transportes; //numero de lugares disponiveis por veiculo
-	vector<int> numEsc; //numero de alunos por escola
-	//para confirmação
-	int lugares = 0;
-	for (int i = 0; i < transportes.size(); ++i) {
-		lugares += transportes[i]->getNumLugares();
-	}
-	if(lugares < clientes.size())
-		throw VeiculosInsuficientes();
-	sort(veiculos.rbegin(),veiculos.rend(),compararVeiculos); //ordem recrescente
-
-	//ALGORITMO MOEDA
-
-	/*for(size_t j = 0; j < escolas.size(); j++){
-		vector<Cliente *> temp = getClientesEscola(escolas.at(j));
-		numEsc.push_back(temp.size());
-	}
-
-	//FAZER DEPOIS
-	//funcao que procura a escola o maior numero de alunos
-	int max = 0;
-	int id = 0;
-	for(size_t k = 0; k < numEsc.size();k++)
-		if(numEsc.at(k) > max){
-			max = numEsc.at(k);
-			id = k;
-		}
-
-}
-
-
-/**
- * ainda não são consideradas formas eficientes de colocar os alunos
- * inicialmente todos os alunos vao para a mesma escola
- *
-void Empresa::distribuiCliVeiculos(){
-
-	size_t i = 0, j = 0;
-	while(i != transportes.size()){
-		while(j != clientes.size()){
-			if(transportes.at(i)->lugaresLivres() != 0)
-				transportes.at(i)->addCliente(clientes.at(j));
-			else{ //ultimo lugar do veiculo
-				transportes.at(i)->setDestino(clientes.at(j)->getEscola()); //TEMPORARIO
-				mapa->setPontoInteresse(*clientes.at(j)->getEscola());
-				break;
-			}
-
-			if(j == clientes.size()-1) //ultimo cliente
-				transportes.at(i)->setDestino(clientes.at(j)->getEscola()); //TEMPORARIO
-			j++;
-		}
-		i++;
+		//MUDAR ISTO !!!!
+		mapa->displayMapa(path);
 	}
 
 }
- */
+
 /**
  * funcao que faz display dos mapas dos veiculos ou display de um só mapa com todos os veiculos
  * (decidir depois)
@@ -358,17 +311,17 @@ void Empresa::guardarInfo() const{
 	for (int i = 0; i < transportes.size(); i++) {
 		file << transportes[i]->getMatricula() << " " << transportes[i]->getNumLugares() << endl;
 	}
-	file << "=========================" << endl;
-	//clientes
-	file << Cliente::id << endl;
-	for (int i = 0; i < clientes.size(); ++i) {
-		file << clientes[i]->getID() << " " <<clientes[i]->getNome()<< " " << *clientes[i]->getResidencia()<< " " << *clientes[i]->getEscola() << endl;
-	}
 	//pontos recolha
 	file << "=========================" << endl;
 	vector<Morada> recolha = mapa->getInterestPoints();
 	for (int i = 0; i < recolha.size(); ++i) {
 		file << recolha[i]<< endl;
+	}
+	file << "=========================" << endl;
+	//clientes
+	file << Cliente::id << endl;
+	for (int i = 0; i < clientes.size(); ++i) {
+		file << clientes[i]->getID() << " " <<clientes[i]->getNome()<< " " << *clientes[i]->getResidencia()<< " " << *clientes[i]->getEscola() << endl;
 	}
 	file.close();
 }
@@ -410,32 +363,36 @@ void Empresa::carregarInfo(){
 			getline(file,tmp);
 		}
 
+		//pontos de recolha
+		linha.clear();
+		getline(file,tmp);
+		while(tmp != separador){
+			linha << tmp;
+			linha >> id >> lixo >> coordx >> lixo >> coordy >> lixo;
+			Morada ponto(coordx,coordy,id);
+			mapa->setPontoInteresse(ponto,true);
+			linha.clear();
+			getline(file,tmp);
+		}
+
 		//clientes
 		int id_tmp;
 		getline(file,tmp);//IDDD
 		linha << tmp;
 		linha >> id_tmp;
-
-		linha.clear();
-		getline(file,tmp);
-		while(tmp != separador){
+		while(!file.eof()){
+			linha.clear();
+			getline(file,tmp);
 			linha << tmp;
 			linha >> cliente_n >> nome >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
 			Morada *casa = new Morada(coordx,coordy,id);
+			casa->incNumCriancas();
 			Morada *escola = new Morada(coordx2,coordy,id2);
 			Cliente *c = new Cliente(nome,casa,escola);
 			c->setID(cliente_n);
 			addCliente(c);
 			linha.clear();
 			getline(file,tmp);
-		}
-		while(!file.eof()){
-			linha.clear();
-			getline(file,tmp);
-			linha << tmp;
-			linha >> id >> lixo >> coordx >> lixo >> coordy >> lixo;
-			Morada ponto(coordx,coordy,id);
-			mapa->setPontoInteresse(ponto,true);
 		}
 
 		Cliente::id = id_tmp;

@@ -706,6 +706,8 @@ bool Graph<T>::getProcessing(T info){
 template<class T>
 int Graph<T>::getMinDistAndPath(int pi, vector<T> points, vector<T> &res){
 
+	//floydWarshallShortestPath();
+
 	//ver qual dos PI esta mais proximo do 'info'
 	int dist = INT_INFINITY;
 	int min = 0; //pi mais proximo
@@ -713,8 +715,8 @@ int Graph<T>::getMinDistAndPath(int pi, vector<T> points, vector<T> &res){
 
 	for(size_t i = 0; i < points.size(); i++){
 		Vertex<T> *v = getVertex(points.at(i)); // vertice correpondente à morada
+		//a pesquisa na tablela é feita pelo id de cada n
 
-		//a pesquisa na tablela é feita pelo id de cada nó
 		if(W[points.at(pi).getID()][points.at(i).getID()] < dist && !(vInfo == v) && !(v->processing)){
 			dist = W[points.at(pi).getID()][points.at(i).getID()];
 			min = i;

@@ -28,16 +28,18 @@ void addCliente(Empresa *e){
 	cout << "Nome: ";
 	cin.ignore(1000,'\n');
 	getline(cin,nome);
-	cout << "Morada Residencial (id): ";
+	cout << "Ponto de Recolha (id): ";
 	cin >> id;
 	*casa = e->getMapa()->getPonto(id);
 
 	if(casa->getID() == -1){
 		throw PontoInexistente(*casa);
 	}
+
+	casa->incNumCriancas();
+
 	cout << "Morada Escolar (id): ";
 	cin >> id;
-
 
 	*escola = e->getMapa()->getPonto(id);
 	if(escola->getID() == -1){
@@ -230,7 +232,10 @@ void verPontosRecolha(Empresa *e){
 void verTodosPontos(Empresa *e){
 	clrscr();
 	displayTitulo("TODOS OS PONTOS");
-	e->getMapa()->displayPontos();
+	//e->getMapa()->displayPontos();
+
+	e->distribuiCliVeiculos();
+
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -405,7 +410,7 @@ int main() {
 	Morada * source = new Morada(100,100,0);
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	e->carregarInfo();
-	e->distribuiCliVeiculos();
+	//e->distribuiCliVeiculos();
 	menuInicial(e);
 	esperar();
 

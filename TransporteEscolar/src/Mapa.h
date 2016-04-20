@@ -22,6 +22,7 @@ public:
 	int getMinDistBetweenPoints(int pi, vector<Morada> points, vector<Morada> &res);
 	bool getPontoProcessado(Morada ponto);
 	void setPontoProcessado(Morada ponto, bool estado);
+	void makefloydWarshallShortestPath();
 };
 
 
