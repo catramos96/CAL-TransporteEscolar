@@ -8,6 +8,8 @@
 
 * algoritmo de distribuição das crianças inverso (escola -> garagem)
 
+* criar função initialize e update (para não repetir constantemente algoritmos)
+
 * verificar a conectividade do grafo (inês)
 
 * verificação de erros
