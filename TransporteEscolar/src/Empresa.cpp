@@ -53,8 +53,8 @@ bool Empresa::addCliente(Cliente * cliente)
 		lugares += transportes[i]->getNumLugares();
 	}
 	//Residencia nao e um ponto de interesse (crasha lool)
-	//if(mapa->isPontoInteresse(*cliente->getResidencia()) == false)
-	//throw ResidenciaInvalida(*cliente->getResidencia());
+	if(mapa->isPontoInteresse(*cliente->getResidencia()) == false)
+		throw PontoRecolhaInvalido(*cliente->getResidencia());
 	if(lugares < clientes.size())
 		throw VeiculosInsuficientes();
 	//residencia = escola
