@@ -1,3 +1,23 @@
+## O que falta fazer : ##
+
+* eliminação de um ponto de recolha (todas as crianças se devem dirigir para o ponto de recolha mais proximo)
+
+* caso em que a escola é a empresa
+
+* openStreetMaps (fazer display)
+
+* algoritmo de distribuição das crianças inverso (escola -> garagem)
+
+* verificar a conectividade do grafo (inês)
+
+
+* verificação de erros
+
+* relatório
+
+
+#=====================================================================================#
+
 # Comandos do git #
 
 ## 1- Clonar o repositório para o computador: ##
