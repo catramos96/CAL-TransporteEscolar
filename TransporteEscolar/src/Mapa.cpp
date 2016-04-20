@@ -73,6 +73,7 @@ Mapa::Mapa(){
 		Vertex<Morada>* vDest = mapa.getVertexByID(idNoDestino);
 
 		mapa.addEdge(vSource->getInfo(), vDest->getInfo(), peso,1);
+		mapa.addEdge(vDest->getInfo(), vSource->getInfo(), peso,1);
 	}
 	inFile.close();
 

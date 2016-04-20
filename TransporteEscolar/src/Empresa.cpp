@@ -224,8 +224,8 @@ void Empresa::distribuiCliVeiculos(){
 			}
 
 			//se todas as criancas entraram no autocarro, esse ponto é marcado como processado
-			if(pi.at(p).getNumCriancas() == 0)
-				mapa->setPontoProcessado(pi.at(p), true);
+			if(pi.at(min).getNumCriancas() == 0)
+				mapa->setPontoProcessado(pi.at(min), true);
 
 			p = min;
 		}
@@ -236,6 +236,7 @@ void Empresa::distribuiCliVeiculos(){
 			if(mapa->getPontoProcessado(*escolas.at(k)) == true) //se foram processadas é porque existem alunos no veiculo que as frequentam
 				dest.push_back(*escolas.at(k));
 
+
 		//remarca as escolas como não processadas
 		for(size_t i = 0; i < escolas.size(); i++)
 			mapa->setPontoProcessado(*escolas.at(i), false);
@@ -243,7 +244,7 @@ void Empresa::distribuiCliVeiculos(){
 
 		//procurar do ultimo ponto a escola mais proxima
 		p = 0;
-		for(size_t k = 0; k < dest.size(); k++){
+		for(size_t k = 1; k < dest.size(); k++){
 			min = mapa->getMinDistBetweenPoints(p,dest,path);
 			p = min;
 		}
@@ -387,12 +388,10 @@ void Empresa::carregarInfo(){
 			linha >> cliente_n >> nome >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
 			Morada *casa = new Morada(coordx,coordy,id);
 			casa->incNumCriancas();
-			Morada *escola = new Morada(coordx2,coordy,id2);
+			Morada *escola = new Morada(coordx2,coordy2,id2);
 			Cliente *c = new Cliente(nome,casa,escola);
 			c->setID(cliente_n);
 			addCliente(c);
-			linha.clear();
-			getline(file,tmp);
 		}
 
 		Cliente::id = id_tmp;
