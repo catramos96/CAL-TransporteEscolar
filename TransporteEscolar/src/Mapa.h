@@ -10,6 +10,7 @@ private:
 	Graph<Morada> mapa;
 public:
 	Mapa();
+	void display();
 	void displayMapa(vector<Morada> points);
 	void setPontoInteresse(Morada m, bool b);
 	bool isPontoInteresse(Morada m);
@@ -23,6 +24,7 @@ public:
 	bool getPontoProcessado(Morada ponto);
 	void setPontoProcessado(Morada ponto, bool estado);
 	void makefloydWarshallShortestPath();
+	double haversineAlgorith(double lat1, double long1, double lat2, double long2);
 };
 
 

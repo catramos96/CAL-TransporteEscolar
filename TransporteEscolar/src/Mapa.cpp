@@ -13,6 +13,7 @@ using namespace std;
  * Inicializa o grafo com os nos e arestas dos ficheiros "nos.txt" e "arestas.txt"
  */
 
+/*
 Mapa::Mapa(){
 	ifstream inFile;
 
@@ -79,8 +80,20 @@ Mapa::Mapa(){
 
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
+}*/
+double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double long2)
+{
+	const int earthRadius = 6371000;
+	double deltaLat = lat2 - lat1;
+	double deltaLong = long2 - long1;
+
+	double a = pow(sin(deltaLat/2), 2) + cos(lat1)*cos(lat2)*+pow(sin(deltaLong/2),2);
+	double c = 2*atan2(sqrt(a),sqrt(1-a));
+	double d = earthRadius * c;
+
+	return d;
 }
-/*
+
 Mapa::Mapa(){
 
 	//openstreetmaps.org
@@ -107,12 +120,13 @@ Mapa::Mapa(){
 		string	data;
 
 		linestream >> idNo;
-		idNo = idNo %10000; //apenas queremos os ultimos 4 digitos
+		getline(linestream, data, ';');  // discard lat in º
+		getline(linestream, data, ';');  // discard long in º
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		linestream >> x;
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		linestream >> y;
-		Morada m = Morada(x,y+10,idNo);
+		Morada m = Morada(x,y,idNo);
 		mapa.addVertex(m);
 	}
 
@@ -135,7 +149,6 @@ Mapa::Mapa(){
 		string temp;
 
 		linestream >> idAresta;
-		idAresta = idAresta %10000;
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		linestream >> temp;
@@ -161,28 +174,24 @@ Mapa::Mapa(){
 		string data;
 
 		linestream >> idAresta;
-		idAresta = idAresta %10000;
 
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		linestream >> idNoOrigem;
-		idNoOrigem = idNoOrigem %10000;
 
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		linestream >> idNoDestino;
-		idNoDestino = idNoDestino %10000;
 
 		Vertex<Morada>* vSource = mapa.getVertexByID(idNoOrigem);
 		Vertex<Morada>* vDest = mapa.getVertexByID(idNoDestino);
-
+		double weight =  haversineAlgorith(vSource->getInfo().getX(), vSource->getInfo().getY(), vDest->getInfo().getX(), vDest->getInfo().getY());
 		if(vSource == vDest)
 			continue;
 		else{
 			if(vSource != NULL && vDest != NULL){
-				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), 1, idAresta);
-
+				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), weight, idAresta);
 				for(size_t i = 0; i < twoWays.size(); i++)
 					if(twoWays.at(i) == idAresta){	//esta aresta está nos vetores de arestas bidirecionais
-						mapa.addEdge(vDest->getInfo(),vSource->getInfo(), 1, idAresta);
+						mapa.addEdge(vDest->getInfo(),vSource->getInfo(), weight, idAresta);
 					}
 			}
 		}
@@ -192,9 +201,7 @@ Mapa::Mapa(){
 
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
-
 }
- */
 /*
 void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(1200, 1200, false);
@@ -246,6 +253,45 @@ void Mapa::displayMapa(vector<Morada> points){
 	gv->rearrange();
 }
  */
+
+void Mapa::display(){
+	GraphViewer *gv = new GraphViewer(4000, 4000, false);
+
+	gv->createWindow(4000, 4000);
+	gv->defineEdgeColor("black");
+	gv->defineVertexColor("pink");
+
+	vector<Vertex<Morada> * > m = mapa.getVertexSet();
+	int offset =0;
+	for(int i = 0; i < m.size(); i++){
+
+		Vertex<Morada> * v = m.at(i);
+		//cout << "nº "<< i << " x " <<v->getInfo().getX() << " y " << v->getInfo().getY() << endl;
+		gv->addNode(v->getInfo().getID(),v->getInfo().getX()+ 100 + offset,v->getInfo().getY() + 100 + offset/2) ;
+
+		for(int j = 0; j < v->getNumAdjacents(); j++){
+
+			//cout << "j " << j << endl;
+			Edge<Morada> e = v->getAdjacentNumber(j);
+			int edgeID = e.getID();
+			int dest = e.getDest()->getInfo().getID();
+			int src = v->getInfo().getID();
+
+			gv->addEdge(edgeID,src,dest, EdgeType::DIRECTED);
+			stringstream label;
+			label << v->getAdjacentNumber(j).getWeight();
+			gv->setEdgeLabel(edgeID,label.str());
+
+		}
+		if(i%2 == 0)
+			offset += 100;
+		else
+			offset -= 100;
+
+		offset += 3;
+
+	}
+}
 
 void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(600, 600, false);

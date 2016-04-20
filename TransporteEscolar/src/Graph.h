@@ -29,6 +29,7 @@ template <class T> class Graph;
 template <class T>
 class Graph {
 	vector<Vertex<T> *> vertexSet;
+	vector<Edge<T> *> edgeSet; // criado para o trabalho
 	void dfs(Vertex<T> *v, vector<T> &res) const;
 
 	//exercicio 5
@@ -75,6 +76,7 @@ public:
 	void setProcessing(T info, bool estado);
 	bool getProcessing(T info);
 	int getMinDistAndPath(int pi, vector<T> points, vector<T> &res);
+	bool edgeExists(Edge<T>* e);
 };
 
 
@@ -137,6 +139,16 @@ bool Graph<T>::removeVertex(const T &in) {
 }
 
 template <class T>
+bool Graph<T>::edgeExists(Edge<T>* e)
+{
+	for(int i = 0; i < edgeSet.size(); i++)
+		if(e->getID() == edgeSet[i]->getID())
+			return true;
+
+	return false;
+}
+
+template <class T>
 bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, int id) {
 	typename vector<Vertex<T>*>::iterator it= vertexSet.begin();
 	typename vector<Vertex<T>*>::iterator ite= vertexSet.end();
@@ -149,9 +161,11 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, int id) {
 		{ vD=*it; found++;}
 		it ++;
 	}
-	if (found!=2) return false;
+	Edge<T>* e = new Edge<T>(vD, w, id);
+	if ((found!=2)||(edgeExists(e))) return false;
 	vD->indegree++;
 	vS->addEdge(vD,w,id);
+	edgeSet.push_back(e);
 
 	return true;
 }
