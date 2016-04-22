@@ -1,8 +1,5 @@
 ## O que falta fazer : ##
 
-* eliminação de um ponto de recolha (todas as crianças se devem dirigir para o ponto de recolha mais proximo) - catarina
-- preciso de ter a certeza que o grafo é todo conectado, se não não consigo fazer este ponto;
-
 * caso em que a escola é a empresa - catarina
 
 * openStreetMaps (fazer display)
