@@ -1,8 +1,6 @@
 ## O que falta fazer : ##
 
-* eliminação de um ponto de recolha (todas as crianças se devem dirigir para o ponto de recolha mais proximo)
-
-* caso em que a escola é a empresa
+* caso em que a escola é a empresa - catarina
 
 * openStreetMaps (fazer display)
 
