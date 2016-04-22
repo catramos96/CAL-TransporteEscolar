@@ -161,11 +161,13 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, int id) {
 		{ vD=*it; found++;}
 		it ++;
 	}
-	Edge<T>* e = new Edge<T>(vD, w, id);
-	if ((found!=2)||(edgeExists(e))) return false;
+	//Edge<T>* e = new Edge<T>(vD, w, id);
+	//if ((found!=2)||(edgeExists(e))) return false;
+	if(found != 2)
+		return false;
 	vD->indegree++;
 	vS->addEdge(vD,w,id);
-	edgeSet.push_back(e);
+	//edgeSet.push_back(e);
 
 	return true;
 }
@@ -720,11 +722,11 @@ bool Graph<T>::getProcessing(T info){
 template<class T>
 int Graph<T>::getMinDistAndPath(int pi, vector<T> points, vector<T> &res){
 
-	//floydWarshallShortestPath();
+	floydWarshallShortestPath();
 
 	//ver qual dos PI esta mais proximo do 'info'
 	int dist = INT_INFINITY;
-	int min = 0; //pi mais proximo
+	int min = -1; //pi mais proximo
 	Vertex<T> *vInfo = getVertex(points.at(pi));
 
 	for(size_t i = 0; i < points.size(); i++){

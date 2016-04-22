@@ -216,6 +216,7 @@ void removerPontoRecolha(Empresa *e){
 	if(ponto.getID() == -1){
 		throw PontoInexistente(ponto);
 	}
+	e->setClientesPI(ponto.getID());
 	e->getMapa()->setPontoInteresse(ponto,false);
 	throw VoltarAtras();
 }
@@ -406,7 +407,7 @@ void menuInicial(Empresa *e) {
 
 
 int main() {
-	/*
+
 	//temp
 	Morada * source = new Morada(100,100,0);
 	Empresa *e = new Empresa("Transportes Escolares",source);
@@ -416,7 +417,7 @@ int main() {
 	esperar();
 
 	delete(e);
-
+/*
 	Morada *m1 = new Morada(100,100,0);
 	Morada *m2 = new Morada(100,200,4);
 	Morada *m3 = new Morada(100,300,8);
@@ -444,8 +445,8 @@ int main() {
 	e->enviaVeiculos();	//funcao que atualiza os mapas dos veiculos e faz display dos mesmos
 	getchar();*/
 
-	Mapa * m = new Mapa();
+	/*Mapa * m = new Mapa();
 	m->display();
-	esperar();
+	esperar();*/
 	return 0;
 }

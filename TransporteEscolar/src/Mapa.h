@@ -10,6 +10,7 @@ private:
 	Graph<Morada> mapa;
 public:
 	Mapa();
+	Graph<Morada> getMapa();
 	void display();
 	void displayMapa(vector<Morada> points);
 	void setPontoInteresse(Morada m, bool b);

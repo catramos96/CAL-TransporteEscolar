@@ -426,3 +426,36 @@ vector<Cliente *> Empresa::getClientesPontoRecolha(Morada * ponto) const{
 	return c;
 }
 
+void Empresa::setClientesPI(int id){
+	vector<Cliente *> mudar_cli;
+	//Seleccionar os clientes com a residencia com o mesmo id
+	for (int i = 0; i < clientes.size(); ++i) {
+		if(clientes[i]->getResidencia()->getID() == id)
+			mudar_cli.push_back(clientes[i]);
+	}
+	//ir buscar o ponto de recolha mais próximo a id
+	vector<Morada> pontosRecolha = mapa->getInterestPoints();
+	vector<Morada> lixo;
+	int indice1 = -1,indice2 = -1;
+	//procurar o indice do ponto de recolha com id
+	for (int i = 0; i < pontosRecolha.size(); ++i) {
+		if(pontosRecolha[i].getID() == id)
+			indice1 = i;
+	}
+
+	if(indice1 == -1){
+		cout << "Indice Invalido" << endl;
+		throw VoltarAtras();
+	}
+	indice2 = mapa->getMinDistBetweenPoints(indice1,pontosRecolha,lixo);
+
+	if(indice1 == indice2 || indice2 == -1)
+		throw PontoRecolhaInvalido(pontosRecolha[indice1]);
+
+	//substituir clientes para o ponto de recolha de indice2 em pontosRecolha
+
+	Morada *m = new Morada(getEndereco()->getX(),getEndereco()->getY(),pontosRecolha[indice2].getID());
+	for (int i = 0; i < mudar_cli.size(); ++i) {
+		mudar_cli[i]->setNovaResidencia(m);
+	}
+}

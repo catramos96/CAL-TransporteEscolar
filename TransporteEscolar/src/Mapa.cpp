@@ -13,7 +13,7 @@ using namespace std;
  * Inicializa o grafo com os nos e arestas dos ficheiros "nos.txt" e "arestas.txt"
  */
 
-/*
+
 Mapa::Mapa(){
 	ifstream inFile;
 
@@ -80,7 +80,7 @@ Mapa::Mapa(){
 
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
-}*/
+}
 double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double long2)
 {
 	const int earthRadius = 6371000;
@@ -93,7 +93,7 @@ double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double lo
 
 	return d;
 }
-
+/*
 Mapa::Mapa(){
 
 	//openstreetmaps.org
@@ -202,6 +202,10 @@ Mapa::Mapa(){
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
 }
+*/
+Graph<Morada> Mapa::getMapa(){
+	return mapa;
+}
 /*
 void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(1200, 1200, false);
@@ -252,8 +256,8 @@ void Mapa::displayMapa(vector<Morada> points){
 
 	gv->rearrange();
 }
- */
 
+/*
 void Mapa::display(){
 	GraphViewer *gv = new GraphViewer(4000, 4000, false);
 
@@ -292,7 +296,7 @@ void Mapa::display(){
 
 	}
 }
-
+*/
 void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(600, 600, false);
 
