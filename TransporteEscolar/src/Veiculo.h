@@ -13,8 +13,9 @@ private:
 	unsigned int numLugares;
 	string matricula;
 	vector<Cliente *> clientes;
-	Morada *partida;
-	Morada *destino;
+	//Morada *partida;
+	//Morada *destino;
+	vector<Morada > caminho;
 public:
 	Veiculo(string matricula);
 	int getNumLugares()const;
@@ -33,6 +34,8 @@ public:
 	Morada* getDestino() const;
 	//enviar clientes, desmarcar pontos de interesse e marcar os que interessa
 	friend ostream & operator<<(ostream & o, const Veiculo &v);
+	void pushCaminho(Morada m);
+	vector<Morada> getCaminho();
 };
 
 #endif /* SRC_VEICULO_H_ */

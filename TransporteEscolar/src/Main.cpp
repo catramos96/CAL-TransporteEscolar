@@ -237,6 +237,9 @@ void verTodosPontos(Empresa *e){
 
 	e->distribuiCliVeiculos();
 
+	e->displayTrajetosIda();
+	e->displayTrajetosVolta();
+
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -411,8 +414,8 @@ int main() {
 	//temp
 	Morada * source = new Morada(100,100,0);
 	Empresa *e = new Empresa("Transportes Escolares",source);
+	//fazer funcao de inicializar
 	e->carregarInfo();
-	//e->distribuiCliVeiculos();
 	menuInicial(e);
 	esperar();
 
