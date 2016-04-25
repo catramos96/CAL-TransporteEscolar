@@ -1,0 +1,72 @@
+4751557;Campo dos Mártires da Pátria;False
+23148321;Largo do Mitelo;True
+23525306;Campo dos Mártires da Pátria;True
+23735282;Rua do Instituto Bacteriológico;True
+23735290;Rua Manuel Bento de Sousa;False
+23735294;Rua Manuel Bento de Sousa;False
+25625870;Rua Nova do Desterro;False
+27572377;Campo dos Mártires da Pátria;False
+32331225;Travessa do Torel;False
+32331218;Travessa da Cruz do Torel;False
+32906862;Campo dos Mártires da Pátria;False
+32907041;Rua de Santo António dos Capuchos;False
+36378965;Rua Doutor Almeida Amaral;False
+38036789;Largo do Mastro;False
+38037208;Largo do Mitelo;False
+38036823;Rua da Bempostinha;False
+48663304;Alameda de Santo António dos Capuchos;False
+95684746;Rua de Santo António dos Capuchos;False
+97717667;Travessa de José Vaz de Carvalho;False
+97717671;Travessa das Recolhidas;False
+97735381;Rua do Saco;False
+25625810;Rua Rafael de Andrade;False
+97735334;Rua dos Castelinhos;False
+97735299;Travessa de Santa Cruz;False
+97735371;Travessa do Meio Forte;False
+97735318;Rua do Instituto Bacteriológico;False
+97735456;;False
+97735375;;False
+97735297;Pátio do Sequeiro;False
+25625801;Rua Capitão Renato Baptista;False
+97739336;Travessa das Salgadeiras;False
+97735360;Largo do Mastro;True
+97735317;Travessa da Cruz do Desterro;True
+4751555;Calçada do Moinho de Vento;False
+97821503;;False
+97821507;;False
+97821510;;False
+97717683;;False
+97822050;;False
+97822052;;False
+97822058;;False
+97822060;;False
+97822061;;False
+98042150;;False
+98042153;;False
+98042158;;False
+98042151;;False
+98042161;;False
+98042162;;False
+97498810;Rua de São Lázaro;False
+98146089;;False
+27572506;Campo dos Mártires da Pátria;False
+330216441;Travessa do Forno do Torel;False
+137762634;Largo do Mastro;False
+137762651;Paço da Rainha;False
+137762674;Rua do Sol a Santana;False
+137762680;Travessa do Forte;False
+137762685;Travessa do Meio Forte;False
+137762646;Pátio do Sequeiro;False
+32331226;Rua Júlio de Andrade;False
+97735325;Pátio dos Santos;False
+97759892;;False
+236038763;;False
+236038709;Campo dos Mártires da Pátria;True
+236038708;Campo dos Mártires da Pátria;False
+32906875;Campo dos Mártires da Pátria;False
+97735386;Campo dos Mártires da Pátria;False
+137762630;Largo do Mastro;False
+137762657;Rua Conselheiro Arantes Pedroso;False
+384772505;Rua Nova do Desterro;True
+384772506;Rua de São Lázaro;False
+384773260;Largo do Mitelo;False

@@ -10,12 +10,13 @@ private:
 	Graph<Morada> mapa;
 public:
 	Mapa();
+	Mapa(GraphViewer *gv);
 	Graph<Morada> getMapa();
 	void display();
 	void displayMapa(vector<Morada> points);
+	void displayPath(GraphViewer *gv,vector<Morada> points, bool inverse);
 	void setPontoInteresse(Morada m, bool b);
 	bool isPontoInteresse(Morada m);
-	//int isPonto(Morada m) const; // retorna o id se encontrou ou -1 caso não tenha encontrado
 	int displayPontos() const;
 	Morada getPonto(int id);
 	vector<Morada> shortestPath(vector<Morada> points);
@@ -27,6 +28,7 @@ public:
 	void makefloydWarshallShortestPath();
 	double haversineAlgorith(double lat1, double long1, double lat2, double long2);
 	vector<Morada> makePath(vector<Morada> points);
+	void cleanMapa(GraphViewer *gv);
 };
 
 

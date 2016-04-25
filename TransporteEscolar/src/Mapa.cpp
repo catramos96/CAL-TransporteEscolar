@@ -13,6 +13,7 @@ using namespace std;
  * Inicializa o grafo com os nos e arestas dos ficheiros "nos.txt" e "arestas.txt"
  */
 
+// FUNÇÃO SÓ PARA TESTE
 Mapa::Mapa(){
 	ifstream inFile;
 
@@ -80,6 +81,8 @@ Mapa::Mapa(){
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
 }
+
+// ALGORITMO PARA CALCULO DE DISTANCIAS - LAT E LONG EM RAD
 double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double long2)
 {
 	const int earthRadius = 6371000;
@@ -92,31 +95,33 @@ double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double lo
 
 	return d;
 }
-/*
-Mapa::Mapa(){
+
+// FUNÇÃO QUE CRIA E FAZ DISPLAY DO MAPA. CASO POINTS NAO SEJA NULO, TRAÇA O CAMINHO
+Mapa::Mapa(GraphViewer *gv){
 
 	//openstreetmaps.org
 
-	vector<int > twoWays; //se uma aresta estiver neste vértice significa que a sua rua é bidirecional
-
+	vector<int> twoWays; //se uma aresta estiver neste vértice significa que a sua rua é bidirecional
+	vector<pair<unsigned int, unsigned int> > vertexIndex;
 	ifstream inFile;
 
-	//Ler o ficheiro nos.txt
-	inFile.open("LisboaNodes.txt");
+//	limpaMapa();
+
+	//--------------------------------------------- nos.txt----------------------------------------------//
+	inFile.open("111.txt");
 
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
 
+	int idNo, newIdNo = 1;
+	double x, y;
 	string line;
-
-	int idNo=0;
-	double x=0;
-	double y=0;
 
 	while(getline(inFile, line))
 	{
 		stringstream linestream(line);
-		string	data;
+		string data;
+
 
 		linestream >> idNo;
 		getline(linestream, data, ';');  // discard lat in º
@@ -125,20 +130,28 @@ Mapa::Mapa(){
 		linestream >> x;
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		linestream >> y;
-		Morada m = Morada(x,y,idNo);
+
+		Morada m = Morada(x,y,newIdNo);
 		mapa.addVertex(m);
+
+		gv ->addNode(newIdNo);
+
+		pair<unsigned int, unsigned int> idPair;
+		idPair.first = newIdNo;
+		idPair.second = idNo;
+		vertexIndex.push_back(idPair);
+		newIdNo++;
 	}
 
 	inFile.close();
 
-	//Ler o ficheiro arestas.txt
-
-	inFile.open("LisboaRoads.txt");
+	//--------------------------------------------- arestas.txt----------------------------------------------//
+	inFile.open("222.txt");
 
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
 
-	int idAresta=0;
+	int idAresta;
 	string temp;
 
 	while(std::getline(inFile, line))
@@ -153,19 +166,21 @@ Mapa::Mapa(){
 		linestream >> temp;
 
 		if(temp == "True")
-			twoWays.push_back(idAresta);
+		twoWays.push_back(idAresta);
 	}
 	inFile.close();
 
-	//Ler o ficheiro SubRoads.txt
-	inFile.open("LisboaSubRoads.txt");
+	//--------------------------------------------- subroads.txt----------------------------------------------//
+	inFile.open("333.txt");
 
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
 
+	int newIdAresta = 1;
 	idAresta=0;
-	int idNoOrigem=0;
-	int idNoDestino=0;
+	int newIdNoOrigem, newIdNoDestino;
+	int idNoOrigem;
+	int idNoDestino;
 
 	while(std::getline(inFile, line))
 	{
@@ -180,18 +195,34 @@ Mapa::Mapa(){
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		linestream >> idNoDestino;
 
-		Vertex<Morada>* vSource = mapa.getVertexByID(idNoOrigem);
-		Vertex<Morada>* vDest = mapa.getVertexByID(idNoDestino);
+		for(unsigned int i = 0; i < vertexIndex.size(); i++)
+		{
+			if(vertexIndex[i].second == idNoOrigem)
+				newIdNoOrigem = vertexIndex[i].first;
+			else
+			if(vertexIndex[i].second == idNoDestino)
+				newIdNoDestino = vertexIndex[i].first;
+		}
+
+
+		Vertex<Morada>* vSource = mapa.getVertexByID(newIdNoOrigem);
+		Vertex<Morada>* vDest = mapa.getVertexByID(newIdNoDestino);
 		double weight =  haversineAlgorith(vSource->getInfo().getX(), vSource->getInfo().getY(), vDest->getInfo().getX(), vDest->getInfo().getY());
-		if(vSource == vDest)
+		if(vSource->getInfo() == vDest->getInfo())
 			continue;
 		else{
 			if(vSource != NULL && vDest != NULL){
-				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), weight, idAresta);
-				for(size_t i = 0; i < twoWays.size(); i++)
-					if(twoWays.at(i) == idAresta){	//esta aresta está nos vetores de arestas bidirecionais
-						mapa.addEdge(vDest->getInfo(),vSource->getInfo(), weight, idAresta);
-					}
+				stringstream label;
+				label << weight;
+				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), weight, newIdAresta);
+				gv->addEdge(newIdAresta, newIdNoOrigem, newIdNoDestino, EdgeType::UNDIRECTED);
+				gv->setEdgeLabel(newIdAresta,label.str());
+				newIdAresta++;
+				//for(size_t i = 0; i < twoWays.size(); i++)
+				//	if(twoWays.at(i) == newIdAresta){	//esta aresta está nos vetores de arestas bidirecionais
+				mapa.addEdge(vDest->getInfo(),vSource->getInfo(), weight, newIdAresta);
+				newIdAresta++;
+				//	}
 			}
 		}
 	}
@@ -200,102 +231,47 @@ Mapa::Mapa(){
 
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
+	gv->rearrange();
+	return;
 }
- */
+
 Graph<Morada> Mapa::getMapa(){
 	return mapa;
 }
-/*
-void Mapa::displayMapa(vector<Morada> points){
-	GraphViewer *gv = new GraphViewer(1200, 1200, false);
+void Mapa::cleanMapa(GraphViewer *gv)
+{
+	for(int i = 0; i < mapa.getNumVertex(); i++)
+		gv->setVertexColor(mapa.getVertexByID(i+1)->getInfo().getID() , "pink");
+}
 
-	gv->createWindow(1200, 1200);
-	gv->defineEdgeColor("black");
-	gv->defineVertexColor("pink");
+// FUNÇÃO QUE TRAÇA O CAMINHO DE POINTS -> CHAMADA EM Mapa()
+void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool inverse){
 
-	// Faz o mapa sem nada
-
-	vector<Vertex<Morada> *> allVertex = mapa.getVertexSet();
-	for(int i = 0; i < mapa.getNumVertex(); i++){
-		Vertex<Morada> * v = allVertex.at(i);
-
-		gv->addNode(v->getInfo().getID(),v->getInfo().getX(),v->getInfo().getY());
-		//--------------------------------------------------------------------------//
-		for(int j = 0; j < v->getNumAdjacents(); j++){
-			int dest = v->getAdjacentNumber(j).getDest()->getInfo().getID();
-			int k = v->getAdjacentNumber(j).getID();
-			gv->addEdge(k,v->getInfo().getID(),dest, EdgeType::DIRECTED);
-			stringstream label;
-			label << v->getAdjacentNumber(j).getWeight();
-			gv->setEdgeLabel(k,label.str());
-			k++;
-		}
-
-		//--------------------------------------------------------------------------//
-	}
-
-	// Começa a animação
-
+	cleanMapa(gv);
+	Sleep(2000);
 
 	for(int l = 0; l < points.size(); l++)
 	{
-		for(int i = 0; i < mapa.getNumVertex(); i++)
-		{
-			Vertex<Morada> * v = mapa.getVertexByID(i);
-			if(v->getInfo().getID() == points[l].getID())
-			{
-				gv->setVertexColor(v->getInfo().getID(), "magenta");
-				gv->rearrange();
 
-				Sleep(1000);
-			}
-		}
-	}
-
-
-	gv->rearrange();
-}
-
-/*
-void Mapa::display(){
-	GraphViewer *gv = new GraphViewer(4000, 4000, false);
-
-	gv->createWindow(4000, 4000);
-	gv->defineEdgeColor("black");
-	gv->defineVertexColor("pink");
-
-	vector<Vertex<Morada> * > m = mapa.getVertexSet();
-	int offset =0;
-	for(int i = 0; i < m.size(); i++){
-
-		Vertex<Morada> * v = m.at(i);
-		//cout << "nº "<< i << " x " <<v->getInfo().getX() << " y " << v->getInfo().getY() << endl;
-		gv->addNode(v->getInfo().getID(),v->getInfo().getX()+ 100 + offset,v->getInfo().getY() + 100 + offset/2) ;
-
-		for(int j = 0; j < v->getNumAdjacents(); j++){
-
-			//cout << "j " << j << endl;
-			Edge<Morada> e = v->getAdjacentNumber(j);
-			int edgeID = e.getID();
-			int dest = e.getDest()->getInfo().getID();
-			int src = v->getInfo().getID();
-
-			gv->addEdge(edgeID,src,dest, EdgeType::DIRECTED);
-			stringstream label;
-			label << v->getAdjacentNumber(j).getWeight();
-			gv->setEdgeLabel(edgeID,label.str());
-
-		}
-		if(i%2 == 0)
-			offset += 100;
+		Vertex<Morada> * v = mapa.getVertexByID(points[l].getID());
+		if(v == NULL)
+			return;
+		if(!inverse)
+			if(l = 0)
+				gv->setVertexColor(points[l].getID(), "red");
+			else
+				gv->setVertexColor(points[l].getID(), "magenta");
 		else
-			offset -= 100;
-
-		offset += 3;
-
+			if(l == points.size()-1)
+				gv->setVertexColor(points[l].getID(), "green");
+			else
+				gv->setVertexColor(points[l].getID(), "red");
+		gv->rearrange();
+		Sleep(1000);
 	}
 }
- */
+
+// FUNÇÃO SÓ PARA TESTE
 void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(600, 600, false);
 
@@ -308,8 +284,6 @@ void Mapa::displayMapa(vector<Morada> points){
 	int k = 0;
 	for(int i = 0; i < mapa.getNumVertex(); i++){
 		Vertex<Morada> * v = mapa.getVertexByID(i);
-		/*if(v->getIsPI())
-			gv->setVertexColor(v->getInfo().getID(), "red");*/
 		if(v->getInfo() == points.at(0) || v->getInfo() == points.at(points.size()-1)) //destino e inicio
 			gv->setVertexColor(v->getInfo().getID(), "yellow");
 
@@ -323,40 +297,6 @@ void Mapa::displayMapa(vector<Morada> points){
 			k++;
 		}
 	}
-
-	/*	// Começa a animação
-//----------------------------------------------------------------------------//
-	k = 0;
-	for(int i = 0; i < mapa.getNumVertex(); i++)
-	{
-			Vertex<Morada> * v = mapa.getVertexByID(i);
-			if(isPontoInteresse(v->getInfo()))
-			{
-				for(int j = 0; j < v->getNumAdjacents(); j++){
-					int dest = v->getAdjacentNumber(j).getDest()->getInfo().getID();
-					cout << "i " << i << " j " << j <<" dest " << dest << " k " << k << endl;;
-					Vertex<Morada> * destino = mapa.getVertexByID(dest);
-					if(isPontoInteresse(v->getAdjacentNumber(j).getDest()->getInfo()))
-					{
-						cout << "vou colocar" << endl;
-						gv->setEdgeColor(k,"magenta");
-						gv->rearrange();
-					}
-
-					gv->setVertexColor(v->getInfo().getID(), "magenta");
-					gv->rearrange();
-
-					Sleep(1000);
-					k++;
-				}
-			}
-			else
-				for(int j = 0; j < v->getNumAdjacents(); j++){k++;}
-		}
-//----------------------------------------------------------------------------//
-	 */
-
-	Sleep(3000);
 
 	for(size_t l = 0; l < points.size(); l++)
 	{
@@ -373,27 +313,6 @@ void Mapa::displayMapa(vector<Morada> points){
 		}
 	}
 
-
-	/*
-//----------------------------------------------------------------------------//
-	for(int i = 0; i < mapa.getNumVertex(); i++){
-		Vertex<Morada> * v = mapa.getVertexByID(i);
-		if(isPontoInteresse(v->getInfo()))
-			gv->setVertexColor(v->getInfo().getID(), "magenta");
-
-		gv->addNode(i,v->getInfo().getX(),v->getInfo().getY());
-
-		for(int j = 0; j < v->getNumAdjacents(); j++){
-			int dest = v->getAdjacentNumber(j).getDest()->getInfo().getID();
-			gv->addEdge(k,v->getInfo().getID(),dest, EdgeType::DIRECTED);
-			stringstream label;
-			label << v->getAdjacentNumber(j).getWeight();
-			gv->setEdgeLabel(k,label.str());
-			k++;
-		}
-	}
-//----------------------------------------------------------------------------//
-	 * */
 	gv->rearrange();
 }
 
@@ -410,15 +329,6 @@ bool Mapa::isPontoInteresse(Morada m){
 	Vertex<Morada> *v = mapa.getVertex(m);
 	return v->getIsPI();
 }
-
-/*int Mapa::isPonto(Morada m) const{
-	for (int var = 0; var < mapa.getNumVertex(); ++var) {
-		if(mapa.getVertexSet()[var]->getInfo().getX() == m.getX() &&
-				mapa.getVertexSet()[var]->getInfo().getY() == m.getY())
-			return mapa.getVertexSet()[var]->getInfo().getID();
-	}
-	return -1;
-}*/
 
 int Mapa::displayPontos() const{
 	for (int var = 0; var < mapa.getNumVertex(); ++var) {

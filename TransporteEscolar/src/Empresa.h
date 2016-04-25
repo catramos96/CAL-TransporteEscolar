@@ -48,6 +48,9 @@ public:
 	bool displayTrajetosIda(string matricula);
 	bool displayTrajetosVolta(string matricula);
 
+	void initialization();
+	void update();
+
 };
 
 #endif /* SRC_EMPRESA_H_ */

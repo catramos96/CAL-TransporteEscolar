@@ -3,6 +3,7 @@
 #include "Recursos.h"
 #include "Excessoes.h"
 #include "Mapa.h"
+#include "graphviewer.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -481,24 +482,22 @@ void menuEmpresa(Empresa *e){
 	menuInicial(e);
 }
 
-//Inicializacao de dados
-//==============================================================================================================
-void initialize(){
-
-}
-
-void update(){
-
-}
-
 int main(){
-
+/*
 	Morada * source = new Morada(100,100,0); 	// MUDAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	menuEmpresa(e);
-//	esperar();
+	esperar();
 
 	delete(e);
+*/
+	GraphViewer *gv = new GraphViewer(1200,1200,true);
+	Mapa *map = new Mapa(gv);
+	vector<Morada> res;
+	Morada m(30307043,-0.1595457,0.6758222);
+	res.push_back(m);
+	map->displayPath(gv,res,false);
+
 	/*
 	Morada *m1 = new Morada(100,100,0);
 	Morada *m2 = new Morada(100,200,4);

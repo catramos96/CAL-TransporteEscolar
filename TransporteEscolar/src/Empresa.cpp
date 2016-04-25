@@ -11,6 +11,7 @@ using namespace std;
  */
 Empresa::Empresa(string nome, Morada *endereco)
 {
+	isEscola = false;
 	this->nome = nome;
 	this->endereco = endereco;
 	mapa = new Mapa();
@@ -20,22 +21,77 @@ string Empresa::getNome() const {return nome;}
 
 Morada* Empresa::getEndereco() const {return endereco;}
 
-void Empresa::setIsEscola(bool b){
-	isEscola =b;
-}
-bool Empresa::getIsEscola() const{
-	return isEscola;
-}
+void Empresa::setIsEscola(bool b){ isEscola =b; }
 
-vector<Morada *> Empresa::getEscolas() const{
-	return escolas;
-}
+bool Empresa::getIsEscola() const{ return isEscola; }
+
+vector<Morada *> Empresa::getEscolas() const{ return escolas; }
 
 Mapa* Empresa::getMapa() const {return mapa;}
 
 void Empresa::setNome(string nome) {this->nome = nome;}
 
 void Empresa::setEndereco(Morada *endereco) {this->endereco = endereco;}
+
+vector<Cliente *> Empresa::getClientesEscola(Morada *escola) const{
+	vector<Cliente *>::const_iterator itb = clientes.begin();
+	vector<Cliente *>::const_iterator itf = clientes.end();
+	vector<Cliente *> res;
+	while(itb != itf){
+		if(*(*itb)->getEscola() == *escola)
+			res.push_back(*itb);
+		itb++;
+	}
+	return res;
+}
+
+vector<Cliente *> Empresa::getClientesPontoRecolha(Morada * ponto) const{
+	vector<Cliente *>::const_iterator itb = clientes.begin();
+	vector<Cliente *>::const_iterator itf = clientes.end();
+	vector<Cliente *> c;
+	if(mapa->isPontoInteresse(*ponto) == false)
+		throw PontoRecolhaInvalido(*ponto);
+	while(itb != itf){
+		if(*(*itb)->getResidencia() == *ponto)
+			c.push_back(*itb);
+		itb++;
+	}
+	return c;
+}
+
+void Empresa::setClientesPI(int id){
+	vector<Cliente *> mudar_cli;
+	//Seleccionar os clientes com a residencia com o mesmo id
+	for (size_t i = 0; i < clientes.size(); ++i) {
+		if(clientes[i]->getResidencia()->getID() == id)
+			mudar_cli.push_back(clientes[i]);
+	}
+	//ir buscar o ponto de recolha mais próximo a id
+	vector<Morada> pontosRecolha = mapa->getInterestPoints();
+
+	int indice1 = -1,indice2 = -1;
+	//procurar o indice do ponto de recolha com id
+	for (size_t i = 0; i < pontosRecolha.size(); ++i) {
+		if(pontosRecolha[i].getID() == id)
+			indice1 = i;
+	}
+
+	if(indice1 == -1){
+		cout << "Indice Invalido" << endl;
+		throw VoltarAtras();
+	}
+	indice2 = mapa->getMinDistBetweenPoints(indice1,pontosRecolha);
+
+	if(indice1 == indice2 || indice2 == -1)
+		throw PontoRecolhaInvalido(pontosRecolha[indice1]);
+
+	//substituir clientes para o ponto de recolha de indice2 em pontosRecolha
+
+	Morada *m = new Morada(getEndereco()->getX(),getEndereco()->getY(),pontosRecolha[indice2].getID());
+	for (size_t i = 0; i < mudar_cli.size(); ++i) {
+		mudar_cli[i]->setNovaResidencia(m);
+	}
+}
 
 bool Empresa::addTransporte(Veiculo * veiculo)
 {
@@ -55,7 +111,7 @@ bool Empresa::addCliente(Cliente * cliente)
 	Cliente::id--; //para o caso de dar throw
 	//veiculos insuficientes2
 	int lugares = 0;
-	for (int i = 0; i < transportes.size(); ++i) {
+	for (size_t i = 0; i < transportes.size(); ++i) {
 		lugares += transportes[i]->getNumLugares();
 	}
 	//Residencia nao e um ponto de interesse
@@ -72,7 +128,7 @@ bool Empresa::addCliente(Cliente * cliente)
 			return false;
 		}
 	//residencia = escola(Empresa->escolas)
-	for (int j = 0; j < escolas.size(); ++j) {
+	for (size_t j = 0; j < escolas.size(); ++j) {
 		if(*cliente->getResidencia() == *escolas[j])
 			return false;
 	}
@@ -113,7 +169,7 @@ bool Empresa::removeCliente(Cliente * cliente)
 	Cliente *c;
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(cliente == clientes[i]){
-			for (int var = 0; var < transportes.size(); ++ var) {
+			for (size_t var = 0; var < transportes.size(); ++ var) {
 				transportes[var]->sairCliente(cliente);
 			}
 			removerEscola(cliente->getEscola());
@@ -200,6 +256,37 @@ bool Empresa::displayTrajetosVolta(string matricula){
 	}
 	return false;
 }
+
+void Empresa::displayClientes() const{
+	for (size_t i = 0; i < clientes.size(); ++i) {
+		cout << *clientes[i] << endl;
+	}
+}
+
+void Empresa::displayVeiculos() const{
+	for (size_t i = 0; i < transportes.size(); ++i) {
+		cout << *transportes[i] << endl;
+	}
+}
+
+void Empresa::displayEscolas() const{
+	vector<Morada> tmp;
+
+	for (size_t i = 0; i < getEscolas().size(); ++i) {
+		tmp.push_back(*getEscolas()[i]);
+		cout << tmp[i] << endl;
+	}
+	mapa->displayMapa(tmp);
+}
+
+void Empresa::displayPontosRecolha() const{
+	vector<Morada> pi = mapa->getInterestPoints();
+	for (size_t i = 0; i < pi.size(); ++i) {
+		cout << pi[i] << " n Clientes: " << getClientesPontoRecolha(&pi[i]).size() << endl;
+	}
+	mapa->displayMapa(pi);
+}
+
 
 void Empresa::distribuiCliVeiculos(){
 
@@ -289,34 +376,8 @@ void Empresa::distribuiCliVeiculos(){
 
 }
 
-void Empresa::displayClientes() const{
-	for (size_t i = 0; i < clientes.size(); ++i) {
-		cout << *clientes[i] << endl;
-	}
-}
+void Empresa::initialization(){
 
-void Empresa::displayVeiculos() const{
-	for (size_t i = 0; i < transportes.size(); ++i) {
-		cout << *transportes[i] << endl;
-	}
-}
-
-void Empresa::displayEscolas() const{
-	vector<Morada> tmp;
-
-	for (int i = 0; i < getEscolas().size(); ++i) {
-		tmp.push_back(*getEscolas()[i]);
-		cout << tmp[i] << endl;
-	}
-	mapa->displayMapa(tmp);
-}
-
-void Empresa::displayPontosRecolha() const{
-	vector<Morada> pi = mapa->getInterestPoints();
-	for (size_t i = 0; i < pi.size(); ++i) {
-		cout << pi[i] << " n Clientes: " << getClientesPontoRecolha(&pi[i]).size() << endl;
-	}
-	mapa->displayMapa(pi);
 }
 
 void Empresa::guardarInfo() const{
@@ -334,19 +395,19 @@ void Empresa::guardarInfo() const{
 	file << nome << " " << *endereco << endl;
 	file << "=========================" << endl;
 	//transportes
-	for (int i = 0; i < transportes.size(); i++) {
+	for (size_t i = 0; i < transportes.size(); i++) {
 		file << transportes[i]->getMatricula() << " " << transportes[i]->getNumLugares() << endl;
 	}
 	//pontos recolha
 	file << "=========================" << endl;
 	vector<Morada> recolha = mapa->getInterestPoints();
-	for (int i = 0; i < recolha.size(); ++i) {
+	for (size_t i = 0; i < recolha.size(); ++i) {
 		file << recolha[i]<< endl;
 	}
 	file << "=========================" << endl;
 	//clientes
 	file << Cliente::id << endl;
-	for (int i = 0; i < clientes.size(); ++i) {
+	for (size_t i = 0; i < clientes.size(); ++i) {
 		file << clientes[i]->getID() << " " <<clientes[i]->getNome()<< " " << *clientes[i]->getResidencia()<< " " << *clientes[i]->getEscola() << endl;
 	}
 	file.close();
@@ -429,64 +490,4 @@ void Empresa::carregarInfo(){
 	}
 
 	file.close();
-}
-
-vector<Cliente *> Empresa::getClientesEscola(Morada *escola) const{
-	vector<Cliente *>::const_iterator itb = clientes.begin();
-	vector<Cliente *>::const_iterator itf = clientes.end();
-	vector<Cliente *> res;
-	while(itb != itf){
-		if(*(*itb)->getEscola() == *escola)
-			res.push_back(*itb);
-		itb++;
-	}
-	return res;
-}
-
-vector<Cliente *> Empresa::getClientesPontoRecolha(Morada * ponto) const{
-	vector<Cliente *>::const_iterator itb = clientes.begin();
-	vector<Cliente *>::const_iterator itf = clientes.end();
-	vector<Cliente *> c;
-	if(mapa->isPontoInteresse(*ponto) == false)
-		throw PontoRecolhaInvalido(*ponto);
-	while(itb != itf){
-		if(*(*itb)->getResidencia() == *ponto)
-			c.push_back(*itb);
-		itb++;
-	}
-	return c;
-}
-
-void Empresa::setClientesPI(int id){
-	vector<Cliente *> mudar_cli;
-	//Seleccionar os clientes com a residencia com o mesmo id
-	for (int i = 0; i < clientes.size(); ++i) {
-		if(clientes[i]->getResidencia()->getID() == id)
-			mudar_cli.push_back(clientes[i]);
-	}
-	//ir buscar o ponto de recolha mais próximo a id
-	vector<Morada> pontosRecolha = mapa->getInterestPoints();
-
-	int indice1 = -1,indice2 = -1;
-	//procurar o indice do ponto de recolha com id
-	for (int i = 0; i < pontosRecolha.size(); ++i) {
-		if(pontosRecolha[i].getID() == id)
-			indice1 = i;
-	}
-
-	if(indice1 == -1){
-		cout << "Indice Invalido" << endl;
-		throw VoltarAtras();
-	}
-	indice2 = mapa->getMinDistBetweenPoints(indice1,pontosRecolha);
-
-	if(indice1 == indice2 || indice2 == -1)
-		throw PontoRecolhaInvalido(pontosRecolha[indice1]);
-
-	//substituir clientes para o ponto de recolha de indice2 em pontosRecolha
-
-	Morada *m = new Morada(getEndereco()->getX(),getEndereco()->getY(),pontosRecolha[indice2].getID());
-	for (int i = 0; i < mudar_cli.size(); ++i) {
-		mudar_cli[i]->setNovaResidencia(m);
-	}
 }
