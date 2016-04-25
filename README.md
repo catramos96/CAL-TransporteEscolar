@@ -1,6 +1,7 @@
 ## O que falta fazer : ##
 
-* openStreetMaps (fazer display) - catarina (display por trajecto de veiculos)
+* openStreetMaps (fazer display) 
+       *catarina (display por trajecto de veiculos)
 
 * algoritmo de distribuição das crianças inverso (escola -> garagem)
 
