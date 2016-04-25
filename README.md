@@ -2,7 +2,7 @@
 
 * openStreetMaps (fazer display) 
 
-* É preciso garantir que o vector caminho em veiculos esteja sempre com pelo menos 1 elemento (endereço da empresa) caso contrário dá um erro no display do Mapa porque aquilo não suporta um vector de pontos sem elementos
+* colocar a cores diferentes no mapa as escolas e os pontos de recolha
 
 * algoritmo de distribuição das crianças inverso (escola -> garagem) -> está mais ou menos
 
