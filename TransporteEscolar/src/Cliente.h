@@ -15,6 +15,7 @@ private:
 public:
 	static int id; //global
 	Cliente(string nome, Morada *casa, Morada *escola);
+	Cliente(string nome, Morada *casa);
 	string getNome() const;
 	Morada * getEscola() const;
 	Morada * getResidencia() const;

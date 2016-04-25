@@ -10,6 +10,11 @@ Cliente::Cliente(string nome, Morada *casa, Morada *escola) : ID(id++){
 	this->escola = escola;
 }
 
+Cliente::Cliente(string nome, Morada *casa): ID(id++){
+	this->nome = nome;
+	this->residencia = casa;
+}
+
 string Cliente::getNome() const{
 	return nome;
 }

@@ -22,6 +22,7 @@ void addCliente(Empresa *e){
 	Morada *escola = new Morada();
 	int id;
 
+
 	clrscr();
 	displayTitulo("ADICIONAR CLIENTE");
 
@@ -37,16 +38,20 @@ void addCliente(Empresa *e){
 	}
 
 	casa->incNumCriancas();
+	Cliente *c = new Cliente(nome,casa);
+	if(!e->getIsEscola()){
+		cout << "Morada Escolar (id): ";
+		cin >> id;
 
-	cout << "Morada Escolar (id): ";
-	cin >> id;
-
-	*escola = e->getMapa()->getPonto(id);
-	if(escola->getID() == -1){
-		throw PontoInexistente(*escola);
+		*escola = e->getMapa()->getPonto(id);
+		if(escola->getID() == -1){
+			throw PontoInexistente(*escola);
+		}
+		c->setNovaEscola(escola);
 	}
+	else
+		c->setNovaEscola(e->getEndereco());
 
-	Cliente *c = new Cliente(nome,casa,escola);
 
 	//É so a casa que passa a ser um ponto de interesse ?
 	if(e->addCliente(c) == false)
@@ -403,21 +408,58 @@ void menuInicial(Empresa *e) {
 	} while (op != 5);
 }
 
+//Empresa
+//==============================================================================================================
+void menuEmpresa(Empresa *e){
+	clrscr();
+	int id;
+	char resp;
+
+	do {
+		displayTitulo("EMPRESA - "+e->getNome());
+		cout << "A empresa pertence a uma escola ? (S/N)\n";
+		cin >> resp;
+	}
+	while(resp != 'S' && resp != 'N');
+
+	if(resp == 'S')
+		e->setIsEscola(true);
+	else
+		e->setIsEscola(false);
+/*
+	cout << "Morada (id) :";
+	cin >> id;
+
+	Morada *m = new Morada(100,100,0);
+	*m = e->getMapa()->getPontoVertex(id)->getInfo();
+	try{
+		if(m->getID() == -1){
+			throw PontoInexistente(*m);
+		}
+	}
+	catch (PontoInexistente(e)){
+		cout << "Ponto inexistente " << e.getPonto() << endl;
+	}
+*/
+	e->carregarInfo();
+
+	menuInicial(e);
+}
 
 
 
-int main() {
+int main(){
 
 	//temp
 	Morada * source = new Morada(100,100,0);
 	Empresa *e = new Empresa("Transportes Escolares",source);
-	e->carregarInfo();
+	menuEmpresa(e);
 	//e->distribuiCliVeiculos();
-	menuInicial(e);
+
 	esperar();
 
 	delete(e);
-/*
+	/*
 	Morada *m1 = new Morada(100,100,0);
 	Morada *m2 = new Morada(100,200,4);
 	Morada *m3 = new Morada(100,300,8);

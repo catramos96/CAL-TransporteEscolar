@@ -21,6 +21,13 @@ string Empresa::getNome() const {return nome;}
 
 Morada* Empresa::getEndereco() const {return endereco;}
 
+void Empresa::setIsEscola(bool b){
+	isEscola =b;
+}
+bool Empresa::getIsEscola() const{
+	return isEscola;
+}
+
 vector<Morada *> Empresa::getEscolas() const{
 	return escolas;
 }
@@ -47,12 +54,13 @@ bool Empresa::addTransporte(Veiculo * veiculo)
 
 bool Empresa::addCliente(Cliente * cliente)
 {
+	Cliente::id--; //para o caso de dar throw
 	//veiculos insuficientes2
 	int lugares = 0;
 	for (int i = 0; i < transportes.size(); ++i) {
 		lugares += transportes[i]->getNumLugares();
 	}
-	//Residencia nao e um ponto de interesse (crasha lool)
+	//Residencia nao e um ponto de interesse
 	if(mapa->isPontoInteresse(*cliente->getResidencia()) == false)
 		throw PontoRecolhaInvalido(*cliente->getResidencia());
 	if(lugares < clientes.size())
@@ -63,7 +71,6 @@ bool Empresa::addCliente(Cliente * cliente)
 	//cliente já existe, id = ou residencia =
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(*cliente == *clientes[i]){
-			Cliente::id--;
 			return false;
 		}
 	//residencia = escola(Empresa->escolas)
@@ -73,6 +80,7 @@ bool Empresa::addCliente(Cliente * cliente)
 	}
 	clientes.push_back(cliente);
 	addEscola(cliente->getEscola());
+	Cliente::id++;
 	return true;
 }
 
@@ -299,10 +307,13 @@ void Empresa::displayPontosRecolha() const{
 
 void Empresa::guardarInfo() const{
 	fstream file;
-	file.open("info.txt");
+	if(isEscola)
+		file.open("escolaInfo.txt");
+	else
+		file.open("empresaInfo.txt");
 
 	if(file.fail()){
-		cout << "Error at opening info.txt\n";
+		cout << "Error at opening the file\n";
 	}
 
 	//empresa
@@ -331,7 +342,10 @@ void Empresa::carregarInfo(){
 	fstream file;
 	string tmp;
 	stringstream linha;
-	file.open("info.txt");
+	if(isEscola)
+		file.open("escolaInfo.txt");
+	else
+		file.open("empresaInfo.txt");
 	string nome;
 	string matricula;
 	int id,id2 ,coordx,coordy, nLugares, coordx2,coordy2,cliente_n;
@@ -339,7 +353,7 @@ void Empresa::carregarInfo(){
 	string separador = "=========================";
 
 	if(file.fail()){
-		cout << "Error at opening info.txt\n";
+		cout << "Error at opening the file\n";
 	}
 
 	if(!file.eof()){
@@ -389,14 +403,17 @@ void Empresa::carregarInfo(){
 			Morada *casa = new Morada(coordx,coordy,id);
 			casa->incNumCriancas();
 			Morada *escola = new Morada(coordx2,coordy2,id2);
-			Cliente *c = new Cliente(nome,casa,escola);
+			Cliente *c = new Cliente(nome,casa);
+			if(isEscola)
+				c->setNovaEscola(endereco);
+			else
+				c->setNovaEscola(escola);
 			c->setID(cliente_n);
 			addCliente(c);
 		}
-
 		Cliente::id = id_tmp;
-
 	}
+
 	file.close();
 }
 

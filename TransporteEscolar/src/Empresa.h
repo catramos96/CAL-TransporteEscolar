@@ -16,6 +16,7 @@ private:
 	vector<Cliente *> clientes;
 	vector<Morada *> escolas;
 	Mapa* mapa; //mapa da cidade
+	bool isEscola;
 public:
 	Empresa(string nome, Morada *endereco);
 	string getNome() const;
@@ -23,6 +24,8 @@ public:
 	vector<Morada *> getEscolas() const;
 	void setNome(string nome);
 	void setEndereco(Morada *endereco);
+	void setIsEscola(bool b);
+	bool getIsEscola() const;
 	bool addTransporte(Veiculo * veiculo);
 	bool addCliente(Cliente *cliente);		//Verificar se a casa não é uma escola, e se a escola não é uma casa
 	bool addEscola(Morada * e);
