@@ -31,19 +31,30 @@ bool Veiculo::addCliente(Cliente *c){
 }
 
 bool Veiculo::sairCliente(Cliente *c){
-	vector<Cliente *>::iterator it;
-	if(find(clientes.begin(),clientes.end(),c) != clientes.end())
-	{	clientes.erase(it);
-	return true;
+	vector<Cliente *>::iterator itb = clientes.begin();
+	vector<Cliente *>::iterator itf = clientes.end();
+
+	while(itb != itf){
+		if(*(*itb) == *c)
+		{
+			clientes.erase(itb);
+			return true;
+		}
 	}
 	return false;
 }
 
 bool Veiculo::existeCliente(Cliente *c) const{
-	vector<Cliente *>::const_iterator it;
-	if(find(clientes.begin(),clientes.end(),c) != clientes.end())
-		return true;
-	return false;
+	vector<Cliente *>::const_iterator itb = clientes.begin();
+		vector<Cliente *>::const_iterator itf = clientes.end();
+
+		while(itb != itf){
+			if(*(*itb) == *c)
+			{
+				return true;
+			}
+		}
+		return false;
 }
 
 bool Veiculo::passaNaEscola(Morada *escola) const{
@@ -69,7 +80,7 @@ bool Veiculo::operator== (const Veiculo &v) const{
 int Veiculo::lugaresLivres(){
 	return (numLugares - clientes.size());
 }
-
+/*
 void Veiculo::setPartida(Morada *partida){
 	this->partida = partida;
 }
@@ -77,10 +88,11 @@ void Veiculo::setPartida(Morada *partida){
 void Veiculo::setDestino(Morada *destino){
 	this->destino = destino;
 }
+ */
 
 /**
  * cria um vetor de pontos de interesse para esse veiculo
- */
+ *
 vector<Morada> Veiculo::makePath(){
 
 	vector<Morada> points;
@@ -99,7 +111,16 @@ Morada* Veiculo::getPartida() const{
 
 Morada* Veiculo::getDestino() const{
 	return destino;
+}*/
+
+void Veiculo::pushCaminho(Morada m){
+	caminho.push_back(m);
 }
+
+vector<Morada> Veiculo::getCaminho(){
+	return caminho;
+}
+
 
 ostream & operator<<(ostream & o, const Veiculo &v){
 	o << "Matricula - " << v.getMatricula() << " Capacidade -  "<< v.getNumLugares();

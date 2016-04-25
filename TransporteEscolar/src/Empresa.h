@@ -33,7 +33,7 @@ public:
 	bool removeCliente(Cliente * cliente);
 	bool removerEscola(Morada *e);
 	void distribuiCliVeiculos();
-	void enviaVeiculos();
+	//void enviaVeiculos();
 	void displayClientes() const;
 	void displayVeiculos() const;
 	void displayEscolas() const;
@@ -46,6 +46,8 @@ public:
 	vector<Cliente *> getClientesEscola(Morada *escola) const;
 	vector<Cliente *> getClientesPontoRecolha(Morada * ponto) const;
 	void setClientesPI(int id);	//muda a residencia dos clientes com id para o ponto de recolha mais próximo
+	bool displayTrajetosIda();
+	bool displayTrajetosVolta();
 };
 
 #endif /* SRC_EMPRESA_H_ */

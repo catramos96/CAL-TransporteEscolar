@@ -21,11 +21,12 @@ public:
 	vector<Morada> shortestPath(vector<Morada> points);
 	Vertex<Morada> * getPontoVertex(int id);
 	vector<Morada> getInterestPoints() const;
-	int getMinDistBetweenPoints(int pi, vector<Morada> points, vector<Morada> &res);
+	int getMinDistBetweenPoints(int pi, vector<Morada> points);
 	bool getPontoProcessado(Morada ponto);
 	void setPontoProcessado(Morada ponto, bool estado);
 	void makefloydWarshallShortestPath();
 	double haversineAlgorith(double lat1, double long1, double lat2, double long2);
+	vector<Morada> makePath(vector<Morada> points);
 };
 
 

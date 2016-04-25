@@ -13,7 +13,6 @@ using namespace std;
  * Inicializa o grafo com os nos e arestas dos ficheiros "nos.txt" e "arestas.txt"
  */
 
-
 Mapa::Mapa(){
 	ifstream inFile;
 
@@ -202,7 +201,7 @@ Mapa::Mapa(){
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
 }
-*/
+ */
 Graph<Morada> Mapa::getMapa(){
 	return mapa;
 }
@@ -296,7 +295,7 @@ void Mapa::display(){
 
 	}
 }
-*/
+ */
 void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(600, 600, false);
 
@@ -449,10 +448,6 @@ Vertex<Morada> * Mapa::getPontoVertex(int id){
 	return v;
 }
 
-void Mapa::makefloydWarshallShortestPath(){
-	mapa.floydWarshallShortestPath();
-}
-
 vector<Morada> Mapa::shortestPath(vector<Morada> points){
 	mapa.floydWarshallShortestPath();
 	vector<Morada> res = mapa.getfloydWarshallPathWithIP(points);
@@ -467,9 +462,9 @@ vector<Morada> Mapa::shortestPath(vector<Morada> points){
 vector<Morada> Mapa::getInterestPoints() const{
 	vector<Morada> res;
 	for (int i = 0; i < mapa.getNumVertex(); ++i) {
-			if(mapa.getVertexSet()[i]->getIsPI()){
-				res.push_back(mapa.getVertexSet().at(i)->getInfo());
-			}
+		if(mapa.getVertexSet()[i]->getIsPI()){
+			res.push_back(mapa.getVertexSet().at(i)->getInfo());
+		}
 	}
 	return res;
 }
@@ -482,6 +477,28 @@ bool Mapa::getPontoProcessado(Morada ponto){
 	return mapa.getProcessing(ponto);
 }
 
-int Mapa::getMinDistBetweenPoints(int pi, vector<Morada> points, vector<Morada> &res){
-	return mapa.getMinDistAndPath(pi,points,res);
+int Mapa::getMinDistBetweenPoints(int pi, vector<Morada> points){
+	mapa.floydWarshallShortestPath(); //crias as tabelas do path e dist entre todos os pontos
+	return mapa.getMinDistAndPath(pi,points);
+}
+
+/**
+ * Funcao que recebe como parametros os pontos por onde o grafo deve passar (ordenados) e faz o caminho até esse pontos
+ */
+vector<Morada> Mapa::makePath(vector<Morada> points){
+
+	vector<Morada> path;
+
+	for(size_t i = 0; i < points.size()-1; i++){
+		vector<Morada> temp = mapa.getfloydWarshallPath(points.at(i), points.at(i+1));
+
+		if(i == 0)
+			path.push_back(temp.at(0));
+
+		for(size_t k = 0; k < temp.size(); k++){
+			if(k != 0)
+				path.push_back(temp.at(k));
+		}
+	}
+	return path;
 }

@@ -75,7 +75,7 @@ public:
 	bool getfloydWarshallPathWithIPAux(vector<T> points, int pi, vector<T> &res);
 	void setProcessing(T info, bool estado);
 	bool getProcessing(T info);
-	int getMinDistAndPath(int pi, vector<T> points, vector<T> &res);
+	int getMinDistAndPath(int pi, vector<T> points);
 	bool edgeExists(Edge<T>* e);
 };
 
@@ -720,7 +720,7 @@ bool Graph<T>::getProcessing(T info){
  * também recebe um vetor que guarda o caminho entre esses 2 pontos.
  */
 template<class T>
-int Graph<T>::getMinDistAndPath(int pi, vector<T> points, vector<T> &res){
+int Graph<T>::getMinDistAndPath(int pi, vector<T> points){
 
 	floydWarshallShortestPath();
 
@@ -741,11 +741,6 @@ int Graph<T>::getMinDistAndPath(int pi, vector<T> points, vector<T> &res){
 
 	if(dist == INT_INFINITY)
 		return pi; //siginifica que todos os pontos estão processados OU houve um erro
-
-	vector<T> temp = getfloydWarshallPath(points.at(pi), points.at(min));
-	for(size_t k = 0; k < temp.size(); k++)
-		if(k != 0)
-			res.push_back(temp.at(k));
 
 	return min;
 }

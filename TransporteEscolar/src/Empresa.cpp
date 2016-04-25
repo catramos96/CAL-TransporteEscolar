@@ -47,7 +47,7 @@ bool Empresa::addTransporte(Veiculo * veiculo)
 			return false;
 		}
 	}
-	veiculo->setPartida(endereco); // o veiculo parte da sede da empresa
+	//veiculo->setPartida(endereco); // o veiculo parte da sede da empresa
 	transportes.push_back(veiculo);
 	return true;
 }
@@ -116,9 +116,8 @@ bool Empresa::removeCliente(Cliente * cliente)
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(cliente == clientes[i]){
 			for (int var = 0; var < transportes.size(); ++ var) {
-				transportes[i]->sairCliente(clientes[i]);
+				transportes[var]->sairCliente(cliente);
 			}
-			mapa->getPontoVertex(clientes[i]->getResidencia()->getID())->setIsPI(0);
 			removerEscola(cliente->getEscola());
 			c = clientes[i];
 			clientes.erase(clientes.begin() + i);
@@ -171,9 +170,37 @@ bool compararVeiculos(Veiculo *v1 , Veiculo *v2){
 		return false;
 }
 
-void Empresa::distribuiCliVeiculos(){
+bool Empresa::displayTrajetosIda(){
 
-	mapa->makefloydWarshallShortestPath(); //crias as tabelas do path e dist entre todos os pontos
+	for(size_t i = 0; i < transportes.size(); i++){
+		vector<Morada> res = transportes.at(i)->getCaminho();
+
+		if(res.size() != 0){
+			vector<Morada> path = mapa->makePath(res);
+			mapa->displayMapa(path);
+		}
+	}
+	return true;
+}
+
+bool Empresa::displayTrajetosVolta(){
+
+	for(size_t i = 0; i < transportes.size(); i++){
+		vector<Morada> res = transportes.at(i)->getCaminho();
+		vector<Morada> invert;
+
+		if(res.size() != 0){
+			for(size_t j = res.size()-1; j > 0; j--)
+				invert.push_back(res.at(j));
+			invert.push_back(res.at(0));
+			vector<Morada> path = mapa->makePath(invert);
+			mapa->displayMapa(path);
+		}
+	}
+	return true;
+}
+
+void Empresa::distribuiCliVeiculos(){
 
 	bool end = false;
 	vector<Morada > pi; //vetor com todos os pontos de interesse
@@ -198,12 +225,11 @@ void Empresa::distribuiCliVeiculos(){
 		if(end)
 			break;
 
-		int p = 0; // comeca sempre no ponto 0
-		int min = 0; // ponto mais proximo
+		int p = 0; // comeca sempre no ponto 0 (indice do vetor pi)
+		int min = 0; // ponto mais proximo (indice do vetor pi)
 		vector<Morada > dest; //escolas destino
-		vector<Morada > path; //vetor com o caminho
 
-		path.push_back(*endereco); // o primeiro ponto é a empresa
+		transportes.at(j)->pushCaminho(*endereco);
 
 		//marca as escolas como não processadas
 		for(size_t i = 0; i < escolas.size(); i++)
@@ -213,13 +239,15 @@ void Empresa::distribuiCliVeiculos(){
 
 			// chamar o grafo para ver se deste ponto de interesse(k), qual o que está mais proximo.
 			//Retorna o id do mais proximo.
-			min = mapa->getMinDistBetweenPoints(p,pi,path);
+			min = mapa->getMinDistBetweenPoints(p,pi);
 
 			//se forem iguais chegamos ao fim de todos os pontos de interesse
 			if(p == min){
 				end = true;
 				break;
 			}
+
+			transportes.at(j)->pushCaminho(pi.at(min)); 	//colocar  na lifo do veiculo este ponto
 
 			// adiciona as criancas desse destino ao vetor de clientes da carrinha em causa.
 			size_t n = 0;
@@ -253,15 +281,10 @@ void Empresa::distribuiCliVeiculos(){
 		//procurar do ultimo ponto a escola mais proxima
 		p = 0;
 		for(size_t k = 1; k < dest.size(); k++){
-			min = mapa->getMinDistBetweenPoints(p,dest,path);
+			min = mapa->getMinDistBetweenPoints(p,dest);
+			transportes.at(j)->pushCaminho(dest.at(min));
 			p = min;
 		}
-
-		//marcar como destino a escola onde chegou
-		transportes.at(j)->setDestino(&dest.at(p));
-
-		//MUDAR ISTO !!!!
-		mapa->displayMapa(path);
 	}
 
 }
@@ -269,7 +292,7 @@ void Empresa::distribuiCliVeiculos(){
 /**
  * funcao que faz display dos mapas dos veiculos ou display de um só mapa com todos os veiculos
  * (decidir depois)
- */
+ *
 void Empresa::enviaVeiculos(){
 
 	for(size_t i = 0; i < transportes.size(); i++){
@@ -278,7 +301,7 @@ void Empresa::enviaVeiculos(){
 		mapa->displayMapa(res);
 	}
 
-}
+}*/
 
 void Empresa::displayClientes() const{
 	for (size_t i = 0; i < clientes.size(); ++i) {
@@ -452,7 +475,7 @@ void Empresa::setClientesPI(int id){
 	}
 	//ir buscar o ponto de recolha mais próximo a id
 	vector<Morada> pontosRecolha = mapa->getInterestPoints();
-	vector<Morada> lixo;
+
 	int indice1 = -1,indice2 = -1;
 	//procurar o indice do ponto de recolha com id
 	for (int i = 0; i < pontosRecolha.size(); ++i) {
@@ -464,7 +487,7 @@ void Empresa::setClientesPI(int id){
 		cout << "Indice Invalido" << endl;
 		throw VoltarAtras();
 	}
-	indice2 = mapa->getMinDistBetweenPoints(indice1,pontosRecolha,lixo);
+	indice2 = mapa->getMinDistBetweenPoints(indice1,pontosRecolha);
 
 	if(indice1 == indice2 || indice2 == -1)
 		throw PontoRecolhaInvalido(pontosRecolha[indice1]);

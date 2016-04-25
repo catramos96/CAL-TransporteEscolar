@@ -242,6 +242,9 @@ void verTodosPontos(Empresa *e){
 
 	e->distribuiCliVeiculos();
 
+	e->displayTrajetosIda();
+	e->displayTrajetosVolta();
+
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -455,7 +458,6 @@ int main(){
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	menuEmpresa(e);
 	//e->distribuiCliVeiculos();
-
 	esperar();
 
 	delete(e);
