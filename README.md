@@ -1,9 +1,10 @@
 ## O que falta fazer : ##
 
 * openStreetMaps (fazer display) 
-       *catarina (display por trajecto de veiculos)
 
-* algoritmo de distribuição das crianças inverso (escola -> garagem)
+* catarina (display por trajecto de veiculos)
+
+* algoritmo de distribuição das crianças inverso (escola -> garagem) -> está mais ou menos
 
 * criar função initialize e update (para não repetir constantemente algoritmos)
 
