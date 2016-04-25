@@ -56,6 +56,8 @@ void addCliente(Empresa *e){
 	//É so a casa que passa a ser um ponto de interesse ?
 	if(e->addCliente(c) == false)
 		throw ClienteJaExiste(nome,*escola,*casa);
+	cout << endl;
+	esperar();
 	throw VoltarAtras();
 }
 
@@ -70,7 +72,8 @@ void removerCliente(Empresa *e){
 
 	if(e->removeCliente(id) == false)
 		throw ClienteInexistente(id);
-
+	cout << endl;
+	esperar();
 	throw VoltarAtras();
 }
 
@@ -130,6 +133,8 @@ void addVeiculo(Empresa *e){
 
 	if(!e->addTransporte(v))
 		throw VeiculoJaExiste(matricula);
+	cout << endl;
+	esperar();
 	throw VoltarAtras();
 }
 
@@ -144,6 +149,8 @@ void removerVeiculo(Empresa *e){
 	Veiculo * v = new Veiculo(m);
 	if(!e->removeTransporte(v))
 		throw VeiculoInexistente(m);
+	cout << endl;
+	esperar();
 	throw VoltarAtras();
 }
 
@@ -151,6 +158,21 @@ void verVeiculos(Empresa *e){
 	clrscr();
 	displayTitulo("VEICULOS");
 	e->displayVeiculos();
+	cout << endl;
+	esperar();
+	throw VoltarAtras();
+}
+
+void trajetoVeiculo(Empresa *e){
+	string m;
+	clrscr();
+	displayTitulo("VER TRAJETO DO VEICULO");
+	e->displayVeiculos();
+	cout << endl;
+	cout << "Digite a matricula do veiculo: ";
+	cin >> m;
+	if(!e->displayTrajetosIda(m))
+		throw VeiculoInexistente(m);
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -176,7 +198,7 @@ void menuVeiculos(Empresa *e){
 			break;
 		}
 		case 4: {//ver traj
-
+			trajetoVeiculo(e);
 			break;
 		}
 		case 5: {
@@ -202,6 +224,8 @@ void addPontoRecolha(Empresa *e){
 		throw PontoInexistente(ponto);
 	}
 	e->getMapa()->setPontoInteresse(ponto,true);
+	cout << endl;
+	esperar();
 	throw VoltarAtras();
 }
 
@@ -223,6 +247,8 @@ void removerPontoRecolha(Empresa *e){
 	}
 	e->setClientesPI(ponto.getID());
 	e->getMapa()->setPontoInteresse(ponto,false);
+	cout << endl;
+	esperar();
 	throw VoltarAtras();
 }
 
@@ -239,11 +265,15 @@ void verTodosPontos(Empresa *e){
 	clrscr();
 	displayTitulo("TODOS OS PONTOS");
 	//e->getMapa()->displayPontos();
-
+	/*
 	e->distribuiCliVeiculos();
 
 	e->displayTrajetosIda();
 	e->displayTrajetosVolta();
+	 */
+	vector<Morada> tmp;
+	tmp.push_back(*e->getEndereco());
+	e->getMapa()->displayMapa(tmp);
 
 	cout << endl;
 	esperar();
@@ -303,6 +333,7 @@ void verAlunosEscolas(Empresa * e){
 		}
 		cout << endl;
 	}
+	cout << endl;
 	esperar();
 	throw VoltarAtras();
 }
@@ -322,7 +353,7 @@ void menuEscolas(Empresa *e){
 			verAlunosEscolas(e);
 			break;
 		}
-		case 3: {//ver
+		case 3: {
 			throw VoltarAtras();
 		}
 		}
@@ -429,12 +460,12 @@ void menuEmpresa(Empresa *e){
 		e->setIsEscola(true);
 	else
 		e->setIsEscola(false);
-/*
+	/*
 	cout << "Morada (id) :";
 	cin >> id;
 
 	Morada *m = new Morada(100,100,0);
-	*m = e->getMapa()->getPontoVertex(id)->getInfo();
+	 *m = e->getMapa()->getPontoVertex(id)->getInfo();
 	try{
 		if(m->getID() == -1){
 			throw PontoInexistente(*m);
@@ -443,7 +474,7 @@ void menuEmpresa(Empresa *e){
 	catch (PontoInexistente(e)){
 		cout << "Ponto inexistente " << e.getPonto() << endl;
 	}
-*/
+	 */
 	e->carregarInfo();
 
 	menuInicial(e);

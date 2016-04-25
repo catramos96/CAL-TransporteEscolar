@@ -123,6 +123,6 @@ vector<Morada> Veiculo::getCaminho(){
 
 
 ostream & operator<<(ostream & o, const Veiculo &v){
-	o << "Matricula - " << v.getMatricula() << " Capacidade -  "<< v.getNumLugares();
+	o << "Matricula - " << v.getMatricula() << " Capacidade -  "<< v.getNumLugares() << " Clientes - " << v.getClientes().size();
 	return o;
 }

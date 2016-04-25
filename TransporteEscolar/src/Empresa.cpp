@@ -170,20 +170,18 @@ bool compararVeiculos(Veiculo *v1 , Veiculo *v2){
 		return false;
 }
 
-bool Empresa::displayTrajetosIda(){
-
-	for(size_t i = 0; i < transportes.size(); i++){
-		vector<Morada> res = transportes.at(i)->getCaminho();
-
-		if(res.size() != 0){
-			vector<Morada> path = mapa->makePath(res);
+bool Empresa::displayTrajetosIda(string matricula){
+	for (int i = 0; i < transportes.size(); ++i) {
+		if(transportes[i]->getMatricula() == matricula){
+			vector<Morada> path = mapa->makePath(transportes[i]->getCaminho());
 			mapa->displayMapa(path);
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
 
-bool Empresa::displayTrajetosVolta(){
+bool Empresa::displayTrajetosVolta(string matricula){
 
 	for(size_t i = 0; i < transportes.size(); i++){
 		vector<Morada> res = transportes.at(i)->getCaminho();
@@ -316,9 +314,13 @@ void Empresa::displayVeiculos() const{
 }
 
 void Empresa::displayEscolas() const{
-	for (size_t i = 0; i < escolas.size(); ++i) {
-		cout << *escolas[i] << endl;
+	vector<Morada> tmp;
+
+	for (int i = 0; i < getEscolas().size(); ++i) {
+		tmp.push_back(*getEscolas()[i]);
+		cout << tmp[i] << endl;
 	}
+	mapa->displayMapa(tmp);
 }
 
 void Empresa::displayPontosRecolha() const{
@@ -326,6 +328,7 @@ void Empresa::displayPontosRecolha() const{
 	for (size_t i = 0; i < pi.size(); ++i) {
 		cout << pi[i] << " n Clientes: " << getClientesPontoRecolha(&pi[i]).size() << endl;
 	}
+	mapa->displayMapa(pi);
 }
 
 void Empresa::guardarInfo() const{

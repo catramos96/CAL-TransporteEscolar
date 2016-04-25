@@ -46,8 +46,8 @@ public:
 	vector<Cliente *> getClientesEscola(Morada *escola) const;
 	vector<Cliente *> getClientesPontoRecolha(Morada * ponto) const;
 	void setClientesPI(int id);	//muda a residencia dos clientes com id para o ponto de recolha mais próximo
-	bool displayTrajetosIda();
-	bool displayTrajetosVolta();
+	bool displayTrajetosIda(string matricula);
+	bool displayTrajetosVolta(string matricula);
 };
 
 #endif /* SRC_EMPRESA_H_ */
