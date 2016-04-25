@@ -9,7 +9,6 @@ using namespace std;
 /*
  * FUNÇÕES CARRREGAR E GUARDAR A ACEITAR GETLINES
  */
-
 Empresa::Empresa(string nome, Morada *endereco)
 {
 	this->nome = nome;
@@ -47,7 +46,6 @@ bool Empresa::addTransporte(Veiculo * veiculo)
 			return false;
 		}
 	}
-	//veiculo->setPartida(endereco); // o veiculo parte da sede da empresa
 	transportes.push_back(veiculo);
 	return true;
 }
@@ -135,7 +133,6 @@ bool Empresa::removeCliente(int id){
 	return false;
 }
 
-//VER DEPOIS NÃO FUNCIONA
 bool Empresa::removerEscola(Morada *e){
 	vector<Cliente *>::iterator itb = clientes.begin();
 	vector<Cliente *>::iterator itf = clientes.end();
@@ -171,9 +168,11 @@ bool compararVeiculos(Veiculo *v1 , Veiculo *v2){
 }
 
 bool Empresa::displayTrajetosIda(string matricula){
-	for (int i = 0; i < transportes.size(); ++i) {
+
+	for (size_t i = 0; i < transportes.size(); ++i) {
 		if(transportes[i]->getMatricula() == matricula){
-			vector<Morada> path = mapa->makePath(transportes[i]->getCaminho());
+			vector<Morada> res = transportes.at(i)->getCaminho();
+			vector<Morada> path = mapa->makePath(res);
 			mapa->displayMapa(path);
 			return true;
 		}
@@ -184,18 +183,22 @@ bool Empresa::displayTrajetosIda(string matricula){
 bool Empresa::displayTrajetosVolta(string matricula){
 
 	for(size_t i = 0; i < transportes.size(); i++){
-		vector<Morada> res = transportes.at(i)->getCaminho();
-		vector<Morada> invert;
 
-		if(res.size() != 0){
+		if(transportes.at(i)->getMatricula() == matricula){
+
+			vector<Morada> res = transportes.at(i)->getCaminho();
+			vector<Morada> invert;
+
 			for(size_t j = res.size()-1; j > 0; j--)
 				invert.push_back(res.at(j));
 			invert.push_back(res.at(0));
+
 			vector<Morada> path = mapa->makePath(invert);
 			mapa->displayMapa(path);
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
 
 void Empresa::distribuiCliVeiculos(){
@@ -220,6 +223,8 @@ void Empresa::distribuiCliVeiculos(){
 
 	for(size_t j = 0; j < transportes.size(); j++){
 
+		transportes.at(j)->pushCaminho(*endereco);	//o primeiro ponto a colocar no trajeto é o endereco da empresa
+
 		if(end)
 			break;
 
@@ -227,14 +232,11 @@ void Empresa::distribuiCliVeiculos(){
 		int min = 0; // ponto mais proximo (indice do vetor pi)
 		vector<Morada > dest; //escolas destino
 
-		transportes.at(j)->pushCaminho(*endereco);
-
 		//marca as escolas como não processadas
 		for(size_t i = 0; i < escolas.size(); i++)
 			mapa->setPontoProcessado(*escolas.at(i), false);
 
 		while(transportes.at(j)->lugaresLivres() != 0){
-
 			// chamar o grafo para ver se deste ponto de interesse(k), qual o que está mais proximo.
 			//Retorna o id do mais proximo.
 			min = mapa->getMinDistBetweenPoints(p,pi);
@@ -256,20 +258,19 @@ void Empresa::distribuiCliVeiculos(){
 				mapa->setPontoProcessado(*clientes.at(n)->getEscola(), true); //escola marcada como processada -> é destino
 				n++;
 			}
-
 			//se todas as criancas entraram no autocarro, esse ponto é marcado como processado
 			if(pi.at(min).getNumCriancas() == 0)
 				mapa->setPontoProcessado(pi.at(min), true);
 
+
 			p = min;
 		}
 
-		//descobrir quantas escolas diferentes estão no veiculo
+		//desobrir quantas escolas diferentes estão no veiculo
 		dest.push_back(pi.at(p)); //ultimo ponto
 		for(size_t k = 0; k < escolas.size(); k++)
 			if(mapa->getPontoProcessado(*escolas.at(k)) == true) //se foram processadas é porque existem alunos no veiculo que as frequentam
 				dest.push_back(*escolas.at(k));
-
 
 		//remarca as escolas como não processadas
 		for(size_t i = 0; i < escolas.size(); i++)
@@ -280,26 +281,13 @@ void Empresa::distribuiCliVeiculos(){
 		p = 0;
 		for(size_t k = 1; k < dest.size(); k++){
 			min = mapa->getMinDistBetweenPoints(p,dest);
+			mapa->setPontoProcessado(dest.at(min), true);
 			transportes.at(j)->pushCaminho(dest.at(min));
 			p = min;
 		}
 	}
 
 }
-
-/**
- * funcao que faz display dos mapas dos veiculos ou display de um só mapa com todos os veiculos
- * (decidir depois)
- *
-void Empresa::enviaVeiculos(){
-
-	for(size_t i = 0; i < transportes.size(); i++){
-		vector<Morada> res = transportes.at(i)->makePath(); //pontos de interesse
-		res = mapa->shortestPath(res); //menor caminho que passa nesses pontos de interesse
-		mapa->displayMapa(res);
-	}
-
-}*/
 
 void Empresa::displayClientes() const{
 	for (size_t i = 0; i < clientes.size(); ++i) {
@@ -374,7 +362,7 @@ void Empresa::carregarInfo(){
 		file.open("empresaInfo.txt");
 	string nome;
 	string matricula;
-	int id,id2 ,coordx,coordy, nLugares, coordx2,coordy2,cliente_n;
+	int id,id2 ,coordx,coordy, nLugares,coordx2,coordy2,cliente_n;
 	char lixo;
 	string separador = "=========================";
 
@@ -399,7 +387,7 @@ void Empresa::carregarInfo(){
 		while(tmp != separador){
 			linha << tmp;
 			linha >> matricula >> nLugares;
-			addTransporte(new Veiculo(matricula));
+			addTransporte(new Veiculo(matricula, nLugares));
 			linha.clear();
 			getline(file,tmp);
 		}

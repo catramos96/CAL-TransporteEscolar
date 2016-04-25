@@ -1,10 +1,3 @@
-/*
- * Edge.h
- *
- *  Created on: 06/04/2016
- *      Author: Inês Gomes
- */
-
 #ifndef SRC_EDGE_H_
 #define SRC_EDGE_H_
 

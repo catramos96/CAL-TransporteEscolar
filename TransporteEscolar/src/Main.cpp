@@ -122,14 +122,17 @@ void menuClientes(Empresa *e){
 
 void addVeiculo(Empresa *e){
 	string matricula;
+	int num;
 	char classe;
 
 	clrscr();
 	displayTitulo("ADICIONAR VEICULO");
 	cout << "Matricula: ";
 	cin >> matricula;
+	cout << "Número de lugares: ";
+	cin >> num;
 
-	Veiculo *v = new Veiculo(matricula);
+	Veiculo *v = new Veiculo(matricula, num);
 
 	if(!e->addTransporte(v))
 		throw VeiculoJaExiste(matricula);
@@ -146,7 +149,7 @@ void removerVeiculo(Empresa *e){
 	cout << endl;
 	cout << "Digite a matricula do veiculo: ";
 	cin >> m;
-	Veiculo * v = new Veiculo(m);
+	Veiculo * v = new Veiculo(m,0);
 	if(!e->removeTransporte(v))
 		throw VeiculoInexistente(m);
 	cout << endl;
@@ -164,6 +167,9 @@ void verVeiculos(Empresa *e){
 }
 
 void trajetoVeiculo(Empresa *e){
+
+	e->distribuiCliVeiculos();
+
 	string m;
 	clrscr();
 	displayTitulo("VER TRAJETO DO VEICULO");
@@ -265,12 +271,7 @@ void verTodosPontos(Empresa *e){
 	clrscr();
 	displayTitulo("TODOS OS PONTOS");
 	//e->getMapa()->displayPontos();
-	/*
-	e->distribuiCliVeiculos();
 
-	e->displayTrajetosIda();
-	e->displayTrajetosVolta();
-	 */
 	vector<Morada> tmp;
 	tmp.push_back(*e->getEndereco());
 	e->getMapa()->displayMapa(tmp);
@@ -480,16 +481,22 @@ void menuEmpresa(Empresa *e){
 	menuInicial(e);
 }
 
+//Inicializacao de dados
+//==============================================================================================================
+void initialize(){
 
+}
+
+void update(){
+
+}
 
 int main(){
 
-	//temp
-	Morada * source = new Morada(100,100,0);
+	Morada * source = new Morada(100,100,0); 	// MUDAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	menuEmpresa(e);
-	//e->distribuiCliVeiculos();
-	esperar();
+//	esperar();
 
 	delete(e);
 	/*

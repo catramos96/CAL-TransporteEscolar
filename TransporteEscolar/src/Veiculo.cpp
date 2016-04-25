@@ -3,9 +3,9 @@
 
 using namespace std;
 
-Veiculo::Veiculo(string matricula){
+Veiculo::Veiculo(string matricula, int numLugares){
 	this->matricula = matricula;
-	numLugares = 10;
+	this->numLugares = numLugares;
 }
 
 int Veiculo::getNumLugares()const{
@@ -24,7 +24,6 @@ bool Veiculo::addCliente(Cliente *c){
 	//não excede o número de lugares
 	if(numLugares > clientes.size() && !existeCliente(c)){
 		clientes.push_back(c);
-		numLugares++;
 		return true;
 	}
 	return false;
@@ -53,6 +52,7 @@ bool Veiculo::existeCliente(Cliente *c) const{
 			{
 				return true;
 			}
+			itb++;
 		}
 		return false;
 }
@@ -78,40 +78,9 @@ bool Veiculo::operator== (const Veiculo &v) const{
 }
 
 int Veiculo::lugaresLivres(){
+
 	return (numLugares - clientes.size());
 }
-/*
-void Veiculo::setPartida(Morada *partida){
-	this->partida = partida;
-}
-
-void Veiculo::setDestino(Morada *destino){
-	this->destino = destino;
-}
- */
-
-/**
- * cria um vetor de pontos de interesse para esse veiculo
- *
-vector<Morada> Veiculo::makePath(){
-
-	vector<Morada> points;
-
-	points.push_back(*partida);
-	for(size_t i = 0; i < clientes.size(); i++)
-		points.push_back(*clientes.at(i)->getResidencia());
-	points.push_back(*destino);
-
-	return points;
-}
-
-Morada* Veiculo::getPartida() const{
-	return partida;
-}
-
-Morada* Veiculo::getDestino() const{
-	return destino;
-}*/
 
 void Veiculo::pushCaminho(Morada m){
 	caminho.push_back(m);
@@ -123,6 +92,6 @@ vector<Morada> Veiculo::getCaminho(){
 
 
 ostream & operator<<(ostream & o, const Veiculo &v){
-	o << "Matricula - " << v.getMatricula() << " Capacidade -  "<< v.getNumLugares() << " Clientes - " << v.getClientes().size();
+	o << "Matricula - " << v.getMatricula() << " Capacidade -  "<< v.getNumLugares();// << " Clientes - " << v.getClientes().size();
 	return o;
 }

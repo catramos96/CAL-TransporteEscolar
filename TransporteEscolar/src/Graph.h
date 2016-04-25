@@ -722,8 +722,6 @@ bool Graph<T>::getProcessing(T info){
 template<class T>
 int Graph<T>::getMinDistAndPath(int pi, vector<T> points){
 
-	floydWarshallShortestPath();
-
 	//ver qual dos PI esta mais proximo do 'info'
 	int dist = INT_INFINITY;
 	int min = -1; //pi mais proximo

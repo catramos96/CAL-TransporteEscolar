@@ -13,11 +13,9 @@ private:
 	unsigned int numLugares;
 	string matricula;
 	vector<Cliente *> clientes;
-	//Morada *partida;
-	//Morada *destino;
 	vector<Morada > caminho;
 public:
-	Veiculo(string matricula);
+	Veiculo(string matricula, int numLugares);
 	int getNumLugares()const;
 	string getMatricula()const;
 	vector<Cliente *> getClientes() const;
@@ -27,12 +25,6 @@ public:
 	bool passaNaEscola(Morada *escola)const;
 	bool operator== (const Veiculo &v) const;
 	int lugaresLivres();
-	void setPartida(Morada *partida);
-	void setDestino(Morada *destino);
-	vector<Morada> makePath();
-	Morada* getPartida() const;
-	Morada* getDestino() const;
-	//enviar clientes, desmarcar pontos de interesse e marcar os que interessa
 	friend ostream & operator<<(ostream & o, const Veiculo &v);
 	void pushCaminho(Morada m);
 	vector<Morada> getCaminho();
