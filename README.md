@@ -1,7 +1,5 @@
 ## O que falta fazer : ##
 
-* caso em que a escola é a empresa - catarina
-
 * openStreetMaps (fazer display)
 
 * algoritmo de distribuição das crianças inverso (escola -> garagem)
