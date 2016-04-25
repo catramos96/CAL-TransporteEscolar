@@ -1,10 +1,10 @@
 ## O que falta fazer : ##
 
-* caso em que a escola é a empresa - catarina
+* openStreetMaps (fazer display) 
 
-* openStreetMaps (fazer display)
+* catarina (display por trajecto de veiculos)
 
-* algoritmo de distribuição das crianças inverso (escola -> garagem)
+* algoritmo de distribuição das crianças inverso (escola -> garagem) -> está mais ou menos
 
 * criar função initialize e update (para não repetir constantemente algoritmos)
 
