@@ -10,6 +10,8 @@
 
 * verificar a conectividade do grafo (inês)
 
+* possibilidade de haver impedimentos na via (booleano em graph ? )
+
 * verificação de erros
 
 * relatório
