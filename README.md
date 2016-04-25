@@ -2,7 +2,7 @@
 
 * openStreetMaps (fazer display) 
 
-* catarina (display por trajecto de veiculos)
+* É preciso garantir que o vector caminho em veiculos esteja sempre com pelo menos 1 elemento (endereço da empresa) caso contrário dá um erro no display do Mapa porque aquilo não suporta um vector de pontos sem elementos
 
 * algoritmo de distribuição das crianças inverso (escola -> garagem) -> está mais ou menos
 
