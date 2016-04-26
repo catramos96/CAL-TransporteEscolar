@@ -484,7 +484,7 @@ void menuEmpresa(Empresa *e){
 
 int main(){
 
-	Morada * source = new Morada(100,100,0); 	// MUDAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	Morada * source = new Morada(56,-0.159533,0.67583); 	// MUDAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	menuEmpresa(e);
 	//esperar();

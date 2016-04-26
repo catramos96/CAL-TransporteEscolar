@@ -6,6 +6,7 @@
 #include <algorithm>
 
 using namespace std;
+
 /*
  * Construtor da classe Empresa.
  * @param nome Nome da empresa.
@@ -504,8 +505,8 @@ void Empresa::distribuiCliVeiculos(){
  */
 void Empresa::initialization(){
 	//inicializar o mapa
-	GraphViewer *gv = new GraphViewer(1200,1200,true);
-	gv->createWindow(1200, 1200);
+	GraphViewer *gv = new GraphViewer(600,600,true);
+	gv->createWindow(600, 600);
 	mapa = new Mapa(gv);
 	mapa->makefloydWarshallShortestPath();	//faz o algoritmo
 }
@@ -568,9 +569,10 @@ void Empresa::carregarInfo(){
 		file.open("escolaInfo.txt");
 	else
 		file.open("empresaInfo.txt");
+
 	string nome;
 	string matricula;
-	int id,id2 ,coordx,coordy, nLugares,coordx2,coordy2,cliente_n;
+	double id,id2 ,coordx,coordy, nLugares,coordx2,coordy2,cliente_n;
 	char lixo;
 	string separador = "=========================";
 
@@ -598,6 +600,7 @@ void Empresa::carregarInfo(){
 			addTransporte(new Veiculo(matricula, nLugares));
 			linha.clear();
 			getline(file,tmp);
+
 		}
 
 		//pontos de recolha
@@ -620,6 +623,9 @@ void Empresa::carregarInfo(){
 		while(!file.eof()){
 			linha.clear();
 			getline(file,tmp);
+
+			cout << tmp << endl;
+
 			linha << tmp;
 			linha >> cliente_n >> nome >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
 			Morada *casa = new Morada(coordx,coordy,id);
@@ -635,6 +641,5 @@ void Empresa::carregarInfo(){
 		}
 		Cliente::id = id_tmp;
 	}
-
 	file.close();
 }
