@@ -7,32 +7,70 @@
 
 using namespace std;
 /*
- * FUNÇÕES CARRREGAR E GUARDAR A ACEITAR GETLINES
+ * Construtor da classe Empresa.
+ * @param nome Nome da empresa.
+ * @param endereco Apontador para a morada do empresa.
  */
 Empresa::Empresa(string nome, Morada *endereco)
 {
 	isEscola = false;
 	this->nome = nome;
 	this->endereco = endereco;
-	mapa = new Mapa();
+	initialization();
 }
-
+/**
+ * Método que retorna o nome da empresa
+ * @return nome da empresa.
+*/
 string Empresa::getNome() const {return nome;}
 
+/**
+ * Metodo que retorna a morada da empresa em forma de apontador.
+ * @return morada da empresa
+ */
 Morada* Empresa::getEndereco() const {return endereco;}
 
+/**
+ * Metodo que altera o boleano que indica se uma empresa é escola ou não
+ * @param b Valor do boleano.
+ */
 void Empresa::setIsEscola(bool b){ isEscola =b; }
 
+/**
+ * Metodo que retorna o boleano que indica se a empresa é uma escola
+ * return boleano true ou false consoante e ou nao uma escola
+ */
 bool Empresa::getIsEscola() const{ return isEscola; }
 
+/**
+ * Metodo que retorna um vetor de apontadores com as escolas de todos os clientes.
+ * @return Vetor de apontadores para moradas de escolas.
+ */
 vector<Morada *> Empresa::getEscolas() const{ return escolas; }
 
+/**
+ * Metodo que retorna o mapa associado a esta empresa.
+ * @return objeto do tipo Mapa
+ */
 Mapa* Empresa::getMapa() const {return mapa;}
 
+/**
+ * Metodo que permite alterar o nome da empresa.
+ * @param nome Novo nome.
+ */
 void Empresa::setNome(string nome) {this->nome = nome;}
 
+/**
+ * Metodo que permite alterar a morada da empresa.
+ * @param endereco Apontador para a nova morada da empresa.
+ */
 void Empresa::setEndereco(Morada *endereco) {this->endereco = endereco;}
 
+/**
+ * Metodo que retorna todos os clientes daquela empresa que pertencem a escola passada como arguemto
+ * @param escola Apontador para a morada da escola.
+ * @return todos os clintes da escola que tem como morada 'escola'
+ */
 vector<Cliente *> Empresa::getClientesEscola(Morada *escola) const{
 	vector<Cliente *>::const_iterator itb = clientes.begin();
 	vector<Cliente *>::const_iterator itf = clientes.end();
@@ -45,6 +83,11 @@ vector<Cliente *> Empresa::getClientesEscola(Morada *escola) const{
 	return res;
 }
 
+/**
+ * Metodo que retorna todos os clientes que pertencem ao ponto de recolha 'ponto'.
+ * @param ponto Morada do ponto de recolha.
+ * @return Conjunto de clientes que costumam apanhar o autocarro nesse ponto de recolha
+ */
 vector<Cliente *> Empresa::getClientesPontoRecolha(Morada * ponto) const{
 	vector<Cliente *>::const_iterator itb = clientes.begin();
 	vector<Cliente *>::const_iterator itf = clientes.end();
@@ -59,6 +102,10 @@ vector<Cliente *> Empresa::getClientesPontoRecolha(Morada * ponto) const{
 	return c;
 }
 
+/**
+ * Metodo que muda a residencia dos clientes com id para o ponto de recolha mais próximo.
+ * @param id do cliente
+ */
 void Empresa::setClientesPI(int id){
 	vector<Cliente *> mudar_cli;
 	//Seleccionar os clientes com a residencia com o mesmo id
@@ -93,6 +140,11 @@ void Empresa::setClientesPI(int id){
 	}
 }
 
+/**
+ * Metodo que adiciona um novo veiculo a frota da empresa.
+ * @param veiculo Apontador para o veiculo que sera adicionado.
+ * @return True ou false consoante é ou não possivel adicionar o transporte a frota.
+ */
 bool Empresa::addTransporte(Veiculo * veiculo)
 {
 	if(veiculo->getNumLugares() <= 0)
@@ -106,38 +158,53 @@ bool Empresa::addTransporte(Veiculo * veiculo)
 	return true;
 }
 
-bool Empresa::addCliente(Cliente * cliente)
+/**
+ * Metodo que adiciona um cliente ao vetor de clientes da empresa.
+ * É necessario verificar se ainda existem lugares livres no total da frota, e se a crianca já existe no vetor de clientes.
+ * @param cliente Cliente a ser introduzido.
+ * @return True ou false consoante é ou nao possivel adicionar o cliente.
+ */
+bool Empresa::addCliente(Cliente *cliente)
 {
 	Cliente::id--; //para o caso de dar throw
 	//veiculos insuficientes2
-	int lugares = 0;
+	unsigned int lugares = 0;
 	for (size_t i = 0; i < transportes.size(); ++i) {
 		lugares += transportes[i]->getNumLugares();
 	}
+
 	//Residencia nao e um ponto de interesse
 	if(mapa->isPontoInteresse(*cliente->getResidencia()) == false)
 		throw PontoRecolhaInvalido(*cliente->getResidencia());
+
 	if(lugares < clientes.size())
 		throw VeiculosInsuficientes();
+
 	//residencia = escola
 	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
 		throw ResidenciaInvalida(*cliente->getResidencia());
+
 	//cliente já existe, id = ou residencia =
 	for(unsigned int i = 0; i < clientes.size(); i++)
-		if(*cliente == *clientes[i]){
+		if(*cliente == *clientes[i])
 			return false;
-		}
+
 	//residencia = escola(Empresa->escolas)
-	for (size_t j = 0; j < escolas.size(); ++j) {
+	for (size_t j = 0; j < escolas.size(); ++j)
 		if(*cliente->getResidencia() == *escolas[j])
 			return false;
-	}
+
 	clientes.push_back(cliente);
 	addEscola(cliente->getEscola());
 	Cliente::id++;
 	return true;
 }
 
+/**
+ * Metodo que adiciona uma escola à base de dados de escolas da empresa.
+ * @param e Escola a ser adicionada.
+ * @return true ou false caso a escola ainda não esteja inserida.
+ */
 bool Empresa::addEscola(Morada *e){
 	vector<Morada *>::iterator itb = escolas.begin();
 	vector<Morada *>::iterator itf = escolas.end();
@@ -151,6 +218,11 @@ bool Empresa::addEscola(Morada *e){
 	return true;
 }
 
+/**
+ * Remove um transporte da frota de veiculos da empresa.
+ * @param veiculo Veiculo a ser removido da frota da empresa.
+ * @return boleano true ou false consoante seja ou nao possivel remover o veiculo.
+ */
 bool Empresa::removeTransporte(Veiculo * veiculo)
 {
 	Veiculo *v;
@@ -164,14 +236,22 @@ bool Empresa::removeTransporte(Veiculo * veiculo)
 	return false;
 }
 
+/**
+ * Metodo que remove um cliente da empresa.
+ * @param cliente Apontador para o cliente a ser removido da empresa.
+ * @return True ou false consoante tenha sido removido com sucesso, ou não.
+ */
 bool Empresa::removeCliente(Cliente * cliente)
 {
 	Cliente *c;
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(cliente == clientes[i]){
+			//falta remover do ponto de recolha <<<<
+			//retira-o do veiculo
 			for (size_t var = 0; var < transportes.size(); ++ var) {
 				transportes[var]->sairCliente(cliente);
 			}
+			//retira-o da escola
 			removerEscola(cliente->getEscola());
 			c = clientes[i];
 			clientes.erase(clientes.begin() + i);
@@ -181,6 +261,11 @@ bool Empresa::removeCliente(Cliente * cliente)
 	return false;
 }
 
+/**
+ * Metodo que procura um cliente pelo seu id para depois ser removido
+ * @param id Id do cliente.
+ * @return boleano que indica o sucesso da operação.
+ */
 bool Empresa::removeCliente(int id){
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(id == clientes[i]->getID()){
@@ -189,6 +274,11 @@ bool Empresa::removeCliente(int id){
 	return false;
 }
 
+/**
+ * Metodo que remove uma escola da base de dados de escolas da empresa.
+ * @param e Escola a remover
+ * @param boleano que indica se foi ou não possivel remover a escola em questão.
+ */
 bool Empresa::removerEscola(Morada *e){
 	vector<Cliente *>::iterator itb = clientes.begin();
 	vector<Cliente *>::iterator itf = clientes.end();
@@ -216,6 +306,9 @@ bool Empresa::removerEscola(Morada *e){
 	return false;
 }
 
+/**
+ *	????
+ */
 bool compararVeiculos(Veiculo *v1 , Veiculo *v2){
 	if(v1->getNumLugares() < v2->getNumLugares())
 		return true;
@@ -223,6 +316,11 @@ bool compararVeiculos(Veiculo *v1 , Veiculo *v2){
 		return false;
 }
 
+/**
+ * Metodo que faz display do trajeto de ida (empresa->destino) de um veiculo de matriculo 'matricula'.
+ * @param matricula Matricula do veiculo que mostrará o seu trajeto.
+ * @return True ou false consoante é ou não possivel realizar a operação.
+ */
 bool Empresa::displayTrajetosIda(string matricula){
 
 	for (size_t i = 0; i < transportes.size(); ++i) {
@@ -236,6 +334,11 @@ bool Empresa::displayTrajetosIda(string matricula){
 	return false;
 }
 
+/**
+ * Metodo que faz display do trajeto de volta (destino->empresa) de um veiculo de matricula 'matricula'.
+ * @param matricula Matricula do veiculo que mostrará o seu trajeto.
+ * @return True ou false consoante é ou não possivel realizar a operação.
+ */
 bool Empresa::displayTrajetosVolta(string matricula){
 
 	for(size_t i = 0; i < transportes.size(); i++){
@@ -257,18 +360,27 @@ bool Empresa::displayTrajetosVolta(string matricula){
 	return false;
 }
 
+/**
+ * Metodo que faz display dos clientes da empresa.
+ */
 void Empresa::displayClientes() const{
 	for (size_t i = 0; i < clientes.size(); ++i) {
 		cout << *clientes[i] << endl;
 	}
 }
 
+/**
+ * Metodo que faz display dos veiculos da empresa
+ */
 void Empresa::displayVeiculos() const{
 	for (size_t i = 0; i < transportes.size(); ++i) {
 		cout << *transportes[i] << endl;
 	}
 }
 
+/**
+ * Metodo que faz display das escolas (display no mapa)
+ */
 void Empresa::displayEscolas() const{
 	vector<Morada> tmp;
 
@@ -279,6 +391,9 @@ void Empresa::displayEscolas() const{
 	mapa->displayMapa(tmp);
 }
 
+/**
+ * Metodo que permite fazer display dos pontos de recolha (display do mapa)
+ */
 void Empresa::displayPontosRecolha() const{
 	vector<Morada> pi = mapa->getInterestPoints();
 	for (size_t i = 0; i < pi.size(); ++i) {
@@ -287,7 +402,14 @@ void Empresa::displayPontosRecolha() const{
 	mapa->displayMapa(pi);
 }
 
-
+/**
+ * Metodo que distribui os clientes pelos veiculos por proximidade.
+ * Este metodo coloca os pontos de interesse sucessivamente, ordenados, no vetor 'caminho' do veiculo correspondente.
+ * Um veiculo parte da empresa (primeiro ponto de interesse) e procura o ponto de interesse mais proximo com criancas.
+ * Coloca todas as criancas desse ponto na carrinha e procura de novo o ponto de recolha mais proximo com criancas.
+ * Quando o veiculo não tem mais lugares a ocupar, verifica quais as escolas que os seus clientes ocupam.
+ * Procura a escola mais proxima, depois a seguinte mais proxima  e sempre assim até ter chegado a todas as escolas.
+ */
 void Empresa::distribuiCliVeiculos(){
 
 	bool end = false;
@@ -376,10 +498,31 @@ void Empresa::distribuiCliVeiculos(){
 
 }
 
+/**
+ * Inicializacao da empresa. Permite poupar recursos visto que apenas apenas é necessario fazer estes passos 1 vez.
+ * Inicia o mapa com todos os pontos. Faz o algoritmo de floyd-Warshall.
+ */
 void Empresa::initialization(){
-
+	//inicializar o mapa
+	GraphViewer *gv = new GraphViewer(1200,1200,true);
+	gv->createWindow(1200, 1200);
+	mapa = new Mapa(gv);
+	mapa->makefloydWarshallShortestPath();	//faz o algoritmo
 }
 
+/**
+ * Distribui os clientes pelos veiculos.
+ * É necessária uma nova distribuição das criancas sempre que se adiciona uma nova crianca e no inicio do programa.
+ */
+void Empresa::update(){
+	distribuiCliVeiculos();
+}
+
+/**
+ * Metodo que lê de um ficheiro de texto as informações necesarias a preencher uma dada empresa.
+ * Abre ficheiros diferentes caso a empresa seja uma escola.
+ * Preenche informacoes sobre a empresa, os clientes e os veiculos.
+ */
 void Empresa::guardarInfo() const{
 	fstream file;
 	if(isEscola)
@@ -413,6 +556,10 @@ void Empresa::guardarInfo() const{
 	file.close();
 }
 
+/**
+ * Método que coloca a informação num ficheiro de texto aquando a terminação do programa.
+ * Atualiza as informações sobre os clientes e veiculos.
+ */
 void Empresa::carregarInfo(){
 	fstream file;
 	string tmp;

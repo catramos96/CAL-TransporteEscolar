@@ -19,7 +19,7 @@ public:
 	bool isPontoInteresse(Morada m);
 	int displayPontos() const;
 	Morada getPonto(int id);
-	vector<Morada> shortestPath(vector<Morada> points);
+	//vector<Morada> shortestPath(vector<Morada> points);
 	Vertex<Morada> * getPontoVertex(int id);
 	vector<Morada> getInterestPoints() const;
 	int getMinDistBetweenPoints(int pi, vector<Morada> points);

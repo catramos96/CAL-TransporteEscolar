@@ -483,21 +483,12 @@ void menuEmpresa(Empresa *e){
 }
 
 int main(){
-/*
+
 	Morada * source = new Morada(100,100,0); 	// MUDAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	menuEmpresa(e);
-	esperar();
-
+	//esperar();
 	delete(e);
-*/
-	GraphViewer *gv = new GraphViewer(600,600,true);
-	gv->createWindow(600, 600);
-	Mapa *map = new Mapa(gv);
-	//vector<Morada> res;
-	//Morada m(30307043,-0.1595457,0.6758222);
-	//res.push_back(m);
-	//map->displayPath(gv,res,false);
 
 	/*
 	Morada *m1 = new Morada(100,100,0);

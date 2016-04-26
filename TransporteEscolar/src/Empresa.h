@@ -21,33 +21,32 @@ public:
 	Empresa(string nome, Morada *endereco);
 	string getNome() const;
 	Morada* getEndereco() const;
+	void setIsEscola(bool b);
+	bool getIsEscola() const;
 	vector<Morada *> getEscolas() const;
 	void setNome(string nome);
 	void setEndereco(Morada *endereco);
-	void setIsEscola(bool b);
-	bool getIsEscola() const;
+	Mapa* getMapa() const;
+	vector<Cliente *> getClientesEscola(Morada *escola) const;
+	vector<Cliente *> getClientesPontoRecolha(Morada * ponto) const;
+	void setClientesPI(int id);
 	bool addTransporte(Veiculo * veiculo);
-	bool addCliente(Cliente *cliente);		//Verificar se a casa não é uma escola, e se a escola não é uma casa
+	bool addCliente(Cliente *cliente);
 	bool addEscola(Morada * e);
 	bool removeTransporte(Veiculo * veiculo);
 	bool removeCliente(Cliente * cliente);
 	bool removerEscola(Morada *e);
-	void distribuiCliVeiculos();
+	bool removeCliente(int id);
+	void guardarInfo() const;
+	void carregarInfo() ;
+	bool displayTrajetosIda(string matricula);
+	bool displayTrajetosVolta(string matricula);
+	void displayMapa(vector<Morada> points);
 	void displayClientes() const;
 	void displayVeiculos() const;
 	void displayEscolas() const;
 	void displayPontosRecolha() const;
-	bool removeCliente(int id);
-	void displayMapa(vector<Morada> points);
-	void guardarInfo() const;
-	void carregarInfo() ;
-	Mapa* getMapa() const;
-	vector<Cliente *> getClientesEscola(Morada *escola) const;
-	vector<Cliente *> getClientesPontoRecolha(Morada * ponto) const;
-	void setClientesPI(int id);	//muda a residencia dos clientes com id para o ponto de recolha mais próximo
-	bool displayTrajetosIda(string matricula);
-	bool displayTrajetosVolta(string matricula);
-
+	void distribuiCliVeiculos();
 	void initialization();
 	void update();
 

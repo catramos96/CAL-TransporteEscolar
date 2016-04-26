@@ -357,7 +357,7 @@ Vertex<Morada> * Mapa::getPontoVertex(int id){
 
 	return v;
 }
-
+/*
 vector<Morada> Mapa::shortestPath(vector<Morada> points){
 	mapa.floydWarshallShortestPath();
 	vector<Morada> res = mapa.getfloydWarshallPathWithIP(points);
@@ -366,8 +366,11 @@ vector<Morada> Mapa::shortestPath(vector<Morada> points){
 		cout << "ATENCAO! O GRAFO NAO PERMITE CHEGAR AO PONTO " << res.at(0).getID() << endl ; //isto tem de ir para o main mais tarde
 	}else
 		return res;
-}
+}*/
 
+void Mapa::makefloydWarshallShortestPath(){
+	mapa.floydWarshallShortestPath(); //crias as tabelas do path e dist entre todos os pontos
+}
 
 vector<Morada> Mapa::getInterestPoints() const{
 	vector<Morada> res;
@@ -388,7 +391,6 @@ bool Mapa::getPontoProcessado(Morada ponto){
 }
 
 int Mapa::getMinDistBetweenPoints(int pi, vector<Morada> points){
-	mapa.floydWarshallShortestPath(); //crias as tabelas do path e dist entre todos os pontos
 	return mapa.getMinDistAndPath(pi,points);
 }
 
@@ -412,3 +414,4 @@ vector<Morada> Mapa::makePath(vector<Morada> points){
 	}
 	return path;
 }
+
