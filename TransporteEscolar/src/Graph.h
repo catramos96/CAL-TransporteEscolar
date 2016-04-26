@@ -16,7 +16,7 @@
 const int NOT_VISITED = 0;
 const int BEING_VISITED = 1;
 const int DONE_VISITED = 2;
-const int INT_INFINITY = 10000; //INT_MAX; compor isto
+const int INT_INFINITY = 10000 ; //INT_MAX compor isto
 
 using namespace std;
 
@@ -77,6 +77,7 @@ public:
 	bool getProcessing(T info);
 	int getMinDistAndPath(int pi, vector<T> points);
 	bool edgeExists(Edge<T>* e);
+	bool isConnected(Vertex<T> *v);
 };
 
 
@@ -741,6 +742,18 @@ int Graph<T>::getMinDistAndPath(int pi, vector<T> points){
 		return pi; //siginifica que todos os pontos estão processados OU houve um erro
 
 	return min;
+}
+
+//verifica se um grafo é conexo
+template<class T>
+bool Graph<T>::isConnected(Vertex<T> *v){
+
+	int id = v->getInfo().getID();
+
+	for(size_t i = 0; i < vertexSet.size(); i++)
+		if(W[id-1][i] == INT_INFINITY && id != i)
+			return false;
+	return false;
 }
 
 

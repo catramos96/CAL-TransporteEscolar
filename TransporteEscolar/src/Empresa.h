@@ -30,6 +30,7 @@ public:
 	vector<Cliente *> getClientesEscola(Morada *escola) const;
 	vector<Cliente *> getClientesPontoRecolha(Morada * ponto) const;
 	void setClientesPI(int id);
+	void setMapa(Mapa* m);
 	bool addTransporte(Veiculo * veiculo);
 	bool addCliente(Cliente *cliente);
 	bool addEscola(Morada * e);

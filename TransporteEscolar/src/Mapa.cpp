@@ -105,7 +105,7 @@ Mapa::Mapa(GraphViewer *gv){
 	vector<pair<unsigned int, unsigned int> > vertexIndex;
 	ifstream inFile;
 
-//	limpaMapa();
+	//	limpaMapa();
 
 	//--------------------------------------------- nos.txt----------------------------------------------//
 	inFile.open("111.txt");
@@ -113,7 +113,7 @@ Mapa::Mapa(GraphViewer *gv){
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
 
-	int idNo, newIdNo = 1;
+	int idNo, newIdNo = 0;
 	double x, y;
 	string line;
 
@@ -121,7 +121,6 @@ Mapa::Mapa(GraphViewer *gv){
 	{
 		stringstream linestream(line);
 		string data;
-
 
 		linestream >> idNo;
 		getline(linestream, data, ';');  // discard lat in º
@@ -134,7 +133,9 @@ Mapa::Mapa(GraphViewer *gv){
 		Morada m = Morada(x,y,newIdNo);
 		mapa.addVertex(m);
 
-		gv ->addNode(newIdNo);
+		gv->addNode(newIdNo);
+
+		cout << m << endl;
 
 		pair<unsigned int, unsigned int> idPair;
 		idPair.first = newIdNo;
@@ -166,7 +167,7 @@ Mapa::Mapa(GraphViewer *gv){
 		linestream >> temp;
 
 		if(temp == "True")
-		twoWays.push_back(idAresta);
+			twoWays.push_back(idAresta);
 	}
 	inFile.close();
 
@@ -176,7 +177,7 @@ Mapa::Mapa(GraphViewer *gv){
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
 
-	int newIdAresta = 1;
+	int newIdAresta = 0;
 	idAresta=0;
 	int newIdNoOrigem, newIdNoDestino;
 	int idNoOrigem;
@@ -200,8 +201,8 @@ Mapa::Mapa(GraphViewer *gv){
 			if(vertexIndex[i].second == idNoOrigem)
 				newIdNoOrigem = vertexIndex[i].first;
 			else
-			if(vertexIndex[i].second == idNoDestino)
-				newIdNoDestino = vertexIndex[i].first;
+				if(vertexIndex[i].second == idNoDestino)
+					newIdNoDestino = vertexIndex[i].first;
 		}
 
 
@@ -241,7 +242,7 @@ Graph<Morada> Mapa::getMapa(){
 void Mapa::cleanMapa(GraphViewer *gv)
 {
 	for(int i = 0; i < mapa.getNumVertex(); i++)
-		gv->setVertexColor(mapa.getVertexByID(i+1)->getInfo().getID() , "pink");
+		gv->setVertexColor(mapa.getVertexByID(i)->getInfo().getID() , "pink");
 }
 
 // FUNÇÃO QUE TRAÇA O CAMINHO DE POINTS -> CHAMADA EM Mapa()
@@ -257,7 +258,7 @@ void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool inverse){
 		if(v == NULL)
 			return;
 		if(!inverse)
-			if(l = 0)
+			if(l == 0)
 				gv->setVertexColor(points[l].getID(), "red");
 			else
 				gv->setVertexColor(points[l].getID(), "magenta");
@@ -316,13 +317,20 @@ void Mapa::displayMapa(vector<Morada> points){
 	gv->rearrange();
 }
 
-void Mapa::setPontoInteresse(Morada m,bool b){
+bool Mapa::setPontoInteresse(Morada m,bool b){
 
 	Vertex<Morada> *v = mapa.getVertex(m);
-	v->setIsPI(b);
 
 	if(v == NULL)
 		mapa.addVertex(m);
+
+	//verificar se o ponto é valido (ou seja verificando as tabelas de floyd-warshall, este ponto é conexo)
+
+	//if(mapa.isConnected(v)){
+		v->setIsPI(b);
+	//	return true;
+//	}
+	//return false;
 }
 
 bool Mapa::isPontoInteresse(Morada m){
@@ -411,6 +419,7 @@ vector<Morada> Mapa::makePath(vector<Morada> points){
 			if(k != 0)
 				path.push_back(temp.at(k));
 		}
+
 	}
 	return path;
 }

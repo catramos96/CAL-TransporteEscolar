@@ -2,8 +2,8 @@
 #include <sstream>
 #include <fstream>
 #include <string.h>
-#include <algorithm>
 #include "Excecoes.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -20,7 +20,7 @@ Empresa::Empresa(string nome, Morada *endereco)
 	initialization();
 }
 /**
- * MÈtodo que retorna o nome da empresa
+ * M√©todo que retorna o nome da empresa
  * @return nome da empresa.
 */
 string Empresa::getNome() const {return nome;}
@@ -32,13 +32,13 @@ string Empresa::getNome() const {return nome;}
 Morada* Empresa::getEndereco() const {return endereco;}
 
 /**
- * Metodo que altera o boleano que indica se uma empresa È escola ou n„o
+ * Metodo que altera o boleano que indica se uma empresa √© escola ou n√£o
  * @param b Valor do boleano.
  */
 void Empresa::setIsEscola(bool b){ isEscola =b; }
 
 /**
- * Metodo que retorna o boleano que indica se a empresa È uma escola
+ * Metodo que retorna o boleano que indica se a empresa √© uma escola
  * return boleano true ou false consoante e ou nao uma escola
  */
 bool Empresa::getIsEscola() const{ return isEscola; }
@@ -104,7 +104,7 @@ vector<Cliente *> Empresa::getClientesPontoRecolha(Morada * ponto) const{
 }
 
 /**
- * Metodo que muda a residencia dos clientes com id para o ponto de recolha mais prÛximo.
+ * Metodo que muda a residencia dos clientes com id para o ponto de recolha mais pr√≥ximo.
  * @param id do cliente
  */
 void Empresa::setClientesPI(int id){
@@ -114,7 +114,7 @@ void Empresa::setClientesPI(int id){
 		if(clientes[i]->getResidencia()->getID() == id)
 			mudar_cli.push_back(clientes[i]);
 	}
-	//ir buscar o ponto de recolha mais prÛximo a id
+	//ir buscar o ponto de recolha mais pr√≥ximo a id
 	vector<Morada> pontosRecolha = mapa->getInterestPoints();
 
 	int indice1 = -1,indice2 = -1;
@@ -144,7 +144,7 @@ void Empresa::setClientesPI(int id){
 /**
  * Metodo que adiciona um novo veiculo a frota da empresa.
  * @param veiculo Apontador para o veiculo que sera adicionado.
- * @return True ou false consoante È ou n„o possivel adicionar o transporte a frota.
+ * @return True ou false consoante √© ou n√£o possivel adicionar o transporte a frota.
  */
 bool Empresa::addTransporte(Veiculo * veiculo)
 {
@@ -161,9 +161,9 @@ bool Empresa::addTransporte(Veiculo * veiculo)
 
 /**
  * Metodo que adiciona um cliente ao vetor de clientes da empresa.
- * … necessario verificar se ainda existem lugares livres no total da frota, e se a crianca j· existe no vetor de clientes.
+ * √â necessario verificar se ainda existem lugares livres no total da frota, e se a crianca j√° existe no vetor de clientes.
  * @param cliente Cliente a ser introduzido.
- * @return True ou false consoante È ou nao possivel adicionar o cliente.
+ * @return True ou false consoante √© ou nao possivel adicionar o cliente.
  */
 bool Empresa::addCliente(Cliente *cliente)
 {
@@ -185,7 +185,7 @@ bool Empresa::addCliente(Cliente *cliente)
 	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
 		throw ResidenciaInvalida(*cliente->getResidencia());
 
-	//cliente j· existe, id = ou residencia =
+	//cliente j√° existe, id = ou residencia =
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(*cliente == *clientes[i])
 			return false;
@@ -202,9 +202,9 @@ bool Empresa::addCliente(Cliente *cliente)
 }
 
 /**
- * Metodo que adiciona uma escola ‡ base de dados de escolas da empresa.
+ * Metodo que adiciona uma escola √† base de dados de escolas da empresa.
  * @param e Escola a ser adicionada.
- * @return true ou false caso a escola ainda n„o esteja inserida.
+ * @return true ou false caso a escola ainda n√£o esteja inserida.
  */
 bool Empresa::addEscola(Morada *e){
 	vector<Morada *>::iterator itb = escolas.begin();
@@ -240,7 +240,7 @@ bool Empresa::removeTransporte(Veiculo * veiculo)
 /**
  * Metodo que remove um cliente da empresa.
  * @param cliente Apontador para o cliente a ser removido da empresa.
- * @return True ou false consoante tenha sido removido com sucesso, ou n„o.
+ * @return True ou false consoante tenha sido removido com sucesso, ou n√£o.
  */
 bool Empresa::removeCliente(Cliente * cliente)
 {
@@ -265,7 +265,7 @@ bool Empresa::removeCliente(Cliente * cliente)
 /**
  * Metodo que procura um cliente pelo seu id para depois ser removido
  * @param id Id do cliente.
- * @return boleano que indica o sucesso da operaÁ„o.
+ * @return boleano que indica o sucesso da opera√ß√£o.
  */
 bool Empresa::removeCliente(int id){
 	for(unsigned int i = 0; i < clientes.size(); i++)
@@ -278,7 +278,7 @@ bool Empresa::removeCliente(int id){
 /**
  * Metodo que remove uma escola da base de dados de escolas da empresa.
  * @param e Escola a remover
- * @param boleano que indica se foi ou n„o possivel remover a escola em quest„o.
+ * @param boleano que indica se foi ou n√£o possivel remover a escola em quest√£o.
  */
 bool Empresa::removerEscola(Morada *e){
 	vector<Cliente *>::iterator itb = clientes.begin();
@@ -319,8 +319,8 @@ bool compararVeiculos(Veiculo *v1 , Veiculo *v2){
 
 /**
  * Metodo que faz display do trajeto de ida (empresa->destino) de um veiculo de matriculo 'matricula'.
- * @param matricula Matricula do veiculo que mostrar· o seu trajeto.
- * @return True ou false consoante È ou n„o possivel realizar a operaÁ„o.
+ * @param matricula Matricula do veiculo que mostrar√° o seu trajeto.
+ * @return True ou false consoante √© ou n√£o possivel realizar a opera√ß√£o.
  */
 bool Empresa::displayTrajetosIda(string matricula){
 
@@ -328,17 +328,18 @@ bool Empresa::displayTrajetosIda(string matricula){
 		if(transportes[i]->getMatricula() == matricula){
 			vector<Morada> res = transportes.at(i)->getCaminho();
 			vector<Morada> path = mapa->makePath(res);
-			mapa->displayMapa(path);
+			//mapa->displayMapa(path);
 			return true;
 		}
 	}
+
 	return false;
 }
 
 /**
  * Metodo que faz display do trajeto de volta (destino->empresa) de um veiculo de matricula 'matricula'.
- * @param matricula Matricula do veiculo que mostrar· o seu trajeto.
- * @return True ou false consoante È ou n„o possivel realizar a operaÁ„o.
+ * @param matricula Matricula do veiculo que mostrar√° o seu trajeto.
+ * @return True ou false consoante √© ou n√£o possivel realizar a opera√ß√£o.
  */
 bool Empresa::displayTrajetosVolta(string matricula){
 
@@ -408,8 +409,8 @@ void Empresa::displayPontosRecolha() const{
  * Este metodo coloca os pontos de interesse sucessivamente, ordenados, no vetor 'caminho' do veiculo correspondente.
  * Um veiculo parte da empresa (primeiro ponto de interesse) e procura o ponto de interesse mais proximo com criancas.
  * Coloca todas as criancas desse ponto na carrinha e procura de novo o ponto de recolha mais proximo com criancas.
- * Quando o veiculo n„o tem mais lugares a ocupar, verifica quais as escolas que os seus clientes ocupam.
- * Procura a escola mais proxima, depois a seguinte mais proxima  e sempre assim atÈ ter chegado a todas as escolas.
+ * Quando o veiculo n√£o tem mais lugares a ocupar, verifica quais as escolas que os seus clientes ocupam.
+ * Procura a escola mais proxima, depois a seguinte mais proxima  e sempre assim at√© ter chegado a todas as escolas.
  */
 void Empresa::distribuiCliVeiculos(){
 
@@ -418,22 +419,27 @@ void Empresa::distribuiCliVeiculos(){
 	vector<Morada > temp = mapa->getInterestPoints();
 
 	pi.push_back(*endereco); //comeca na morada da empresa
-	mapa->setPontoProcessado(*endereco,true); //o primeiro ponto È processado
+
+	mapa->setPontoProcessado(*endereco,true); //o primeiro ponto √© processado
+
 	for(size_t i = 0; i < temp.size(); i++)
 		pi.push_back(temp.at(i));
 
-	//marca todos os pi com 0 criancas como processados (o primeiro n„o conta)
+	//marca todos os pi com 0 criancas como processados (o primeiro n√£o conta)
 	for(size_t i = 1; i < pi.size(); i++){
+
 		vector<Cliente *> clientes = getClientesPontoRecolha(&pi.at(i));
-		if(clientes.size() != 0)//vÍ se o nesse ponto existem criancas
+		if(clientes.size() != 0)//v√™ se o nesse ponto existem criancas
 			mapa->setPontoProcessado(pi.at(i), false);
 		else
 			mapa->setPontoProcessado(pi.at(i), true);
 	}
 
+	cout << endl;
+
 	for(size_t j = 0; j < transportes.size(); j++){
 
-		transportes.at(j)->pushCaminho(*endereco);	//o primeiro ponto a colocar no trajeto È o endereco da empresa
+		transportes.at(j)->pushCaminho(*endereco);	//o primeiro ponto a colocar no trajeto √© o endereco da empresa
 
 		if(end)
 			break;
@@ -442,12 +448,12 @@ void Empresa::distribuiCliVeiculos(){
 		int min = 0; // ponto mais proximo (indice do vetor pi)
 		vector<Morada > dest; //escolas destino
 
-		//marca as escolas como n„o processadas
+		//marca as escolas como n√£o processadas
 		for(size_t i = 0; i < escolas.size(); i++)
 			mapa->setPontoProcessado(*escolas.at(i), false);
 
 		while(transportes.at(j)->lugaresLivres() != 0){
-			// chamar o grafo para ver se deste ponto de interesse(k), qual o que est· mais proximo.
+			// chamar o grafo para ver se deste ponto de interesse(k), qual o que est√° mais proximo.
 			//Retorna o id do mais proximo.
 			min = mapa->getMinDistBetweenPoints(p,pi);
 
@@ -465,27 +471,25 @@ void Empresa::distribuiCliVeiculos(){
 			while(transportes.at(j)->lugaresLivres() != 0 && n != clientes.size()){
 				transportes.at(j)->addCliente(clientes.at(n));
 				pi.at(min).decNumCriancas();
-				mapa->setPontoProcessado(*clientes.at(n)->getEscola(), true); //escola marcada como processada -> È destino
+				mapa->setPontoProcessado(*clientes.at(n)->getEscola(), true); //escola marcada como processada -> √© destino
 				n++;
 			}
-			//se todas as criancas entraram no autocarro, esse ponto È marcado como processado
+			//se todas as criancas entraram no autocarro, esse ponto √© marcado como processado
 			if(pi.at(min).getNumCriancas() == 0)
 				mapa->setPontoProcessado(pi.at(min), true);
-
 
 			p = min;
 		}
 
-		//desobrir quantas escolas diferentes est„o no veiculo
+		//desobrir quantas escolas diferentes est√£o no veiculo
 		dest.push_back(pi.at(p)); //ultimo ponto
 		for(size_t k = 0; k < escolas.size(); k++)
-			if(mapa->getPontoProcessado(*escolas.at(k)) == true) //se foram processadas È porque existem alunos no veiculo que as frequentam
+			if(mapa->getPontoProcessado(*escolas.at(k)) == true) //se foram processadas √© porque existem alunos no veiculo que as frequentam
 				dest.push_back(*escolas.at(k));
 
-		//remarca as escolas como n„o processadas
+		//remarca as escolas como n√£o processadas
 		for(size_t i = 0; i < escolas.size(); i++)
 			mapa->setPontoProcessado(*escolas.at(i), false);
-
 
 		//procurar do ultimo ponto a escola mais proxima
 		p = 0;
@@ -500,7 +504,7 @@ void Empresa::distribuiCliVeiculos(){
 }
 
 /**
- * Inicializacao da empresa. Permite poupar recursos visto que apenas apenas È necessario fazer estes passos 1 vez.
+ * Inicializacao da empresa. Permite poupar recursos visto que apenas apenas √© necessario fazer estes passos 1 vez.
  * Inicia o mapa com todos os pontos. Faz o algoritmo de floyd-Warshall.
  */
 void Empresa::initialization(){
@@ -513,14 +517,14 @@ void Empresa::initialization(){
 
 /**
  * Distribui os clientes pelos veiculos.
- * … necess·ria uma nova distribuiÁ„o das criancas sempre que se adiciona uma nova crianca e no inicio do programa.
+ * √â necess√°ria uma nova distribui√ß√£o das criancas sempre que se adiciona uma nova crianca e no inicio do programa.
  */
 void Empresa::update(){
 	distribuiCliVeiculos();
 }
 
 /**
- * Metodo que lÍ de um ficheiro de texto as informaÁıes necesarias a preencher uma dada empresa.
+ * Metodo que l√™ de um ficheiro de texto as informa√ß√µes necesarias a preencher uma dada empresa.
  * Abre ficheiros diferentes caso a empresa seja uma escola.
  * Preenche informacoes sobre a empresa, os clientes e os veiculos.
  */
@@ -558,8 +562,8 @@ void Empresa::guardarInfo() const{
 }
 
 /**
- * MÈtodo que coloca a informaÁ„o num ficheiro de texto aquando a terminaÁ„o do programa.
- * Atualiza as informaÁıes sobre os clientes e veiculos.
+ * M√©todo que coloca a informa√ß√£o num ficheiro de texto aquando a termina√ß√£o do programa.
+ * Atualiza as informa√ß√µes sobre os clientes e veiculos.
  */
 void Empresa::carregarInfo(){
 	fstream file;
@@ -623,11 +627,11 @@ void Empresa::carregarInfo(){
 		while(!file.eof()){
 			linha.clear();
 			getline(file,tmp);
-
-			cout << tmp << endl;
-
 			linha << tmp;
-			linha >> cliente_n >> nome >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
+			linha >> cliente_n;
+			//getline(linha, tmp, ';');
+			//nome = tmp;
+			linha >> nome >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
 			Morada *casa = new Morada(coordx,coordy,id);
 			casa->incNumCriancas();
 			Morada *escola = new Morada(coordx2,coordy2,id2);

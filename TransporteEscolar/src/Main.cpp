@@ -1,13 +1,13 @@
 #include "Graph.h"
 #include "Empresa.h"
 #include "Recursos.h"
+#include "Excecoes.h"
 #include "Mapa.h"
 #include "graphviewer.h"
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "Excecoes.h"
 
 using namespace std;
 /*
@@ -462,21 +462,7 @@ void menuEmpresa(Empresa *e){
 		e->setIsEscola(true);
 	else
 		e->setIsEscola(false);
-	/*
-	cout << "Morada (id) :";
-	cin >> id;
 
-	Morada *m = new Morada(100,100,0);
-	 *m = e->getMapa()->getPontoVertex(id)->getInfo();
-	try{
-		if(m->getID() == -1){
-			throw PontoInexistente(*m);
-		}
-	}
-	catch (PontoInexistente(e)){
-		cout << "Ponto inexistente " << e.getPonto() << endl;
-	}
-	 */
 	e->carregarInfo();
 
 	menuInicial(e);
