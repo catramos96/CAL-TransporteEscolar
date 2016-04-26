@@ -19,20 +19,24 @@ private:
 	int id; //id da morada -> correspondente numerico a uma morada (é unico)
 	int numCriancas;
 public:
-	Morada(){};
+	//Construtores
+	Morada();
 	Morada(double x, double y, int id);
-	bool operator == (const Morada &m) const;
+	//Gets
 	int getID() const;
 	double getX() const;
 	double getY() const;
+	int getNumCriancas() const;
+	//Sets
 	void setID(int id);
 	void setX(double x);
 	void setY(double y);
 	void incNumCriancas();
 	void decNumCriancas();
-	int getNumCriancas() const;
+	//Operadores
 	Morada & operator=(const Morada &m);
 	friend ostream & operator<<(ostream & o, const Morada &m);
+	bool operator == (const Morada &m) const;
 
 };
 

@@ -1,16 +1,24 @@
 #include <iostream>
 #include <Windows.h>
-#include "Excessoes.h"
 #include <string>
+#include "Excecoes.h"
 
 using namespace std;
 
+/**
+ * @brief Funcao de display de um titulo
+ * @param t (string)
+ */
 void displayTitulo(string t){
 	cout << "///////////////////////////////\n";
 	cout << "// " << t << endl;
 	cout << "///////////////////////////////\n\n";
 }
 
+/**
+ * @brief Funcao de display do menu inicial
+ * @param nome_empresa (string)
+ */
 void displayMenuInicial(string nome_empresa){
 	displayTitulo(nome_empresa);
 	cout << "1 - Veiculos\n";
@@ -20,6 +28,9 @@ void displayMenuInicial(string nome_empresa){
 	cout << "5 - Sair\n";
 }
 
+/**
+ * @brief Funcao de display do menu veiculos
+ */
 void displayMenuVeiculos(){
 	displayTitulo("VEICULOS");
 	cout << "1 - Adicionar Veiculo\n";
@@ -29,6 +40,9 @@ void displayMenuVeiculos(){
 	cout << "5 - Voltar Atras\n";
 }
 
+/**
+ * @brief Funcao de display do menu clientes
+ */
 void displayMenuClientes(){
 	displayTitulo("CLIENTES");
 	cout << "1 - Adicionar Clientes\n";
@@ -38,6 +52,9 @@ void displayMenuClientes(){
 	cout << "5 - Voltar Atras\n";
 }
 
+/**
+ * @brief Funcao de display do menu pontos de interesse (recolha)
+ */
 void displayMenuPI(){
 	displayTitulo("PONTOS DE RECOLHA");
 	cout << "1 - Adicionar Ponto\n";
@@ -47,6 +64,9 @@ void displayMenuPI(){
 	cout << "5 - Voltar Atras\n";
 }
 
+/**
+ * @brief Funcao de display do menu escolas
+ */
 void displayMenuEscolas(){
 	displayTitulo("ESCOLAS");
 	cout << "1 - Ver Escolas\n";
@@ -54,6 +74,13 @@ void displayMenuEscolas(){
 	cout << "3 - Voltar Atras \n";
 }
 
+/**
+ * @brief Funcao que verifica se a opcao escolhida esta entre os valores aceites.
+ * Caso nao esteja, lanca uma excessao.
+ * @param op (int), opcao
+ * @param min (int), valor minimo
+ * @param max (int), valor maximo
+ */
 void opccao(int &op, int min, int max) {
 	cout << "Seleccione uma opccao: ";
 	cin >> op;
@@ -64,12 +91,16 @@ void opccao(int &op, int min, int max) {
 	}
 }
 
+/**
+ * @brief Funcao que obriga o utilizador a carregar numa tecla para avancar.
+ */
 void esperar() {
 	system("pause");
 }
 
-//Clears the screen
-
+/**
+ * @brief Funcao que limpa o ecra da consola.
+ */
 void clrscr(void)
 {
 	COORD coordScreen = { 0, 0 }; // upper left corner

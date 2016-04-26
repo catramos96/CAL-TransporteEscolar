@@ -1,13 +1,13 @@
 #include "Graph.h"
 #include "Empresa.h"
 #include "Recursos.h"
-#include "Excessoes.h"
 #include "Mapa.h"
 #include "graphviewer.h"
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <fstream>
+#include "Excecoes.h"
 
 using namespace std;
 /*

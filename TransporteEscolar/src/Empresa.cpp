@@ -2,8 +2,8 @@
 #include <sstream>
 #include <fstream>
 #include <string.h>
-#include "Excessoes.h"
 #include <algorithm>
+#include "Excecoes.h"
 
 using namespace std;
 /*
