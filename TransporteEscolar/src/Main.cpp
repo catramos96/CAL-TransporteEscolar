@@ -23,7 +23,6 @@ void addCliente(Empresa *e){
 	Morada *escola = new Morada();
 	int id;
 
-
 	clrscr();
 	displayTitulo("ADICIONAR CLIENTE");
 
@@ -37,8 +36,12 @@ void addCliente(Empresa *e){
 	if(casa->getID() == -1){
 		throw PontoInexistente(*casa);
 	}
+	//so sao aceites pontos de recolha que são estao assinalados como pontos de recolha
+	if(!e->getMapa()->isPontoInteresse(*casa))
+		throw PontoRecolhaInvalido(*casa);
 
-	casa->incNumCriancas();
+	casa->incNumCriancas(); //?? nao sei se deve estar aqui
+
 	Cliente *c = new Cliente(nome,casa);
 	if(!e->getIsEscola()){
 		cout << "Morada Escolar (id): ";
@@ -53,8 +56,6 @@ void addCliente(Empresa *e){
 	else
 		c->setNovaEscola(e->getEndereco());
 
-
-	//É so a casa que passa a ser um ponto de interesse ?
 	if(e->addCliente(c) == false)
 		throw ClienteJaExiste(nome,*escola,*casa);
 	cout << endl;
@@ -124,7 +125,7 @@ void menuClientes(Empresa *e){
 void addVeiculo(Empresa *e){
 	string matricula;
 	int num;
-	char classe;
+	//char classe;
 
 	clrscr();
 	displayTitulo("ADICIONAR VEICULO");
@@ -137,6 +138,7 @@ void addVeiculo(Empresa *e){
 
 	if(!e->addTransporte(v))
 		throw VeiculoJaExiste(matricula);
+
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -230,7 +232,10 @@ void addPontoRecolha(Empresa *e){
 	if(ponto.getID() == -1){
 		throw PontoInexistente(ponto);
 	}
-	e->getMapa()->setPontoInteresse(ponto,true);
+
+	if(!e->getMapa()->setPontoInteresse(ponto,true))
+		throw PontoRecolhaInvalido(ponto);
+
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -503,10 +508,5 @@ int main(){
 	e->distribuiCliVeiculos();
 	e->enviaVeiculos();	//funcao que atualiza os mapas dos veiculos e faz display dos mesmos
 	getchar();*/
-
-	/*Mapa * m = new Mapa();
-	m->display();
-	esperar();*/
-	esperar();
 	return 0;
 }

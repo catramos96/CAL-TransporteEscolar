@@ -247,7 +247,8 @@ bool Empresa::removeCliente(Cliente * cliente)
 	Cliente *c;
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(cliente == clientes[i]){
-			//falta remover do ponto de recolha <<<<
+			//falta remover o cliente do ponto de recolha <<<<
+
 			//retira-o do veiculo
 			for (size_t var = 0; var < transportes.size(); ++ var) {
 				transportes[var]->sairCliente(cliente);
@@ -562,8 +563,8 @@ void Empresa::guardarInfo() const{
 }
 
 /**
- * Método que coloca a informação num ficheiro de texto aquando a terminação do programa.
- * Atualiza as informações sobre os clientes e veiculos.
+ * Metodo que coloca a informacoeo num ficheiro de texto aquando a terminação do programa.
+ * Atualiza as informacoes sobre os clientes e veiculos.
  */
 void Empresa::carregarInfo(){
 	fstream file;

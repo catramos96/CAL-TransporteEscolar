@@ -11,7 +11,7 @@ using namespace std;
 /**
  * Construtor
  * Inicializa o grafo com os nos e arestas dos ficheiros "nos.txt" e "arestas.txt"
- */
+
 
 // FUNÇÃO SÓ PARA TESTE
 Mapa::Mapa(){
@@ -81,7 +81,7 @@ Mapa::Mapa(){
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
 }
-
+*/
 // ALGORITMO PARA CALCULO DE DISTANCIAS - LAT E LONG EM RAD
 double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double long2)
 {
@@ -123,8 +123,8 @@ Mapa::Mapa(GraphViewer *gv){
 		string data;
 
 		linestream >> idNo;
-		getline(linestream, data, ';');  // discard lat in º
-		getline(linestream, data, ';');  // discard long in º
+		getline(linestream, data, ';');  // discard lat in
+		getline(linestream, data, ';');  // discard long in
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		linestream >> x;
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
@@ -134,8 +134,6 @@ Mapa::Mapa(GraphViewer *gv){
 		mapa.addVertex(m);
 
 		gv->addNode(newIdNo);
-
-		cout << m << endl;
 
 		pair<unsigned int, unsigned int> idPair;
 		idPair.first = newIdNo;
@@ -325,12 +323,12 @@ bool Mapa::setPontoInteresse(Morada m,bool b){
 		mapa.addVertex(m);
 
 	//verificar se o ponto é valido (ou seja verificando as tabelas de floyd-warshall, este ponto é conexo)
-
-	//if(mapa.isConnected(v)){
+	if(mapa.isConnected(v)){
 		v->setIsPI(b);
-	//	return true;
-//	}
-	//return false;
+		return true;
+	}else
+		return false;
+
 }
 
 bool Mapa::isPontoInteresse(Morada m){
@@ -423,4 +421,3 @@ vector<Morada> Mapa::makePath(vector<Morada> points){
 	}
 	return path;
 }
-

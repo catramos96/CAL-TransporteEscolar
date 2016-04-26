@@ -751,8 +751,9 @@ bool Graph<T>::isConnected(Vertex<T> *v){
 	int id = v->getInfo().getID();
 
 	for(size_t i = 0; i < vertexSet.size(); i++)
-		if(W[id-1][i] == INT_INFINITY && id != i)
-			return false;
+		if(id != i)
+			if(W[id][i] != INT_INFINITY)
+				return true;
 	return false;
 }
 
