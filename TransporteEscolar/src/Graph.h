@@ -77,7 +77,8 @@ public:
 	bool getProcessing(T info);
 	int getMinDistAndPath(int pi, vector<T> points);
 	bool edgeExists(Edge<T>* e);
-	bool isConnected(Vertex<T> *v);
+	bool hasIncoming(Vertex<T> *v);
+	bool hasOutgoing(Vertex<T> *v);
 };
 
 
@@ -744,18 +745,28 @@ int Graph<T>::getMinDistAndPath(int pi, vector<T> points){
 	return min;
 }
 
-//verifica se um grafo é conexo
+//verifica se um vertice é alcancavel
 template<class T>
-bool Graph<T>::isConnected(Vertex<T> *v){
-
+bool Graph<T>::hasIncoming(Vertex<T> *v){
 	int id = v->getInfo().getID();
 
 	for(size_t i = 0; i < vertexSet.size(); i++)
 		if(id != i)
-			if(W[id][i] != INT_INFINITY)
+			if(W[i][id] != INT_INFINITY)
 				return true;
 	return false;
 }
 
+//verifica se um grafo é interemediario
+template<class T>
+bool Graph<T>::hasOutgoing(Vertex<T> *v){
+	int id = v->getInfo().getID();
+
+	for(size_t i = 0; i < vertexSet.size(); i++)
+		if(id != i)
+			if(W[i][id] != INT_INFINITY)
+				return true;
+	return false;
+}
 
 #endif /* GRAPH_H_ */

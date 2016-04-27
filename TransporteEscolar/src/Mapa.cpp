@@ -81,7 +81,7 @@ Mapa::Mapa(){
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
 }
-*/
+ */
 // ALGORITMO PARA CALCULO DE DISTANCIAS - LAT E LONG EM RAD
 double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double long2)
 {
@@ -322,12 +322,12 @@ bool Mapa::setPontoInteresse(Morada m,bool b){
 	if(v == NULL)
 		mapa.addVertex(m);
 
-	//verificar se o ponto é valido (ou seja verificando as tabelas de floyd-warshall, este ponto é conexo)
-	if(mapa.isConnected(v)){
+	//verificar se o ponto é valido (ou seja verificando as tabelas de floyd-warshall, este ponto é atingivel e intermediario)
+	if(mapa.hasIncoming(v) && mapa.hasOutgoing(v)){
 		v->setIsPI(b);
 		return true;
-	}else
-		return false;
+	}
+	return false;
 
 }
 
@@ -380,11 +380,9 @@ void Mapa::makefloydWarshallShortestPath(){
 
 vector<Morada> Mapa::getInterestPoints() const{
 	vector<Morada> res;
-	for (int i = 0; i < mapa.getNumVertex(); ++i) {
-		if(mapa.getVertexSet()[i]->getIsPI()){
+	for (int i = 0; i < mapa.getNumVertex(); ++i)
+		if(mapa.getVertexSet()[i]->getIsPI())
 			res.push_back(mapa.getVertexSet().at(i)->getInfo());
-		}
-	}
 	return res;
 }
 
@@ -413,10 +411,9 @@ vector<Morada> Mapa::makePath(vector<Morada> points){
 		if(i == 0)
 			path.push_back(temp.at(0));
 
-		for(size_t k = 0; k < temp.size(); k++){
+		for(size_t k = 0; k < temp.size(); k++)
 			if(k != 0)
 				path.push_back(temp.at(k));
-		}
 
 	}
 	return path;

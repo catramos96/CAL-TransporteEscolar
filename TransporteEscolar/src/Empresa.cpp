@@ -22,7 +22,7 @@ Empresa::Empresa(string nome, Morada *endereco)
 /**
  * Método que retorna o nome da empresa
  * @return nome da empresa.
-*/
+ */
 string Empresa::getNome() const {return nome;}
 
 /**
@@ -419,6 +419,11 @@ void Empresa::distribuiCliVeiculos(){
 	vector<Morada > pi; //vetor com todos os pontos de interesse
 	vector<Morada > temp = mapa->getInterestPoints();
 
+	for(size_t i = 0; i < temp.size(); i++){
+		//se o ponto nao e intermediario
+		cout << "o ponto " << temp.at(i).getID() << " nao e possivel alcancar devido a impedimentos na via!\n";
+	}
+
 	pi.push_back(*endereco); //comeca na morada da empresa
 
 	mapa->setPontoProcessado(*endereco,true); //o primeiro ponto é processado
@@ -521,6 +526,7 @@ void Empresa::initialization(){
  * É necessária uma nova distribuição das criancas sempre que se adiciona uma nova crianca e no inicio do programa.
  */
 void Empresa::update(){
+	//funcao que verifica se todos os pontos de recolha sao alcancaveis
 	distribuiCliVeiculos();
 }
 

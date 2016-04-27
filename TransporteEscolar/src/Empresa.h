@@ -50,7 +50,7 @@ public:
 	void distribuiCliVeiculos();
 	void initialization();
 	void update();
-
+	bool todosPontosRecolhaAtingiveis();
 };
 
 #endif /* SRC_EMPRESA_H_ */
