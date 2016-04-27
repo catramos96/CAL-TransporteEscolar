@@ -75,6 +75,7 @@ public:
 	vector<T> getfloydWarshallPathWithIP(vector<T> points);
 	Vertex<T>* getVertexByID(const int id) const;
 	void resetIsPI();
+	void resetIsSchool();
 	bool getfloydWarshallPathWithIPAux(vector<T> points, int pi, vector<T> &res);
 	void setProcessing(T info, bool estado);
 	bool getProcessing(T info);
@@ -704,6 +705,12 @@ template<class T>
 void Graph<T>::resetIsPI(){
 	for(unsigned int i = 0; i < vertexSet.size(); i++)
 		vertexSet[i]->isPI = false;
+}
+
+template<class T>
+void Graph<T>::resetIsSchool(){
+	for(unsigned int i = 0; i < vertexSet.size(); i++)
+		vertexSet[i]->isSchool = false;
 }
 
 template<class T>

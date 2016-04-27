@@ -28,6 +28,7 @@ class Vertex {
 
 	//acrescentado
 	bool isPI;
+	bool isSchool;
 public:
 
 	Vertex(T in);
@@ -49,6 +50,8 @@ public:
 	Edge<T> getAdjacentNumber(int i) const;
 	void setIsPI(bool estado);
 	bool getIsPI();
+	void setIsSchool(bool estado);
+	bool getIsSchool();
 };
 
 
@@ -130,6 +133,17 @@ void Vertex<T>::setIsPI(bool estado){
 template<class T>
 bool Vertex<T>::getIsPI(){
 	return isPI;
+}
+
+
+template<class T>
+void Vertex<T>::setIsSchool(bool estado){
+	isSchool = estado;
+}
+
+template<class T>
+bool Vertex<T>::getIsSchool(){
+	return isSchool;
 }
 
 #endif /* SRC_VERTEX_H_ */

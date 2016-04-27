@@ -30,6 +30,7 @@ double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double lo
 Mapa::Mapa(GraphViewer *gv){
 
 	//openstreetmaps.org
+	gv->defineVertexColor("pink");
 
 	vector<int> twoWays; //se uma aresta estiver neste vértice significa que a sua rua é bidirecional
 	vector<pair<unsigned int, unsigned int> > vertexIndex;
@@ -195,10 +196,10 @@ Mapa::Mapa(GraphViewer *gv){
 
 	inFile.close();
 
-	//inicializa o boleano isPI( é ponto de interesse) a falso
+	//inicializa o boleano isPI( é ponto de interesse) e isSchool ( é uma escola) a falso
 	mapa.resetIsPI();
-	//display(gv);
-	//gv->rearrange();
+	mapa.resetIsSchool();
+
 	return;
 }
 Graph<Morada> Mapa::getMapa(){
@@ -211,7 +212,7 @@ void Mapa::cleanMapa(GraphViewer *gv)
 }
 
 // FUNÇÃO QUE TRAÇA O CAMINHO DE POINTS -> CHAMADA EM Mapa()
-void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, int condition){
+void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool makePath){
 
 	cleanMapa(gv);
 	Sleep(2000);
@@ -221,31 +222,25 @@ void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, int condition){
 		Vertex<Morada> * v = mapa.getVertexByID(points[l].getID());
 		if(v == NULL)
 			return;
-		if(condition == 0) // normal
-			if(l == points.size()-1)
-				gv->setVertexColor(points[l].getID(), "red");
-			else
-				gv->setVertexColor(points[l].getID(), "magenta");
 
-		if(condition == 1) // inverso
-			if(l == 0)
-				gv->setVertexColor(points[l].getID(), "red");
-			else
-				gv->setVertexColor(points[l].getID(), "magenta");
-
-		if(condition == 2) // só pontos de recolha
-
-			gv->setVertexColor(points[l].getID(), "magenta");
-		if(condition == 3) // só escolas
+		if(v->getIsSchool())
 			gv->setVertexColor(points[l].getID(), "red");
+		else
+		if(v->getIsPI())
+			gv->setVertexColor(points[l].getID(), "blue");
+		else
+			gv->setVertexColor(points[l].getID(), "magenta");
 
 		gv->rearrange();
-		Sleep(500);
+
+		if(makePath)
+			Sleep(500);
 	}
 
 }
 
 // FUNÇÃO SÓ PARA TESTE
+/*
 void Mapa::displayMapa(vector<Morada> points){
 	GraphViewer *gv = new GraphViewer(600, 600, false);
 
@@ -288,7 +283,7 @@ void Mapa::displayMapa(vector<Morada> points){
 	}
 
 	gv->rearrange();
-}
+}*/
 
 bool Mapa::setPontoInteresse(Morada m,bool b){
 

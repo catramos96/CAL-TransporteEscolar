@@ -215,6 +215,7 @@ bool Empresa::addEscola(Morada *e){
 			return false;
 		itb++;
 	}
+	mapa->getPontoVertex(e->getID())->setIsSchool(true);
 	escolas.push_back(e);
 	return true;
 }
@@ -330,7 +331,7 @@ bool Empresa::displayTrajetosIda(string matricula){
 		if(transportes[i]->getMatricula() == matricula){
 			vector<Morada> res = transportes.at(i)->getCaminho();
 			vector<Morada> path = mapa->makePath(res);
-			mapa->displayPath(gv, path, 0);
+			mapa->displayPath(gv, path, 1);
 			return true;
 		}
 	}
@@ -357,7 +358,7 @@ bool Empresa::displayTrajetosVolta(string matricula){
 			invert.push_back(res.at(0));
 
 			vector<Morada> path = mapa->makePath(invert);
-			mapa->displayMapa(path);
+			mapa->displayPath(gv,path, 1);
 			return true;
 		}
 	}
@@ -392,7 +393,7 @@ void Empresa::displayEscolas() const{
 		tmp.push_back(*getEscolas()[i]);
 		cout << tmp[i] << endl;
 	}
-	mapa->displayMapa(tmp);
+	mapa->displayPath(gv,tmp, 0);
 }
 
 /**
@@ -403,7 +404,7 @@ void Empresa::displayPontosRecolha() const{
 	for (size_t i = 0; i < pi.size(); ++i) {
 		cout << pi[i] << " n Clientes: " << getClientesPontoRecolha(&pi[i]).size() << endl;
 	}
-	mapa->displayMapa(pi);
+	mapa->displayPath(gv,pi, 0);
 }
 
 /**
@@ -643,6 +644,8 @@ void Empresa::carregarInfo(){
 			Morada *casa = new Morada(coordx,coordy,id);
 			casa->incNumCriancas();
 			Morada *escola = new Morada(coordx2,coordy2,id2);
+			//ver ito
+			mapa->getPontoVertex(escola->getID())->setIsSchool(true);
 			Cliente *c = new Cliente(nome,casa);
 			if(isEscola)
 				c->setNovaEscola(endereco);

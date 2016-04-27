@@ -13,8 +13,7 @@ public:
 	Mapa(GraphViewer *gv);
 	Graph<Morada> getMapa();
 	void display();
-	void displayMapa(vector<Morada> points);
-	void displayPath(GraphViewer *gv, vector<Morada> points, int condition);
+	void displayPath(GraphViewer *gv, vector<Morada> points, bool makePath);
 	bool setPontoInteresse(Morada m, bool b);
 	bool isPontoInteresse(Morada m);
 	int displayPontos() const;
