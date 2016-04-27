@@ -420,12 +420,7 @@ void Empresa::distribuiCliVeiculos(){
 	bool end = false;
 	vector<Morada > pi; //vetor com todos os pontos de interesse
 	vector<Morada > temp = mapa->getInterestPoints();
-/*
-	for(size_t i = 0; i < temp.size(); i++){
-		//se o ponto nao e intermediario
-		cout << "o ponto " << temp.at(i).getID() << " nao e possivel alcancar devido a impedimentos na via!\n";
-	}
-*/
+
 	pi.push_back(*endereco); //comeca na morada da empresa
 
 	mapa->setPontoProcessado(*endereco,true); //o primeiro ponto Ã© processado
@@ -442,8 +437,6 @@ void Empresa::distribuiCliVeiculos(){
 		else
 			mapa->setPontoProcessado(pi.at(i), true);
 	}
-
-	cout << endl;
 
 	for(size_t j = 0; j < transportes.size(); j++){
 
@@ -467,6 +460,11 @@ void Empresa::distribuiCliVeiculos(){
 
 			//se forem iguais chegamos ao fim de todos os pontos de interesse
 			if(p == min){
+				//se existir algum ponto não analisado, significa que é impossivel chegar a esse ponto
+				for(size_t i = 1; i < pi.size(); i++)
+					if(!mapa->getPontoProcessado(pi.at(i)))
+						cout << "o ponto " << pi.at(i).getID() << " nao e possivel alcancar devido a impedimentos na via!\n";
+
 				end = true;
 				break;
 			}
