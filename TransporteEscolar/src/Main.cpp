@@ -108,10 +108,6 @@ void menuClientes(Empresa *e){
 			break;
 		}
 		case 4: {//pesq. traj
-
-			break;
-		}
-		case 5: {
 			throw VoltarAtras();
 		}
 		}
@@ -169,7 +165,7 @@ void verVeiculos(Empresa *e){
 	throw VoltarAtras();
 }
 
-void trajetoVeiculo(Empresa *e){
+void trajetoVeiculoIda(Empresa *e){
 
 	e->distribuiCliVeiculos();
 
@@ -181,6 +177,24 @@ void trajetoVeiculo(Empresa *e){
 	cout << "Digite a matricula do veiculo: ";
 	cin >> m;
 	if(!e->displayTrajetosIda(m))
+		throw VeiculoInexistente(m);
+	cout << endl;
+	esperar();
+	throw VoltarAtras();
+}
+
+void trajetoVeiculoVolta(Empresa *e){
+
+	e->distribuiCliVeiculos();
+
+	string m;
+	clrscr();
+	displayTitulo("VER TRAJETO DO VEICULO");
+	e->displayVeiculos();
+	cout << endl;
+	cout << "Digite a matricula do veiculo: ";
+	cin >> m;
+	if(!e->displayTrajetosVolta(m))
 		throw VeiculoInexistente(m);
 	cout << endl;
 	esperar();
@@ -206,11 +220,15 @@ void menuVeiculos(Empresa *e){
 			verVeiculos(e);
 			break;
 		}
-		case 4: {//ver traj
-			trajetoVeiculo(e);
+		case 4: {//ver traj ida
+			trajetoVeiculoIda(e);
 			break;
 		}
-		case 5: {
+		case 5:{//ver traj volta
+			trajetoVeiculoVolta(e);
+			break;
+		}
+		case 6: {
 			throw VoltarAtras();
 		}
 		}
@@ -273,20 +291,6 @@ void verPontosRecolha(Empresa *e){
 	throw VoltarAtras();
 }
 
-void verTodosPontos(Empresa *e){
-	clrscr();
-	displayTitulo("TODOS OS PONTOS");
-	//e->getMapa()->displayPontos();
-
-	vector<Morada> tmp;
-	tmp.push_back(*e->getEndereco());
-	e->getMapa()->displayPath(e->getGV(),tmp, 0);
-
-	cout << endl;
-	esperar();
-	throw VoltarAtras();
-}
-
 void menuPontos(Empresa *e){
 	clrscr();
 	int op;
@@ -307,11 +311,6 @@ void menuPontos(Empresa *e){
 			break;
 		}
 		case 4:{
-			verTodosPontos(e);
-			break;
-
-		}
-		case 5:{
 			throw VoltarAtras();
 		}
 		}
