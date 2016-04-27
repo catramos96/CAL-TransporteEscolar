@@ -323,13 +323,16 @@ bool compararVeiculos(Veiculo *v1 , Veiculo *v2){
  * @param matricula Matricula do veiculo que mostrará o seu trajeto.
  * @return True ou false consoante é ou não possivel realizar a operação.
  */
+
 bool Empresa::displayTrajetosIda(string matricula){
 
 	for (size_t i = 0; i < transportes.size(); ++i) {
 		if(transportes[i]->getMatricula() == matricula){
 			vector<Morada> res = transportes.at(i)->getCaminho();
 			vector<Morada> path = mapa->makePath(res);
-			//mapa->displayMapa(path);
+			//for(int j = 0; j < path.size(); j++)
+			//	cout << path[j].getID() << endl;
+			//mapa->displayPath(gv, path, 0);
 			return true;
 		}
 	}
@@ -515,8 +518,8 @@ void Empresa::distribuiCliVeiculos(){
  */
 void Empresa::initialization(){
 	//inicializar o mapa
-	GraphViewer *gv = new GraphViewer(600,600,true);
-	gv->createWindow(600, 600);
+	gv = new GraphViewer(1200,1200,false);
+	gv->createWindow(1200, 1200);
 	mapa = new Mapa(gv);
 	mapa->makefloydWarshallShortestPath();	//faz o algoritmo
 }

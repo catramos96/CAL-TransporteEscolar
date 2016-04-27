@@ -16,6 +16,7 @@ private:
 	vector<Cliente *> clientes;
 	vector<Morada *> escolas;
 	Mapa* mapa; //mapa da cidade
+	GraphViewer *gv;
 	bool isEscola;
 public:
 	Empresa(string nome, Morada *endereco);
@@ -27,6 +28,7 @@ public:
 	void setNome(string nome);
 	void setEndereco(Morada *endereco);
 	Mapa* getMapa() const;
+	GraphViewer * getGV() {return gv;}
 	vector<Cliente *> getClientesEscola(Morada *escola) const;
 	vector<Cliente *> getClientesPontoRecolha(Morada * ponto) const;
 	void setClientesPI(int id);

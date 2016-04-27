@@ -11,7 +11,7 @@ using namespace std;
 /**
  * Construtor
  * Inicializa o grafo com os nos e arestas dos ficheiros "nos.txt" e "arestas.txt"
-
+ */
 
 // FUNÇÃO SÓ PARA TESTE
 Mapa::Mapa(){
@@ -81,7 +81,7 @@ Mapa::Mapa(){
 	//inicializa o boleano isPI( é ponto de interesse) a falso
 	mapa.resetIsPI();
 }
- */
+
 // ALGORITMO PARA CALCULO DE DISTANCIAS - LAT E LONG EM RAD
 double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double long2)
 {
@@ -95,7 +95,7 @@ double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double lo
 
 	return d;
 }
-
+/*
 // FUNÇÃO QUE CRIA E FAZ DISPLAY DO MAPA. CASO POINTS NAO SEJA NULO, TRAÇA O CAMINHO
 Mapa::Mapa(GraphViewer *gv){
 
@@ -105,7 +105,7 @@ Mapa::Mapa(GraphViewer *gv){
 	vector<pair<unsigned int, unsigned int> > vertexIndex;
 	ifstream inFile;
 
-	//	limpaMapa();
+//	limpaMapa();
 
 	//--------------------------------------------- nos.txt----------------------------------------------//
 	inFile.open("111.txt");
@@ -113,7 +113,7 @@ Mapa::Mapa(GraphViewer *gv){
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
 
-	int idNo, newIdNo = 0;
+	int idNo, newIdNo = 1;
 	double x, y;
 	string line;
 
@@ -122,9 +122,10 @@ Mapa::Mapa(GraphViewer *gv){
 		stringstream linestream(line);
 		string data;
 
+
 		linestream >> idNo;
-		getline(linestream, data, ';');  // discard lat in
-		getline(linestream, data, ';');  // discard long in
+		getline(linestream, data, ';');  // discard lat in º
+		getline(linestream, data, ';');  // discard long in º
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		linestream >> x;
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
@@ -133,7 +134,7 @@ Mapa::Mapa(GraphViewer *gv){
 		Morada m = Morada(x,y,newIdNo);
 		mapa.addVertex(m);
 
-		gv->addNode(newIdNo);
+		gv ->addNode(newIdNo);
 
 		pair<unsigned int, unsigned int> idPair;
 		idPair.first = newIdNo;
@@ -165,7 +166,7 @@ Mapa::Mapa(GraphViewer *gv){
 		linestream >> temp;
 
 		if(temp == "True")
-			twoWays.push_back(idAresta);
+		twoWays.push_back(idAresta);
 	}
 	inFile.close();
 
@@ -175,7 +176,7 @@ Mapa::Mapa(GraphViewer *gv){
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
 
-	int newIdAresta = 0;
+	int newIdAresta = 1;
 	idAresta=0;
 	int newIdNoOrigem, newIdNoDestino;
 	int idNoOrigem;
@@ -199,8 +200,8 @@ Mapa::Mapa(GraphViewer *gv){
 			if(vertexIndex[i].second == idNoOrigem)
 				newIdNoOrigem = vertexIndex[i].first;
 			else
-				if(vertexIndex[i].second == idNoDestino)
-					newIdNoDestino = vertexIndex[i].first;
+			if(vertexIndex[i].second == idNoDestino)
+				newIdNoDestino = vertexIndex[i].first;
 		}
 
 
@@ -232,16 +233,231 @@ Mapa::Mapa(GraphViewer *gv){
 	mapa.resetIsPI();
 	gv->rearrange();
 	return;
-}
+}*/
 
+Mapa::Mapa(GraphViewer *gv){
+
+	//openstreetmaps.org
+
+	vector<int> twoWays; //se uma aresta estiver neste vértice significa que a sua rua é bidirecional
+	vector<pair<unsigned int, unsigned int> > vertexIndex;
+	vector<pair<unsigned int, pair<double, double> > > vertexCoord;
+	double latMax, latMin, longMax, longMin;
+	bool first = true;
+	ifstream inFile;
+
+	//--------------------------------------------- nos.txt----------------------------------------------//
+	inFile.open("111.txt");
+
+	if (!inFile)
+		cerr << "Unable to open file datafile.txt";
+
+	int idNo, newIdNo = 1;
+	double x, y;
+	string line;
+
+	while(getline(inFile, line))
+	{
+		stringstream linestream(line);
+		string data;
+
+
+		linestream >> idNo;
+		getline(linestream, data, ';');  // discard lat in º
+		getline(linestream, data, ';');  // discard long in º
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> x;
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> y;
+
+		Morada m = Morada(x,y,newIdNo);
+		mapa.addVertex(m);
+
+		if(first)
+		{
+			latMax = x;
+			latMin = x;
+			longMax = y;
+			longMin = y;
+		}
+		else
+		{
+			if(x > latMax)
+				latMax = x;
+			if(y > longMax)
+				longMax = y;
+			if(x < latMin)
+				latMin = x;
+			if(y < longMin)
+				longMin = y;
+		}
+
+		pair<double, double> coordinates(x,y);
+		pair<unsigned int, pair<double, double> > idCoordinates(newIdNo, coordinates);
+		vertexCoord.push_back(idCoordinates);
+
+		pair<unsigned int, unsigned int> idPair;
+		idPair.first = newIdNo;
+		idPair.second = idNo;
+		vertexIndex.push_back(idPair);
+		newIdNo++;
+		first = false;
+	}
+
+	inFile.close();
+
+	for (unsigned int i = 0; i < vertexCoord.size(); i++)
+	{
+		int id = vertexCoord.at(i).first;
+		double x =  vertexCoord.at(i).second.first;
+		double y =  vertexCoord.at(i).second.second;
+
+		double lat = 1200 * (x - latMin) / (latMax - latMin);
+		double lon =1200 * (y - longMin)/ (longMax - longMin);
+
+		gv->addNode(id, lat, lon);
+  }
+
+	//--------------------------------------------- arestas.txt----------------------------------------------//
+	inFile.open("222.txt");
+
+	if (!inFile)
+		cerr << "Unable to open file datafile.txt";
+
+	int idAresta;
+	string temp;
+
+	while(std::getline(inFile, line))
+	{
+		stringstream linestream(line);
+		string data;
+		string temp;
+
+		linestream >> idAresta;
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> temp;
+
+		if(temp == "True")
+		twoWays.push_back(idAresta);
+	}
+	inFile.close();
+
+	//--------------------------------------------- subroads.txt----------------------------------------------//
+	inFile.open("333.txt");
+
+	if (!inFile)
+		cerr << "Unable to open file datafile.txt";
+
+	int newIdAresta = 1;
+	idAresta=0;
+	int newIdNoOrigem, newIdNoDestino;
+	int idNoOrigem;
+	int idNoDestino;
+
+	while(std::getline(inFile, line))
+	{
+		stringstream linestream(line);
+		string data;
+
+		linestream >> idAresta;
+
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> idNoOrigem;
+
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> idNoDestino;
+
+		for(unsigned int i = 0; i < vertexIndex.size(); i++)
+		{
+			if(vertexIndex[i].second == idNoOrigem)
+				newIdNoOrigem = vertexIndex[i].first;
+			else
+			if(vertexIndex[i].second == idNoDestino)
+				newIdNoDestino = vertexIndex[i].first;
+		}
+
+
+		Vertex<Morada>* vSource = mapa.getVertexByID(newIdNoOrigem);
+		Vertex<Morada>* vDest = mapa.getVertexByID(newIdNoDestino);
+		double weight =  haversineAlgorith(vSource->getInfo().getX(), vSource->getInfo().getY(), vDest->getInfo().getX(), vDest->getInfo().getY());
+		if(vSource->getInfo() == vDest->getInfo())
+			continue;
+		else{
+			if(vSource != NULL && vDest != NULL){
+				stringstream label;
+				label << weight;
+				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), weight, newIdAresta);
+				gv->addEdge(newIdAresta, newIdNoOrigem, newIdNoDestino, EdgeType::DIRECTED);
+				gv->setEdgeLabel(newIdAresta,label.str());
+				newIdAresta++;
+				//gv->addEdge(newIdAresta, newIdNoDestino, newIdNoOrigem, EdgeType::DIRECTED);
+				//gv->setEdgeLabel(newIdAresta,label.str());
+				mapa.addEdge(vDest->getInfo(),vSource->getInfo(), weight, newIdAresta);
+				newIdAresta++;
+
+
+			}
+		}
+	}
+
+	inFile.close();
+
+	//inicializa o boleano isPI( é ponto de interesse) a falso
+	mapa.resetIsPI();
+	//display(gv);
+	//gv->rearrange();
+	return;
+}
 Graph<Morada> Mapa::getMapa(){
 	return mapa;
 }
 void Mapa::cleanMapa(GraphViewer *gv)
 {
 	for(int i = 0; i < mapa.getNumVertex(); i++)
-		gv->setVertexColor(mapa.getVertexByID(i)->getInfo().getID() , "pink");
+		gv->setVertexColor(mapa.getVertexByID(i+1)->getInfo().getID() , "pink");
 }
+/*
+void Mapa::display(GraphViewer *gv)
+{
+	double latMax = -5;
+	double longMax = -5;
+
+	double latMin = 5;
+	double longMin = 5;
+
+
+	for(unsigned int i = 0; i < mapa.getVertexSet().size(); i++)
+	{
+		if(mapa.getVertexSet()[i]->getInfo().getX() > latMax)
+			latMax = mapa.getVertexSet()[i]->getInfo().getX();
+		if(mapa.getVertexSet()[i]->getInfo().getY() > longMax)
+			longMax = mapa.getVertexSet()[i]->getInfo().getY();
+
+		if(mapa.getVertexSet()[i]->getInfo().getX() < latMin)
+			latMin = mapa.getVertexSet()[i]->getInfo().getX();
+		if(mapa.getVertexSet()[i]->getInfo().getY() < longMin)
+			longMin = mapa.getVertexSet()[i]->getInfo().getY();
+	}
+
+	cout << "latmin " << latMin << " latmax " << latMax << " longmin " << longMin << " longmax " << longMax << endl;
+
+	int resolution = 800;
+
+	for(unsigned int i = 0; i < mapa.getVertexSet().size(); i++)
+	{
+		double lat = mapa.getVertexSet()[i]->getInfo().getX();
+		double lon = mapa.getVertexSet()[i]->getInfo().getY();
+
+		double x = (abs(800 /(latMax - (latMin)))* abs(mapa.getVertexSet()[i]->getInfo().getX() - latMin))*100;
+		double y = (200 /(longMax - (longMin)))* (mapa.getVertexSet()[i]->getInfo().getY() - longMin);
+
+
+
+		gv->addNode(mapa.getVertexSet()[i]->getInfo().getID(), x, y);
+		cout << "id " << mapa.getVertexSet()[i]->getInfo().getID() << " x " << x << " y " << y;
+	}
+}*/
 
 // FUNÇÃO QUE TRAÇA O CAMINHO DE POINTS -> CHAMADA EM Mapa()
 void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool inverse){
@@ -256,15 +472,15 @@ void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool inverse){
 		if(v == NULL)
 			return;
 		if(!inverse)
-			if(l == 0)
+			if(l = points.size()-1)
 				gv->setVertexColor(points[l].getID(), "red");
 			else
 				gv->setVertexColor(points[l].getID(), "magenta");
 		else
-			if(l == points.size()-1)
+			if(l == 0)
 				gv->setVertexColor(points[l].getID(), "green");
 			else
-				gv->setVertexColor(points[l].getID(), "red");
+				gv->setVertexColor(points[l].getID(), "magenta");
 		gv->rearrange();
 		Sleep(1000);
 	}
@@ -380,9 +596,11 @@ void Mapa::makefloydWarshallShortestPath(){
 
 vector<Morada> Mapa::getInterestPoints() const{
 	vector<Morada> res;
-	for (int i = 0; i < mapa.getNumVertex(); ++i)
-		if(mapa.getVertexSet()[i]->getIsPI())
+	for (int i = 0; i < mapa.getNumVertex(); ++i) {
+		if(mapa.getVertexSet()[i]->getIsPI()){
 			res.push_back(mapa.getVertexSet().at(i)->getInfo());
+		}
+	}
 	return res;
 }
 
@@ -411,10 +629,10 @@ vector<Morada> Mapa::makePath(vector<Morada> points){
 		if(i == 0)
 			path.push_back(temp.at(0));
 
-		for(size_t k = 0; k < temp.size(); k++)
+		for(size_t k = 0; k < temp.size(); k++){
 			if(k != 0)
 				path.push_back(temp.at(k));
-
+		}
 	}
 	return path;
 }
