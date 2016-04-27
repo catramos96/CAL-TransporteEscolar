@@ -445,6 +445,7 @@ void menuInicial(Empresa *e) {
 		}
 		catch(PontoRecolhaInvalido(e)){
 			cout << "Nao existe um ponto de recolha " << e.getPonto() << endl;
+			esperar();
 		}
 	} while (op != 5);
 }
@@ -461,9 +462,9 @@ void menuEmpresa(Empresa *e){
 		cout << "A empresa pertence a uma escola ? (S/N)\n";
 		cin >> resp;
 	}
-	while(resp != 'S' && resp != 'N');
+	while(resp != 'S' && resp != 'N' && resp != 's' && resp != 'n');
 
-	if(resp == 'S')
+	if(resp == 'S' || resp == 's')
 		e->setIsEscola(true);
 	else
 		e->setIsEscola(false);

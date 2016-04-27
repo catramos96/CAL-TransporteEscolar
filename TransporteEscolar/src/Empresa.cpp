@@ -565,7 +565,10 @@ void Empresa::guardarInfo() const{
 	//clientes
 	file << Cliente::id << endl;
 	for (size_t i = 0; i < clientes.size(); ++i) {
-		file << clientes[i]->getID() << " " <<clientes[i]->getNome()<< " " << *clientes[i]->getResidencia()<< " " << *clientes[i]->getEscola() << endl;
+		if(i == clientes.size() -1)
+			file << clientes[i]->getID() << "" <<clientes[i]->getNome()<< ";" << *clientes[i]->getResidencia()<< " " << *clientes[i]->getEscola();
+		else
+			file << clientes[i]->getID() << "" <<clientes[i]->getNome()<< ";" << *clientes[i]->getResidencia()<< " " << *clientes[i]->getEscola() << endl;
 	}
 	file.close();
 }
@@ -638,13 +641,12 @@ void Empresa::carregarInfo(){
 			getline(file,tmp);
 			linha << tmp;
 			linha >> cliente_n;
-			//getline(linha, tmp, ';');
-			//nome = tmp;
-			linha >> nome >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
+			getline(linha, tmp, ';');
+			nome = tmp;
+			linha >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
 			Morada *casa = new Morada(coordx,coordy,id);
 			casa->incNumCriancas();
 			Morada *escola = new Morada(coordx2,coordy2,id2);
-			//ver ito
 			mapa->getPontoVertex(escola->getID())->setIsSchool(true);
 			Cliente *c = new Cliente(nome,casa);
 			if(isEscola)
