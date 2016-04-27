@@ -13,75 +13,6 @@ using namespace std;
  * Inicializa o grafo com os nos e arestas dos ficheiros "nos.txt" e "arestas.txt"
  */
 
-// FUNÇÃO SÓ PARA TESTE
-Mapa::Mapa(){
-	ifstream inFile;
-
-	//Ler o ficheiro nos.txt
-	inFile.open("nos.txt");
-
-	if (!inFile)
-		cerr << "Unable to open file datafile.txt";
-
-	string line;
-
-	int idNo=0;
-	int x=0;
-	int y=0;
-
-	while(getline(inFile, line))
-	{
-		stringstream linestream(line);
-		string	data;
-
-		linestream >> idNo;
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> x;
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> y;
-		Morada m = Morada(x,y,idNo);
-		mapa.addVertex(m);
-	}
-
-	inFile.close();
-
-	//Ler o ficheiro arestas.txt
-	inFile.open("arestas.txt");
-
-	if (!inFile)
-		cerr << "Unable to open file datafile.txt";
-
-	int idAresta=0;
-	int idNoOrigem=0;
-	int idNoDestino=0;
-	int peso = 0;
-
-	while(std::getline(inFile, line))
-	{
-		stringstream linestream(line);
-		string data;
-
-		linestream >> idAresta;
-
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> idNoOrigem;
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> idNoDestino;
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> peso;
-
-		Vertex<Morada>* vSource = mapa.getVertexByID(idNoOrigem);
-		Vertex<Morada>* vDest = mapa.getVertexByID(idNoDestino);
-
-		mapa.addEdge(vSource->getInfo(), vDest->getInfo(), peso,1);
-		mapa.addEdge(vDest->getInfo(), vSource->getInfo(), peso,1);
-	}
-	inFile.close();
-
-	//inicializa o boleano isPI( é ponto de interesse) a falso
-	mapa.resetIsPI();
-}
-
 // ALGORITMO PARA CALCULO DE DISTANCIAS - LAT E LONG EM RAD
 double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double long2)
 {
@@ -95,145 +26,6 @@ double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double lo
 
 	return d;
 }
-/*
-// FUNÇÃO QUE CRIA E FAZ DISPLAY DO MAPA. CASO POINTS NAO SEJA NULO, TRAÇA O CAMINHO
-Mapa::Mapa(GraphViewer *gv){
-
-	//openstreetmaps.org
-
-	vector<int> twoWays; //se uma aresta estiver neste vértice significa que a sua rua é bidirecional
-	vector<pair<unsigned int, unsigned int> > vertexIndex;
-	ifstream inFile;
-
-//	limpaMapa();
-
-	//--------------------------------------------- nos.txt----------------------------------------------//
-	inFile.open("111.txt");
-
-	if (!inFile)
-		cerr << "Unable to open file datafile.txt";
-
-	int idNo, newIdNo = 1;
-	double x, y;
-	string line;
-
-	while(getline(inFile, line))
-	{
-		stringstream linestream(line);
-		string data;
-
-
-		linestream >> idNo;
-		getline(linestream, data, ';');  // discard lat in º
-		getline(linestream, data, ';');  // discard long in º
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> x;
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> y;
-
-		Morada m = Morada(x,y,newIdNo);
-		mapa.addVertex(m);
-
-		gv ->addNode(newIdNo);
-
-		pair<unsigned int, unsigned int> idPair;
-		idPair.first = newIdNo;
-		idPair.second = idNo;
-		vertexIndex.push_back(idPair);
-		newIdNo++;
-	}
-
-	inFile.close();
-
-	//--------------------------------------------- arestas.txt----------------------------------------------//
-	inFile.open("222.txt");
-
-	if (!inFile)
-		cerr << "Unable to open file datafile.txt";
-
-	int idAresta;
-	string temp;
-
-	while(std::getline(inFile, line))
-	{
-		stringstream linestream(line);
-		string data;
-		string temp;
-
-		linestream >> idAresta;
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> temp;
-
-		if(temp == "True")
-		twoWays.push_back(idAresta);
-	}
-	inFile.close();
-
-	//--------------------------------------------- subroads.txt----------------------------------------------//
-	inFile.open("333.txt");
-
-	if (!inFile)
-		cerr << "Unable to open file datafile.txt";
-
-	int newIdAresta = 1;
-	idAresta=0;
-	int newIdNoOrigem, newIdNoDestino;
-	int idNoOrigem;
-	int idNoDestino;
-
-	while(std::getline(inFile, line))
-	{
-		stringstream linestream(line);
-		string data;
-
-		linestream >> idAresta;
-
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> idNoOrigem;
-
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> idNoDestino;
-
-		for(unsigned int i = 0; i < vertexIndex.size(); i++)
-		{
-			if(vertexIndex[i].second == idNoOrigem)
-				newIdNoOrigem = vertexIndex[i].first;
-			else
-			if(vertexIndex[i].second == idNoDestino)
-				newIdNoDestino = vertexIndex[i].first;
-		}
-
-
-		Vertex<Morada>* vSource = mapa.getVertexByID(newIdNoOrigem);
-		Vertex<Morada>* vDest = mapa.getVertexByID(newIdNoDestino);
-		double weight =  haversineAlgorith(vSource->getInfo().getX(), vSource->getInfo().getY(), vDest->getInfo().getX(), vDest->getInfo().getY());
-		if(vSource->getInfo() == vDest->getInfo())
-			continue;
-		else{
-			if(vSource != NULL && vDest != NULL){
-				stringstream label;
-				label << weight;
-				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), weight, newIdAresta);
-				gv->addEdge(newIdAresta, newIdNoOrigem, newIdNoDestino, EdgeType::UNDIRECTED);
-				gv->setEdgeLabel(newIdAresta,label.str());
-				newIdAresta++;
-				//for(size_t i = 0; i < twoWays.size(); i++)
-				//	if(twoWays.at(i) == newIdAresta){	//esta aresta está nos vetores de arestas bidirecionais
-				mapa.addEdge(vDest->getInfo(),vSource->getInfo(), weight, newIdAresta);
-				newIdAresta++;
-				//	}
-			}
-		}
-	}
-
-	inFile.close();
-
-	//inicializa o boleano isPI( é ponto de interesse) a falso
-	mapa.resetIsPI();
-	gv->rearrange();
-	return;
-}*/
 
 Mapa::Mapa(GraphViewer *gv){
 
@@ -247,7 +39,7 @@ Mapa::Mapa(GraphViewer *gv){
 	ifstream inFile;
 
 	//--------------------------------------------- nos.txt----------------------------------------------//
-	inFile.open("111.txt");
+	inFile.open("node.txt");
 
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
@@ -319,7 +111,7 @@ Mapa::Mapa(GraphViewer *gv){
 	}
 
 	//--------------------------------------------- arestas.txt----------------------------------------------//
-	inFile.open("222.txt");
+	inFile.open("road.txt");
 
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
@@ -344,7 +136,7 @@ Mapa::Mapa(GraphViewer *gv){
 	inFile.close();
 
 	//--------------------------------------------- subroads.txt----------------------------------------------//
-	inFile.open("333.txt");
+	inFile.open("subRoad.txt");
 
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
@@ -417,47 +209,6 @@ void Mapa::cleanMapa(GraphViewer *gv)
 	for(int i = 0; i < mapa.getNumVertex(); i++)
 		gv->setVertexColor(mapa.getVertexByID(i)->getInfo().getID() , "pink");
 }
-/*
-void Mapa::display(GraphViewer *gv)
-{
-	double latMax = -5;
-	double longMax = -5;
-
-	double latMin = 5;
-	double longMin = 5;
-
-
-	for(unsigned int i = 0; i < mapa.getVertexSet().size(); i++)
-	{
-		if(mapa.getVertexSet()[i]->getInfo().getX() > latMax)
-			latMax = mapa.getVertexSet()[i]->getInfo().getX();
-		if(mapa.getVertexSet()[i]->getInfo().getY() > longMax)
-			longMax = mapa.getVertexSet()[i]->getInfo().getY();
-
-		if(mapa.getVertexSet()[i]->getInfo().getX() < latMin)
-			latMin = mapa.getVertexSet()[i]->getInfo().getX();
-		if(mapa.getVertexSet()[i]->getInfo().getY() < longMin)
-			longMin = mapa.getVertexSet()[i]->getInfo().getY();
-	}
-
-	cout << "latmin " << latMin << " latmax " << latMax << " longmin " << longMin << " longmax " << longMax << endl;
-
-	int resolution = 800;
-
-	for(unsigned int i = 0; i < mapa.getVertexSet().size(); i++)
-	{
-		double lat = mapa.getVertexSet()[i]->getInfo().getX();
-		double lon = mapa.getVertexSet()[i]->getInfo().getY();
-
-		double x = (abs(800 /(latMax - (latMin)))* abs(mapa.getVertexSet()[i]->getInfo().getX() - latMin))*100;
-		double y = (200 /(longMax - (longMin)))* (mapa.getVertexSet()[i]->getInfo().getY() - longMin);
-
-
-
-		gv->addNode(mapa.getVertexSet()[i]->getInfo().getID(), x, y);
-		cout << "id " << mapa.getVertexSet()[i]->getInfo().getID() << " x " << x << " y " << y;
-	}
-}*/
 
 // FUNÇÃO QUE TRAÇA O CAMINHO DE POINTS -> CHAMADA EM Mapa()
 void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, int condition){
@@ -489,7 +240,7 @@ void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, int condition){
 			gv->setVertexColor(points[l].getID(), "red");
 
 		gv->rearrange();
-		Sleep(1000);
+		Sleep(500);
 	}
 
 }
@@ -587,16 +338,6 @@ Vertex<Morada> * Mapa::getPontoVertex(int id){
 
 	return v;
 }
-/*
-vector<Morada> Mapa::shortestPath(vector<Morada> points){
-	mapa.floydWarshallShortestPath();
-	vector<Morada> res = mapa.getfloydWarshallPathWithIP(points);
-
-	if(res.size() == 1){ // e retornado um vetor vazio
-		cout << "ATENCAO! O GRAFO NAO PERMITE CHEGAR AO PONTO " << res.at(0).getID() << endl ; //isto tem de ir para o main mais tarde
-	}else
-		return res;
-}*/
 
 void Mapa::makefloydWarshallShortestPath(){
 	mapa.floydWarshallShortestPath(); //crias as tabelas do path e dist entre todos os pontos
