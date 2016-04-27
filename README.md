@@ -1,9 +1,5 @@
 ## O que falta fazer : ##
 
-* colocar as coisas a funcionar com o osm -> criar clientes, criar pontos de recolha, a sede da empresa, as escolas...
-
-* openStreetMaps (fazer display) 
-
 * colocar a cores diferentes no mapa as escolas e os pontos de recolha
 
 * algoritmo de distribuição das crianças inverso (escola -> garagem) -> está mais ou menos
