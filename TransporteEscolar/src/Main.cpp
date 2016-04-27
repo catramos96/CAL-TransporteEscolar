@@ -478,7 +478,15 @@ int main(){
 	Morada * source = new Morada(56,-0.159533,0.67583); 	// MUDAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	menuEmpresa(e);
-	//esperar();
+	esperar();
+
+//	Morada a =  Morada (4, -0.1594786,0.6757812);
+	//Morada b =  Morada (34, -0.159454,0.6757402);
+	//vector<Morada> v = e->getMapa()->getMapa().getfloydWarshallPath(a,b);
+//	for(int k = 0; k < v.size(); k++)
+	//	cout << v[k].getID() << endl;
+
+	//e->getMapa()->displayPath(e->getGV(), v, 0);
 	delete(e);
 
 	/*

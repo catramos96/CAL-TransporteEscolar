@@ -330,9 +330,7 @@ bool Empresa::displayTrajetosIda(string matricula){
 		if(transportes[i]->getMatricula() == matricula){
 			vector<Morada> res = transportes.at(i)->getCaminho();
 			vector<Morada> path = mapa->makePath(res);
-			//for(int j = 0; j < path.size(); j++)
-			//	cout << path[j].getID() << endl;
-			//mapa->displayPath(gv, path, 0);
+			mapa->displayPath(gv, path, 0);
 			return true;
 		}
 	}
@@ -421,12 +419,12 @@ void Empresa::distribuiCliVeiculos(){
 	bool end = false;
 	vector<Morada > pi; //vetor com todos os pontos de interesse
 	vector<Morada > temp = mapa->getInterestPoints();
-
+/*
 	for(size_t i = 0; i < temp.size(); i++){
 		//se o ponto nao e intermediario
 		cout << "o ponto " << temp.at(i).getID() << " nao e possivel alcancar devido a impedimentos na via!\n";
 	}
-
+*/
 	pi.push_back(*endereco); //comeca na morada da empresa
 
 	mapa->setPontoProcessado(*endereco,true); //o primeiro ponto é processado

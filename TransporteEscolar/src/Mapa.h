@@ -14,7 +14,7 @@ public:
 	Graph<Morada> getMapa();
 	void display();
 	void displayMapa(vector<Morada> points);
-	void displayPath(GraphViewer *gv,vector<Morada> points, bool inverse);
+	void displayPath(GraphViewer *gv, vector<Morada> points, int condition);
 	bool setPontoInteresse(Morada m, bool b);
 	bool isPontoInteresse(Morada m);
 	int displayPontos() const;

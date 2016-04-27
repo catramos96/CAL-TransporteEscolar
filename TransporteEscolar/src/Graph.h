@@ -13,6 +13,9 @@
 #include <limits>
 #include <cmath>
 
+#include "graphviewer.h"
+
+
 const int NOT_VISITED = 0;
 const int BEING_VISITED = 1;
 const int DONE_VISITED = 2;
@@ -618,8 +621,9 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &origin, const T &dest){
 
 	res.push_back(dest);
 	while(true){
-		if(v->getInfo() == origin)
+		if(v->getInfo().getID() == origin.getID())
 			break;
+
 		else{
 			res.push_back(v->getInfo());
 			v = P[origin.getID()][v->getInfo().getID()];

@@ -252,7 +252,7 @@ Mapa::Mapa(GraphViewer *gv){
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
 
-	int idNo, newIdNo = 1;
+	int idNo, newIdNo = 0;
 	double x, y;
 	string line;
 
@@ -316,7 +316,7 @@ Mapa::Mapa(GraphViewer *gv){
 		double lon =1200 * (y - longMin)/ (longMax - longMin);
 
 		gv->addNode(id, lat, lon);
-  }
+	}
 
 	//--------------------------------------------- arestas.txt----------------------------------------------//
 	inFile.open("222.txt");
@@ -339,7 +339,7 @@ Mapa::Mapa(GraphViewer *gv){
 		linestream >> temp;
 
 		if(temp == "True")
-		twoWays.push_back(idAresta);
+			twoWays.push_back(idAresta);
 	}
 	inFile.close();
 
@@ -349,7 +349,7 @@ Mapa::Mapa(GraphViewer *gv){
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
 
-	int newIdAresta = 1;
+	int newIdAresta = 0;
 	idAresta=0;
 	int newIdNoOrigem, newIdNoDestino;
 	int idNoOrigem;
@@ -373,8 +373,8 @@ Mapa::Mapa(GraphViewer *gv){
 			if(vertexIndex[i].second == idNoOrigem)
 				newIdNoOrigem = vertexIndex[i].first;
 			else
-			if(vertexIndex[i].second == idNoDestino)
-				newIdNoDestino = vertexIndex[i].first;
+				if(vertexIndex[i].second == idNoDestino)
+					newIdNoDestino = vertexIndex[i].first;
 		}
 
 
@@ -391,8 +391,8 @@ Mapa::Mapa(GraphViewer *gv){
 				gv->addEdge(newIdAresta, newIdNoOrigem, newIdNoDestino, EdgeType::DIRECTED);
 				gv->setEdgeLabel(newIdAresta,label.str());
 				newIdAresta++;
-				//gv->addEdge(newIdAresta, newIdNoDestino, newIdNoOrigem, EdgeType::DIRECTED);
-				//gv->setEdgeLabel(newIdAresta,label.str());
+				gv->addEdge(newIdAresta, newIdNoDestino, newIdNoOrigem, EdgeType::DIRECTED);
+				gv->setEdgeLabel(newIdAresta,label.str());
 				mapa.addEdge(vDest->getInfo(),vSource->getInfo(), weight, newIdAresta);
 				newIdAresta++;
 
@@ -415,7 +415,7 @@ Graph<Morada> Mapa::getMapa(){
 void Mapa::cleanMapa(GraphViewer *gv)
 {
 	for(int i = 0; i < mapa.getNumVertex(); i++)
-		gv->setVertexColor(mapa.getVertexByID(i+1)->getInfo().getID() , "pink");
+		gv->setVertexColor(mapa.getVertexByID(i)->getInfo().getID() , "pink");
 }
 /*
 void Mapa::display(GraphViewer *gv)
@@ -460,30 +460,38 @@ void Mapa::display(GraphViewer *gv)
 }*/
 
 // FUNÇÃO QUE TRAÇA O CAMINHO DE POINTS -> CHAMADA EM Mapa()
-void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool inverse){
+void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, int condition){
 
 	cleanMapa(gv);
 	Sleep(2000);
 
-	for(int l = 0; l < points.size(); l++)
+	for(size_t l = 0; l < points.size(); l++)
 	{
-
 		Vertex<Morada> * v = mapa.getVertexByID(points[l].getID());
 		if(v == NULL)
 			return;
-		if(!inverse)
-			if(l = points.size()-1)
+		if(condition == 0) // normal
+			if(l == points.size()-1)
 				gv->setVertexColor(points[l].getID(), "red");
 			else
 				gv->setVertexColor(points[l].getID(), "magenta");
-		else
+
+		if(condition == 1) // inverso
 			if(l == 0)
-				gv->setVertexColor(points[l].getID(), "green");
+				gv->setVertexColor(points[l].getID(), "red");
 			else
 				gv->setVertexColor(points[l].getID(), "magenta");
+
+		if(condition == 2) // só pontos de recolha
+
+			gv->setVertexColor(points[l].getID(), "magenta");
+		if(condition == 3) // só escolas
+			gv->setVertexColor(points[l].getID(), "red");
+
 		gv->rearrange();
 		Sleep(1000);
 	}
+
 }
 
 // FUNÇÃO SÓ PARA TESTE
