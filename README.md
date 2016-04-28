@@ -1,17 +1,3 @@
-## O que falta fazer : ##
-
-* testar escola ser empresa
-
-* fazer um display do path enquanto faz a visualização do grafo (às vezes aquilo para e não se sabe se ele erdou ou está a passar por pontos pintados)
-
-* eliminar todas as funções que não estão a ser usadas (ver principalmente o graph.h, vertex.h e edge.h mas podem não ser as únicas)
-
-* verificação de erros
-
-* relatório
-
-
-#--------------------------------------------------------------------------------#
 
 # Comandos do git #
 
