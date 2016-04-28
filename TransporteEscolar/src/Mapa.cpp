@@ -8,20 +8,6 @@
 
 using namespace std;
 
-// ALGORITMO PARA CALCULO DE DISTANCIAS - LAT E LONG EM RAD
-double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double long2)
-{
-	const int earthRadius = 6371000;
-	double deltaLat = lat2 - lat1;
-	double deltaLong = long2 - long1;
-
-	double a = pow(sin(deltaLat/2), 2) + cos(lat1)*cos(lat2)*+pow(sin(deltaLong/2),2);
-	double c = 2*atan2(sqrt(a),sqrt(1-a));
-	double d = earthRadius * c;
-
-	return d;
-}
-
 Mapa::Mapa(GraphViewer *gv){
 
 	//openstreetmaps.org
@@ -174,10 +160,10 @@ Mapa::Mapa(GraphViewer *gv){
 		else{
 			if(vSource != NULL && vDest != NULL){
 				stringstream label;
-				//label << weight;
+				label << weight;
 				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), weight, newIdAresta);
 				gv->addEdge(newIdAresta, newIdNoOrigem, newIdNoDestino, EdgeType::DIRECTED);
-				label << newIdAresta;
+			//	label << newIdAresta;
 				gv->setEdgeLabel(newIdAresta,label.str());
 				newIdAresta++;
 				gv->addEdge(newIdAresta, newIdNoDestino, newIdNoOrigem, EdgeType::DIRECTED);
@@ -196,9 +182,25 @@ Mapa::Mapa(GraphViewer *gv){
 
 	return;
 }
+
+// ALGORITMO PARA CALCULO DE DISTANCIAS - LAT E LONG EM RAD
+double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double long2)
+{
+	const int earthRadius = 6371000;
+	double deltaLat = lat2 - lat1;
+	double deltaLong = long2 - long1;
+
+	double a = pow(sin(deltaLat/2), 2) + cos(lat1)*cos(lat2)*+pow(sin(deltaLong/2),2);
+	double c = 2*atan2(sqrt(a),sqrt(1-a));
+	double d = earthRadius * c;
+
+	return d;
+}
+
 Graph<Morada> Mapa::getMapa(){
 	return mapa;
 }
+
 void Mapa::cleanMapa(GraphViewer *gv)
 {
 	for(int i = 0; i < mapa.getNumVertex(); i++)

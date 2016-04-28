@@ -274,6 +274,8 @@ bool Empresa::removeCliente(Cliente * cliente)
 bool Empresa::removeCliente(int id){
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(id == clientes[i]->getID()){
+			//encontra o ponto de recolha correspondente e decrementa o numero de criancas
+			changeNumCriancas(*clientes[i]->getResidencia(), -1);
 			return removeCliente(clientes[i]);
 		}
 	return false;
@@ -332,6 +334,11 @@ bool Empresa::displayTrajetosIda(string matricula){
 	for (size_t i = 0; i < transportes.size(); ++i) {
 		if(transportes[i]->getMatricula() == matricula){
 			vector<Morada> res = transportes.at(i)->getCaminho();
+
+			for(size_t j = 0; j < res.size(); j++)
+				if(!mapa->getPontoProcessado(res.at(j)))
+					cout << "o ponto " << res.at(j).getID() << " nao e possivel alcancar devido a impedimentos na via!\n";
+
 			vector<Morada> path = mapa->makePath(res);
 			mapa->displayPath(gv, path, 1);
 			return true;
@@ -353,6 +360,11 @@ bool Empresa::displayTrajetosVolta(string matricula){
 		if(transportes.at(i)->getMatricula() == matricula){
 
 			vector<Morada> res = transportes.at(i)->getCaminho();
+
+			for(size_t j = 0; j < res.size(); j++)
+				if(!mapa->getPontoProcessado(res.at(j)))
+					cout << "o ponto " << res.at(j).getID() << " nao e possivel alcancar devido a impedimentos na via!\n";
+
 			vector<Morada> invert;
 
 			for(size_t j = res.size()-1; j > 0; j--)
@@ -458,8 +470,6 @@ void Empresa::distribuiCliVeiculos(){
 
 	for(size_t j = 0; j < transportes.size(); j++){
 
-		cout << "4 : " <<mapa->getPontoProcessado(pi.at(4)) <<endl;
-
 		transportes.at(j)->pushCaminho(*endereco);	//o primeiro ponto a colocar no trajeto Ã© o endereco da empresa
 
 		if(end)
@@ -478,17 +488,8 @@ void Empresa::distribuiCliVeiculos(){
 			//Retorna o id do mais proximo.
 			min = mapa->getMinDistBetweenPoints(p,pi);
 
-			cout << j << " - " << min <<endl;
-
 			//se forem iguais chegamos ao fim de todos os pontos de interesse
 			if(p == min){
-				cout << "aqui";
-				//se existir algum ponto não analisado, significa que é impossivel chegar a esse ponto
-				for(size_t i = 1; i < pi.size(); i++){
-					cout << "x";
-					if(!mapa->getPontoProcessado(pi.at(i)))
-						cout << "o ponto " << pi.at(i).getID() << " nao e possivel alcancar devido a impedimentos na via!\n";
-				}
 				end = true;
 				break;
 			}
@@ -498,7 +499,7 @@ void Empresa::distribuiCliVeiculos(){
 			// adiciona as criancas desse destino ao vetor de clientes da carrinha em causa.
 			size_t n = 0;
 			vector<Cliente *> clientes = getClientesPontoRecolha(&pi.at(min)) ; // clientes por ponto de interesse
-			cout << "criancas : " << clientes.size() << endl;
+
 			while(transportes.at(j)->lugaresLivres() != 0 && n != clientes.size()){
 				transportes.at(j)->addCliente(clientes.at(n));
 				changeNumCriancas(pi.at(min),-1);
@@ -508,7 +509,6 @@ void Empresa::distribuiCliVeiculos(){
 			//se todas as criancas entraram no autocarro, esse ponto Ã© marcado como processado
 			if(changeNumCriancas(pi.at(min),0) == 0){
 				mapa->setPontoProcessado(pi.at(min), true);
-				cout << "nice!"<< endl;
 			}
 
 			p = min;
@@ -533,7 +533,14 @@ void Empresa::distribuiCliVeiculos(){
 			transportes.at(j)->pushCaminho(dest.at(min));
 			p = min;
 		}
+	}
 
+	vector<Morada > res = mapa->getInterestPoints();
+	//para cada ponto de recolha, colocar o valor original de criancas
+	for(size_t j = 0; j < res.size(); j++){
+		vector<Cliente *> clientes = getClientesPontoRecolha(&res.at(j));
+		for(size_t k = 0; k < clientes.size(); k++)
+			changeNumCriancas(res.at(j), 1);
 	}
 
 }

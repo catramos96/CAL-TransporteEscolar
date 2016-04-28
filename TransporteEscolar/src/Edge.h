@@ -18,8 +18,6 @@ public:
 	Edge(Vertex<T> *d, double w, int id);
 	friend class Graph<T>;
 	friend class Vertex<T>;
-
-	//=================ACRESCENTADOS PARA O TRABALHO=======================//
 	Vertex<T> *getDest() const;
 	double getWeight() const;
 	int getID() const;
@@ -30,7 +28,6 @@ public:
 template <class T>
 Edge<T>::Edge(Vertex<T> *d, double w, int id): dest(d), weight(w), idEdge(id), isBlocked(false){}
 
-//=================ACRESCENTADOS PARA O TRABALHO=======================//
 template <class T>
 Vertex<T> *Edge<T>::getDest() const{
 	return dest;

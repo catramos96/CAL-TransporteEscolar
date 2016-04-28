@@ -77,8 +77,6 @@ void removerCliente(Empresa *e){
 		throw ClienteInexistente(id);
 	cout << endl;
 
-	//encontra o ponto de recolha correspondente e decrementa o numero de criancas
-
 	e->update();
 
 	esperar();

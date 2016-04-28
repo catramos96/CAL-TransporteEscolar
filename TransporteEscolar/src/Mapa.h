@@ -9,10 +9,10 @@ class Mapa{
 private:
 	Graph<Morada> mapa;
 public:
-	Mapa();
+//	Mapa();
 	Mapa(GraphViewer *gv);
 	Graph<Morada> getMapa();
-	void display();
+//	void display();
 	void displayPath(GraphViewer *gv, vector<Morada> points, bool makePath);
 	bool setPontoInteresse(Morada m, bool b);
 	bool isPontoInteresse(Morada m);
