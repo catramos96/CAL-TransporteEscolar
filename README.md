@@ -1,18 +1,15 @@
 ## O que falta fazer : ##
 
-* colocar a cores diferentes no mapa as escolas e os pontos de recolha
+* testar escola ser empresa
 
-* algoritmo de distribuição das crianças inverso (escola -> garagem) -> está mais ou menos
+* fazer um display do path enquanto faz a visualização do grafo (às vezes aquilo para e não se sabe se ele erdou ou está a passar por pontos pintados)
 
-* verificar a conectividade do grafo (inês)
-
-* possibilidade de haver impedimentos na via (booleano em graph ? )
+* eliminar todas as funções que não estão a ser usadas (ver principalmente o graph.h, vertex.h e edge.h mas podem não ser as únicas)
 
 * verificação de erros
 
 * relatório
 
-* doxygen
 
 #--------------------------------------------------------------------------------#
 
