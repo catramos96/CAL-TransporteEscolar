@@ -35,7 +35,7 @@ public:
 	void incNumCriancas();
 	void decNumCriancas();
 	//Operadores
-	//Morada & operator=(const Morada &m);
+	Morada & operator=(const Morada &m);
 	friend ostream & operator<<(ostream & o, const Morada &m);
 	bool operator == (const Morada &m) const;
 

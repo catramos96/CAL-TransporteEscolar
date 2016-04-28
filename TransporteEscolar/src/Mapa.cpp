@@ -236,7 +236,7 @@ void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool makePath){
 			gv->setVertexColor(points[l].getID(), "magenta");
 
 		gv->rearrange();
-
+		cout << points[l] << endl;
 		if(makePath)
 			Sleep(500);
 	}
