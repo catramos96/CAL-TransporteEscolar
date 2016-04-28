@@ -27,6 +27,7 @@ public:
 	double getX() const;
 	double getY() const;
 	int getNumCriancas() const;
+	void setNumCriancas(int n);
 	//Sets
 	void setID(int id);
 	void setX(double x);
@@ -34,7 +35,7 @@ public:
 	void incNumCriancas();
 	void decNumCriancas();
 	//Operadores
-	Morada & operator=(const Morada &m);
+	//Morada & operator=(const Morada &m);
 	friend ostream & operator<<(ostream & o, const Morada &m);
 	bool operator == (const Morada &m) const;
 

@@ -40,8 +40,6 @@ void addCliente(Empresa *e){
 	if(!e->getMapa()->isPontoInteresse(*casa))
 		throw PontoRecolhaInvalido(*casa);
 
-	casa->incNumCriancas(); //?? nao sei se deve estar aqui
-
 	Cliente *c = new Cliente(nome,casa);
 	if(!e->getIsEscola()){
 		cout << "Morada Escolar (id): ";
@@ -59,6 +57,9 @@ void addCliente(Empresa *e){
 	if(e->addCliente(c) == false)
 		throw ClienteJaExiste(nome,*escola,*casa);
 	cout << endl;
+
+	e->update();
+
 	esperar();
 	throw VoltarAtras();
 }
@@ -75,6 +76,11 @@ void removerCliente(Empresa *e){
 	if(e->removeCliente(id) == false)
 		throw ClienteInexistente(id);
 	cout << endl;
+
+	//encontra o ponto de recolha correspondente e decrementa o numero de criancas
+
+	e->update();
+
 	esperar();
 	throw VoltarAtras();
 }
@@ -167,7 +173,7 @@ void verVeiculos(Empresa *e){
 
 void trajetoVeiculoIda(Empresa *e){
 
-	e->distribuiCliVeiculos();
+//	e->distribuiCliVeiculos();
 
 	string m;
 	clrscr();
@@ -185,7 +191,7 @@ void trajetoVeiculoIda(Empresa *e){
 
 void trajetoVeiculoVolta(Empresa *e){
 
-	e->distribuiCliVeiculos();
+//	e->distribuiCliVeiculos();
 
 	string m;
 	clrscr();
@@ -206,7 +212,7 @@ void menuVeiculos(Empresa *e){
 	int op;
 	do {
 		displayMenuVeiculos();
-		opccao(op, 1, 5);
+		opccao(op, 1, 6);
 		switch (op) {
 		case 1: { //add
 			addVeiculo(e);
@@ -366,6 +372,65 @@ void menuEscolas(Empresa *e){
 	} while (1);
 }
 
+//ArestasBloqueadas
+//==============================================================================================================
+
+void bloquearArestas(Empresa *e){
+	clrscr();
+	displayTitulo("ARESTAS BLOQUEADAS");
+	int id;
+	cout << "ID da aresta a bloquear : \n";
+	cin >> id;
+
+	e->getMapa()->setBlockedEdge(id, true);
+	//mensagem de erro?
+
+	e->update();
+
+	esperar();
+	throw VoltarAtras();
+}
+
+void desbloquearArestas(Empresa *e){
+	clrscr();
+	displayTitulo("ARESTAS BLOQUEADAS");
+
+	e->getMapa()->displayBlockedEdges();
+	int id;
+	cout << "ID da aresta a desbloquear : \n";
+	cin >> id;
+
+	e->getMapa()->setBlockedEdge(id, false);
+	//mensagem de erro?
+
+	e->update();
+
+	esperar();
+	throw VoltarAtras();
+}
+
+void menuArestas(Empresa *e){
+	clrscr();
+	int op;
+	do {
+		displayMenuArestas();
+		opccao(op, 1, 3);
+		switch (op) {
+		case 1: { //bloquear arestas
+			bloquearArestas(e);
+			break;
+		}
+		case 2: { //desbloquear arestas
+			desbloquearArestas(e);
+			break;
+		}
+		case 3: {
+			throw VoltarAtras();
+		}
+		}
+	} while (1);
+}
+
 //==============================================================================================================
 void opMenuInicial(Empresa *e, int op) {
 	switch (op) {
@@ -386,6 +451,10 @@ void opMenuInicial(Empresa *e, int op) {
 		break;
 	}
 	case 5:{
+		menuArestas(e);
+		break;
+	}
+	case 6:{
 		e->guardarInfo();
 		break;
 	}
@@ -398,7 +467,7 @@ void menuInicial(Empresa *e) {
 		try {
 			clrscr();
 			displayMenuInicial(e->getNome());
-			opccao(op, 1, 5);
+			opccao(op, 1, 6);
 			opMenuInicial(e, op);
 		}
 		catch (OpccaoInvalida<int>(x)) {
@@ -446,7 +515,7 @@ void menuInicial(Empresa *e) {
 			cout << "Nao existe um ponto de recolha " << e.getPonto() << endl;
 			esperar();
 		}
-	} while (op != 5);
+	} while (op != 6);
 }
 
 //Empresa
@@ -478,7 +547,6 @@ int main(){
 	Morada * source = new Morada(56,-0.159533,0.67583);
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	menuEmpresa(e);
-	//esperar();
 	delete(e);
 	return 0;
 }

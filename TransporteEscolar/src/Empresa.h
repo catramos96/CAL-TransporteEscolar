@@ -53,6 +53,7 @@ public:
 	void initialization();
 	void update();
 	bool todosPontosRecolhaAtingiveis();
+	int changeNumCriancas(Morada m, int state);
 };
 
 #endif /* SRC_EMPRESA_H_ */

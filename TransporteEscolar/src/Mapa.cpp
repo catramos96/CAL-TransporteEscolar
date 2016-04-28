@@ -8,11 +8,6 @@
 
 using namespace std;
 
-/**
- * Construtor
- * Inicializa o grafo com os nos e arestas dos ficheiros "nos.txt" e "arestas.txt"
- */
-
 // ALGORITMO PARA CALCULO DE DISTANCIAS - LAT E LONG EM RAD
 double Mapa::haversineAlgorith(double lat1, double long1, double lat2, double long2)
 {
@@ -179,17 +174,16 @@ Mapa::Mapa(GraphViewer *gv){
 		else{
 			if(vSource != NULL && vDest != NULL){
 				stringstream label;
-				label << weight;
+				//label << weight;
 				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), weight, newIdAresta);
 				gv->addEdge(newIdAresta, newIdNoOrigem, newIdNoDestino, EdgeType::DIRECTED);
+				label << newIdAresta;
 				gv->setEdgeLabel(newIdAresta,label.str());
 				newIdAresta++;
 				gv->addEdge(newIdAresta, newIdNoDestino, newIdNoOrigem, EdgeType::DIRECTED);
 				gv->setEdgeLabel(newIdAresta,label.str());
 				mapa.addEdge(vDest->getInfo(),vSource->getInfo(), weight, newIdAresta);
 				newIdAresta++;
-
-
 			}
 		}
 	}
@@ -217,6 +211,17 @@ void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool makePath){
 	cleanMapa(gv);
 	Sleep(2000);
 
+	vector<Vertex<Morada> *> allVertex = mapa.getVertexSet();
+	vector<Edge<Morada> > adj;
+
+	//pinta arestas bloqueadas a vermelho
+	for(size_t i = 0; i < allVertex.size(); i++){
+		vector<Edge<Morada> > adj = allVertex.at(i)->getAdjacents();
+		for(size_t j = 0; j < adj.size(); j++)
+			if(adj.at(j).getIsBlocked())
+				gv->setEdgeColor(adj.at(j).getID(),"red");
+	}
+
 	for(size_t l = 0; l < points.size(); l++)
 	{
 		Vertex<Morada> * v = mapa.getVertexByID(points[l].getID());
@@ -225,8 +230,7 @@ void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool makePath){
 
 		if(v->getIsSchool())
 			gv->setVertexColor(points[l].getID(), "red");
-		else
-		if(v->getIsPI())
+		else if(v->getIsPI())
 			gv->setVertexColor(points[l].getID(), "blue");
 		else
 			gv->setVertexColor(points[l].getID(), "magenta");
@@ -238,52 +242,6 @@ void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool makePath){
 	}
 
 }
-
-// FUNÇÃO SÓ PARA TESTE
-/*
-void Mapa::displayMapa(vector<Morada> points){
-	GraphViewer *gv = new GraphViewer(600, 600, false);
-
-	gv->createWindow(600, 600);
-	gv->defineEdgeColor("black");
-	gv->defineVertexColor("pink");
-
-	// Faz o mapa sem nada
-
-	int k = 0;
-	for(int i = 0; i < mapa.getNumVertex(); i++){
-		Vertex<Morada> * v = mapa.getVertexByID(i);
-		if(v->getInfo() == points.at(0) || v->getInfo() == points.at(points.size()-1)) //destino e inicio
-			gv->setVertexColor(v->getInfo().getID(), "yellow");
-
-		gv->addNode(i,v->getInfo().getX(),v->getInfo().getY());
-		for(int j = 0; j < v->getNumAdjacents(); j++){
-			int dest = v->getAdjacentNumber(j).getDest()->getInfo().getID();
-			gv->addEdge(k,v->getInfo().getID(),dest, EdgeType::DIRECTED);
-			stringstream label;
-			label << v->getAdjacentNumber(j).getWeight();
-			gv->setEdgeLabel(k,label.str());
-			k++;
-		}
-	}
-
-	for(size_t l = 0; l < points.size(); l++)
-	{
-		for(int i = 0; i < mapa.getNumVertex(); i++)
-		{
-			Vertex<Morada> * v = mapa.getVertexByID(i);
-			if(v->getInfo().getID() == points[l].getID())
-			{
-				gv->setVertexColor(v->getInfo().getID(), "magenta");
-				gv->rearrange();
-
-				Sleep(1000);
-			}
-		}
-	}
-
-	gv->rearrange();
-}*/
 
 bool Mapa::setPontoInteresse(Morada m,bool b){
 
@@ -325,12 +283,12 @@ Morada Mapa::getPonto(int id){
 
 Vertex<Morada> * Mapa::getPontoVertex(int id){
 
-	Vertex<Morada> * v;
-	for (int var = 0; var < mapa.getNumVertex(); ++var) {
+	Vertex<Morada> * v = mapa.getVertexByID(id);
+/*	for (int var = 0; var < mapa.getNumVertex(); ++var) {
 		if(mapa.getVertexSet()[var]->getInfo().getID() == id)
 			return v = mapa.getVertexSet()[var];
 	}
-
+*/
 	return v;
 }
 
@@ -379,4 +337,15 @@ vector<Morada> Mapa::makePath(vector<Morada> points){
 		}
 	}
 	return path;
+}
+
+void Mapa::setBlockedEdge(int edgeId, bool state){
+	mapa.setEdgeBlocked(edgeId,state);
+}
+
+void Mapa::displayBlockedEdges(){
+	vector<Edge<Morada> > temp = mapa.getBlockedEdges();
+
+	for(size_t i = 0; i < temp.size(); i++)
+		cout << temp.at(i).getID()<< endl;
 }

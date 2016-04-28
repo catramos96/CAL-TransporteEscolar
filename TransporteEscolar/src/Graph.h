@@ -83,6 +83,8 @@ public:
 	bool edgeExists(Edge<T>* e);
 	bool hasIncoming(Vertex<T> *v);
 	bool hasOutgoing(Vertex<T> *v);
+	void setEdgeBlocked(int idEdge, bool state);
+	vector<Edge<T> > getBlockedEdges() const;
 };
 
 
@@ -644,10 +646,10 @@ int Graph<T>::edgeCost(int i, int j){
 	Vertex<T>* vi = vertexSet[i];
 	Vertex<T>* vf = vertexSet[j];
 
-	for(size_t i = 0; i < vi->adj.size(); i++){
-		if(vi->adj[i].dest == vf)
+	for(size_t i = 0; i < vi->adj.size(); i++)
+		if(vi->adj[i].dest == vf && !vi->adj[i].isBlocked) //a aresta não está bloqueada
 			return vi->adj[i].weight;
-	}
+
 	return 0;
 }
 
@@ -744,7 +746,7 @@ int Graph<T>::getMinDistAndPath(int pi, vector<T> points){
 		Vertex<T> *v = getVertex(points.at(i)); // vertice correpondente à morada
 		//a pesquisa na tablela é feita pelo id de cada n
 
-		if(W[points.at(pi).getID()][points.at(i).getID()] < dist && !(vInfo == v) && !(v->processing)){
+		if(W[points.at(pi).getID()][points.at(i).getID()] < dist && !(vInfo == v) && v->processing == false){
 			dist = W[points.at(pi).getID()][points.at(i).getID()];
 			min = i;
 		}
@@ -779,5 +781,32 @@ bool Graph<T>::hasOutgoing(Vertex<T> *v){
 				return true;
 	return false;
 }
+
+template<class T>
+void Graph<T>::setEdgeBlocked(int idEdge, bool state){
+
+	for(size_t i = 0; i < vertexSet.size(); i++){
+		vector<Edge<T> > temp = vertexSet.at(i)->adj;
+		for(size_t j = 0; j < temp.size(); j++)
+			if(temp.at(j).idEdge == idEdge){
+				vertexSet.at(i)->adj.at(j).isBlocked = state;
+				break;
+			}
+	}
+}
+
+template<class T>
+vector<Edge<T> > Graph<T>::getBlockedEdges() const{
+	vector<Edge<T> > res;
+
+	for(size_t i = 0; i < vertexSet.size(); i++){
+		vector<Edge<T> > temp = vertexSet.at(i)->adj;
+		for(size_t j = 0; j < temp.size(); j++)
+			if(temp.at(j).isBlocked)
+				res.push_back(temp.at(j));
+	}
+	return res;
+}
+
 
 #endif /* GRAPH_H_ */

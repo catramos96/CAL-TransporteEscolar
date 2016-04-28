@@ -115,7 +115,7 @@ void Empresa::setClientesPI(int id){
 			mudar_cli.push_back(clientes[i]);
 	}
 	//ir buscar o ponto de recolha mais próximo a id
-	vector<Morada> pontosRecolha = mapa->getInterestPoints();
+	vector<Morada > pontosRecolha = mapa->getInterestPoints();
 
 	int indice1 = -1,indice2 = -1;
 	//procurar o indice do ponto de recolha com id
@@ -194,6 +194,8 @@ bool Empresa::addCliente(Cliente *cliente)
 	for (size_t j = 0; j < escolas.size(); ++j)
 		if(*cliente->getResidencia() == *escolas[j])
 			return false;
+
+	changeNumCriancas(*cliente->getResidencia(),1);
 
 	clientes.push_back(cliente);
 	addEscola(cliente->getEscola());
@@ -400,12 +402,28 @@ void Empresa::displayEscolas() const{
  * Metodo que permite fazer display dos pontos de recolha (display do mapa)
  */
 void Empresa::displayPontosRecolha() const{
-	vector<Morada> pi = mapa->getInterestPoints();
+	vector<Morada > pi = mapa->getInterestPoints();
 	for (size_t i = 0; i < pi.size(); ++i) {
 		cout << pi[i] << " n Clientes: " << getClientesPontoRecolha(&pi[i]).size() << endl;
 	}
 	mapa->displayPath(gv,pi, 0);
 }
+
+/**
+ * M�todo que permite incrementar, decrementar, ou apenas devolver o numero de criancas presentes nesse momemnto numa dada morada.
+ */
+int Empresa::changeNumCriancas(Morada m, int state){
+	Vertex<Morada> *v = mapa->getPontoVertex(m.getID());
+
+	int n = v->getInfo().getNumCriancas();
+	n += state;
+	m.setNumCriancas(n);
+
+	v->setInfo(m);
+
+	return v->getInfo().getNumCriancas();
+}
+
 
 /**
  * Metodo que distribui os clientes pelos veiculos por proximidade.
@@ -418,7 +436,7 @@ void Empresa::displayPontosRecolha() const{
 void Empresa::distribuiCliVeiculos(){
 
 	bool end = false;
-	vector<Morada > pi; //vetor com todos os pontos de interesse
+	vector<Morada > pi; //vetor de apontadores para todos os pontos de interesse
 	vector<Morada > temp = mapa->getInterestPoints();
 
 	pi.push_back(*endereco); //comeca na morada da empresa
@@ -440,6 +458,8 @@ void Empresa::distribuiCliVeiculos(){
 
 	for(size_t j = 0; j < transportes.size(); j++){
 
+		cout << "4 : " <<mapa->getPontoProcessado(pi.at(4)) <<endl;
+
 		transportes.at(j)->pushCaminho(*endereco);	//o primeiro ponto a colocar no trajeto é o endereco da empresa
 
 		if(end)
@@ -458,13 +478,17 @@ void Empresa::distribuiCliVeiculos(){
 			//Retorna o id do mais proximo.
 			min = mapa->getMinDistBetweenPoints(p,pi);
 
+			cout << j << " - " << min <<endl;
+
 			//se forem iguais chegamos ao fim de todos os pontos de interesse
 			if(p == min){
+				cout << "aqui";
 				//se existir algum ponto n�o analisado, significa que � impossivel chegar a esse ponto
-				for(size_t i = 1; i < pi.size(); i++)
+				for(size_t i = 1; i < pi.size(); i++){
+					cout << "x";
 					if(!mapa->getPontoProcessado(pi.at(i)))
 						cout << "o ponto " << pi.at(i).getID() << " nao e possivel alcancar devido a impedimentos na via!\n";
-
+				}
 				end = true;
 				break;
 			}
@@ -474,15 +498,18 @@ void Empresa::distribuiCliVeiculos(){
 			// adiciona as criancas desse destino ao vetor de clientes da carrinha em causa.
 			size_t n = 0;
 			vector<Cliente *> clientes = getClientesPontoRecolha(&pi.at(min)) ; // clientes por ponto de interesse
+			cout << "criancas : " << clientes.size() << endl;
 			while(transportes.at(j)->lugaresLivres() != 0 && n != clientes.size()){
 				transportes.at(j)->addCliente(clientes.at(n));
-				pi.at(min).decNumCriancas();
+				changeNumCriancas(pi.at(min),-1);
 				mapa->setPontoProcessado(*clientes.at(n)->getEscola(), true); //escola marcada como processada -> é destino
 				n++;
 			}
 			//se todas as criancas entraram no autocarro, esse ponto é marcado como processado
-			if(pi.at(min).getNumCriancas() == 0)
+			if(changeNumCriancas(pi.at(min),0) == 0){
 				mapa->setPontoProcessado(pi.at(min), true);
+				cout << "nice!"<< endl;
+			}
 
 			p = min;
 		}
@@ -501,10 +528,12 @@ void Empresa::distribuiCliVeiculos(){
 		p = 0;
 		for(size_t k = 1; k < dest.size(); k++){
 			min = mapa->getMinDistBetweenPoints(p,dest);
-			mapa->setPontoProcessado(dest.at(min), true);
+			if(min != 0)
+				mapa->setPontoProcessado(dest.at(min), true);
 			transportes.at(j)->pushCaminho(dest.at(min));
 			p = min;
 		}
+
 	}
 
 }
@@ -521,12 +550,8 @@ void Empresa::initialization(){
 	mapa->makefloydWarshallShortestPath();	//faz o algoritmo
 }
 
-/**
- * Distribui os clientes pelos veiculos.
- * É necessária uma nova distribuição das criancas sempre que se adiciona uma nova crianca e no inicio do programa.
- */
 void Empresa::update(){
-	//funcao que verifica se todos os pontos de recolha sao alcancaveis
+	mapa->makefloydWarshallShortestPath();	//faz o algoritmo
 	distribuiCliVeiculos();
 }
 
@@ -643,7 +668,6 @@ void Empresa::carregarInfo(){
 			nome = tmp;
 			linha >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
 			Morada *casa = new Morada(coordx,coordy,id);
-			casa->incNumCriancas();
 			Morada *escola = new Morada(coordx2,coordy2,id2);
 			mapa->getPontoVertex(escola->getID())->setIsSchool(true);
 			Cliente *c = new Cliente(nome,casa);
@@ -657,4 +681,6 @@ void Empresa::carregarInfo(){
 		Cliente::id = id_tmp;
 	}
 	file.close();
+
+	distribuiCliVeiculos();
 }

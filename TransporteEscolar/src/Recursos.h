@@ -25,7 +25,8 @@ void displayMenuInicial(string nome_empresa){
 	cout << "2 - Clientes\n";
 	cout << "3 - Pontos de Recolha\n";
 	cout << "4 - Escolas\n";
-	cout << "5 - Sair\n";
+	cout << "5 - Arestas Bloqueadas\n";
+	cout << "6 - Sair\n";
 }
 
 /**
@@ -63,6 +64,12 @@ void displayMenuPI(){
 	cout << "4 - Voltar Atras\n";
 }
 
+void displayMenuArestas(){
+	displayTitulo("ARESTAS BLOQUEADAS");
+	cout << "1 - Bloquear Aresta\n";
+	cout << "2 - Desbloquear Aresta\n";
+	cout << "3 - Voltar Atras\n";
+}
 /**
  * @brief Funcao de display do menu escolas
  */

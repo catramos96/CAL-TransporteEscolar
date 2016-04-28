@@ -23,6 +23,7 @@ public:
 	Vertex<T> *getDest() const;
 	double getWeight() const;
 	int getID() const;
+	bool getIsBlocked() const;
 
 };
 
@@ -44,6 +45,9 @@ template <class T>
 int Edge<T>::getID() const{
 	return idEdge;
 }
-
+template <class T>
+bool Edge<T>::getIsBlocked() const{
+	return isBlocked;
+}
 
 #endif /* SRC_EDGE_H_ */

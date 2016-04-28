@@ -112,7 +112,7 @@ void Morada::decNumCriancas(){
  * @brief Funcao de overloading do operador =
  * @param m (Morada)
  * @return *this (Morada)
- */
+ *
 Morada & Morada::operator=(const Morada &m){
 	x = m.getX();
 	y = m.getY();
@@ -139,4 +139,8 @@ ostream & operator<<(ostream & o, const Morada &m){
  */
 bool Morada::operator ==(const Morada &m) const{
 	return (m.id == id);
+}
+
+void Morada::setNumCriancas(int n){
+	numCriancas = n;
 }

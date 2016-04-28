@@ -20,7 +20,7 @@ template <class T> class Graph;
 template <class T>
 class Vertex {
 	T info;
-	vector<Edge<T>  > adj;
+	vector<Edge<T> > adj;
 	bool visited;
 	bool processing;
 	int indegree;
@@ -52,6 +52,7 @@ public:
 	bool getIsPI();
 	void setIsSchool(bool estado);
 	bool getIsSchool();
+	vector<Edge<T> > getAdjacents() const;
 };
 
 
@@ -144,6 +145,11 @@ void Vertex<T>::setIsSchool(bool estado){
 template<class T>
 bool Vertex<T>::getIsSchool(){
 	return isSchool;
+}
+
+template<class T>
+vector<Edge<T> > Vertex<T>::getAdjacents() const{
+	return adj;
 }
 
 #endif /* SRC_VERTEX_H_ */
