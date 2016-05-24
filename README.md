@@ -2,6 +2,23 @@
 
 ## A FAZER
 
+Para adicionar ao main:
+
+### clientes: ###
+
+* procurar clientes (pesquisa aproximada : retorna lista de crianças com nome parecido e id)
+
+
+### pontos de recolha: ###
+
+* procurar ponto de recolha (pesquisa aproximada : retorna lista de pontos de recolha com nome parecido e id)
+
+* adicionar ponto de recolha (pesquisa aproximada : retorna lista de moradas com nome parecido e id)
+
+* ver criancas/ponto de recolha (pesquisa exata)
+
+===============================================
+
 * morada -> identificada pelo nome da rua
 
 * verificar se uma dada criança está inscrita (no vieiculo ? ou na empresa?)
