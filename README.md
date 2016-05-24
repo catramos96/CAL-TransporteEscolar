@@ -14,6 +14,10 @@
 
 * Implementar Menu de Procura de Ruas/Clientes no main
 
+* Procura Clientes/Rua ->algoritmo aproximado  
+
+* Procura de Moradas por Rua ->algoritmo exato
+
 ## 1- Clonar o repositório para o computador: ##
 
 * clicar no botão à esquerda chamado 'clone'
