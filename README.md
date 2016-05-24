@@ -1,5 +1,12 @@
-
 # Comandos do git #
+
+## A FAZER
+
+* Acrescentar o nome das Ruas ao funcionamento do proj
+
+* Implementar Algoritmos de comparação total/parcial de strings
+
+* Implementar Menu de Procura de Ruas/Clientes no main
 
 ## 1- Clonar o repositório para o computador: ##
 
