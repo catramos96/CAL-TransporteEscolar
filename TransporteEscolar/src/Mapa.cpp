@@ -44,7 +44,7 @@ Mapa::Mapa(GraphViewer *gv){
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		linestream >> y;
 
-		Morada m = Morada(x,y,newIdNo);
+		Morada m = Morada(x,y,newIdNo, "");
 		mapa.addVertex(m);
 
 		if(first)
@@ -261,7 +261,7 @@ void Mapa::displayPath(GraphViewer *gv, vector<Morada> points, bool makePath){
 			gv->setVertexColor(points[l].getID(), "magenta");
 
 		gv->rearrange();
-		cout << points[l] << endl;
+
 		if(makePath)
 			Sleep(500);
 	}
@@ -296,14 +296,23 @@ int Mapa::displayPontos() const{
 	return 0;
 }
 
-Morada Mapa::getPonto(int id){
-	for (int var = 0; var < mapa.getNumVertex(); ++var) {
-		if(mapa.getVertexSet()[var]->getInfo().getID() == id)
-			return mapa.getVertexSet()[var]->getInfo();
-	}
+//lê a informacao que está no no grafo e cria um apontador
+Morada *Mapa::getPonto(int id){
 	Morada m;
-	m.setID(-1);
-	return m;
+	bool found = false;
+	for (int var = 0; var < mapa.getNumVertex(); ++var) {
+		if(mapa.getVertexSet()[var]->getInfo().getID() == id){
+			m = mapa.getVertexSet()[var]->getInfo();
+			found = true;
+			break;
+		}
+	}
+	if(!found)
+		m.setID(-1);
+
+	Morada *enviar = new Morada(m.getX(), m.getY(), m.getID(), m.getNome());
+
+	return enviar;
 }
 
 Vertex<Morada> * Mapa::getPontoVertex(int id){

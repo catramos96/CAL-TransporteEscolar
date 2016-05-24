@@ -114,7 +114,7 @@ void Empresa::setClientesPI(int id){
 		if(clientes[i]->getResidencia()->getID() == id)
 			mudar_cli.push_back(clientes[i]);
 	}
-	//ir buscar o ponto de recolha mais pr√≥ximo a id
+	//ir buscar o ponto de recolha mais proximo a id
 	vector<Morada > pontosRecolha = mapa->getInterestPoints();
 
 	int indice1 = -1,indice2 = -1;
@@ -135,7 +135,9 @@ void Empresa::setClientesPI(int id){
 
 	//substituir clientes para o ponto de recolha de indice2 em pontosRecolha
 
-	Morada *m = new Morada(getEndereco()->getX(),getEndereco()->getY(),pontosRecolha[indice2].getID());
+	//fazer uma funÁ„o que retorna o nome da primeira aresta que sai de um certo no
+
+	Morada *m = new Morada(getEndereco()->getX(),getEndereco()->getY(),pontosRecolha[indice2].getID(),pontosRecolha[indice2].getNome());
 	for (size_t i = 0; i < mudar_cli.size(); ++i) {
 		mudar_cli[i]->setNovaResidencia(m);
 	}
@@ -596,9 +598,9 @@ void Empresa::guardarInfo() const{
 	file << Cliente::id << endl;
 	for (size_t i = 0; i < clientes.size(); ++i) {
 		if(i == clientes.size() -1)
-			file << clientes[i]->getID() << "" <<clientes[i]->getNome()<< ";" << *clientes[i]->getResidencia()<< " " << *clientes[i]->getEscola();
+			file << clientes[i]->getID() << "" <<clientes[i]->getNome()<< ";" << clientes[i]->getResidencia()->getID()<< " " << clientes[i]->getEscola()->getID();
 		else
-			file << clientes[i]->getID() << "" <<clientes[i]->getNome()<< ";" << *clientes[i]->getResidencia()<< " " << *clientes[i]->getEscola() << endl;
+			file << clientes[i]->getID() << "" <<clientes[i]->getNome()<< ";" << clientes[i]->getResidencia()->getID()<< " " << clientes[i]->getEscola()->getID() << endl;
 	}
 	file.close();
 }
@@ -655,8 +657,9 @@ void Empresa::carregarInfo(){
 		while(tmp != separador){
 			linha << tmp;
 			linha >> id >> lixo >> coordx >> lixo >> coordy >> lixo;
-			Morada ponto(coordx,coordy,id);
-			mapa->setPontoInteresse(ponto,true);
+			Morada *ponto = mapa->getPonto(id);
+			//Morada ponto(coordx,coordy,id,nome);
+			mapa->setPontoInteresse(*ponto,true);
 			linha.clear();
 			getline(file,tmp);
 		}
@@ -673,9 +676,11 @@ void Empresa::carregarInfo(){
 			linha >> cliente_n;
 			getline(linha, tmp, ';');
 			nome = tmp;
-			linha >> id >> lixo >> coordx >> lixo >> coordy >> lixo >> id2 >> lixo >> coordx2 >> lixo >> coordy2 >> lixo;
-			Morada *casa = new Morada(coordx,coordy,id);
-			Morada *escola = new Morada(coordx2,coordy2,id2);
+			linha >> id >> lixo >> id2;
+			//Morada *casa = new Morada(coordx,coordy,id);
+			//Morada *escola = new Morada(coordx2,coordy2,id2);
+			Morada *casa = mapa->getPonto(id);
+			Morada *escola = mapa->getPonto(id2);
 			mapa->getPontoVertex(escola->getID())->setIsSchool(true);
 			Cliente *c = new Cliente(nome,casa);
 			if(isEscola)

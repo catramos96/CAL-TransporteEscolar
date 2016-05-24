@@ -18,11 +18,12 @@ Morada::Morada(){
  * @param y (double), coordenada y
  * @param id (int), id do vertice correspondente
  */
-Morada::Morada(double x, double y, int id){
-	this->x = x;
-	this->y = y;
+Morada::Morada(double x, double y, int id, string nome){
 	this->id = id;
 	this->numCriancas = 0;
+	this->x = x;
+	this->y = y;
+	this->nome = nome;
 }
 
 /****************************
@@ -59,6 +60,10 @@ double Morada::getY() const{
  */
 int Morada::getNumCriancas() const{
 	return numCriancas;
+}
+
+string Morada::getNome() const{
+	return nome;
 }
 
 /****************************
@@ -128,7 +133,7 @@ Morada & Morada::operator=(const Morada &m){
  * @return o (ostream)
  */
 ostream & operator<<(ostream & o, const Morada &m){
-		o << m.getID()  << "(" << m.getX() << "," << m.getY() << ")";
+		o << m.getID() << " " << m.getNome() << " ";
 	return o;
 }
 
@@ -144,3 +149,4 @@ bool Morada::operator ==(const Morada &m) const{
 void Morada::setNumCriancas(int n){
 	numCriancas = n;
 }
+

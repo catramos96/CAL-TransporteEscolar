@@ -17,7 +17,7 @@ public:
 	bool setPontoInteresse(Morada m, bool b);
 	bool isPontoInteresse(Morada m);
 	int displayPontos() const;
-	Morada getPonto(int id);
+	Morada *getPonto(int id);
 	//vector<Morada> shortestPath(vector<Morada> points);
 	Vertex<Morada> * getPontoVertex(int id);
 	vector<Morada > getInterestPoints() const;

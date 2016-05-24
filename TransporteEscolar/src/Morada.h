@@ -18,16 +18,18 @@ private:
 	double y; //coordenada y
 	int id; //id da morada -> correspondente numerico a uma morada (é unico)
 	int numCriancas;
+	string nome; //nome da rua
 public:
 	//Construtores
 	Morada();
-	Morada(double x, double y, int id);
+	Morada(double x, double y, int id, string nome);
 	//Gets
 	int getID() const;
 	double getX() const;
 	double getY() const;
 	int getNumCriancas() const;
 	void setNumCriancas(int n);
+	string getNome() const;
 	//Sets
 	void setID(int id);
 	void setX(double x);

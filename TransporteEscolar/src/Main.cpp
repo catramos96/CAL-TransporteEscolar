@@ -31,7 +31,7 @@ void addCliente(Empresa *e){
 	getline(cin,nome);
 	cout << "Ponto de Recolha (id): ";
 	cin >> id;
-	*casa = e->getMapa()->getPonto(id);
+	casa = e->getMapa()->getPonto(id);
 
 	if(casa->getID() == -1){
 		throw PontoInexistente(*casa);
@@ -45,7 +45,7 @@ void addCliente(Empresa *e){
 		cout << "Morada Escolar (id): ";
 		cin >> id;
 
-		*escola = e->getMapa()->getPonto(id);
+		escola = e->getMapa()->getPonto(id);
 		if(escola->getID() == -1){
 			throw PontoInexistente(*escola);
 		}
@@ -241,7 +241,6 @@ void menuVeiculos(Empresa *e){
 //PONTOS DE RECOLHA
 //==============================================================================================================
 void addPontoRecolha(Empresa *e){
-	Morada ponto;
 	int id;
 
 	clrscr();
@@ -249,14 +248,14 @@ void addPontoRecolha(Empresa *e){
 
 	cout << "Morada Recolha (id): ";
 	cin >> id;
-	ponto = e->getMapa()->getPonto(id);
+	Morada *ponto = e->getMapa()->getPonto(id);
 
-	if(ponto.getID() == -1){
-		throw PontoInexistente(ponto);
+	if(ponto->getID() == -1){
+		throw PontoInexistente(*ponto);
 	}
 
-	if(!e->getMapa()->setPontoInteresse(ponto,true))
-		throw PontoRecolhaInvalido(ponto);
+	if(!e->getMapa()->setPontoInteresse(*ponto,true))
+		throw PontoRecolhaInvalido(*ponto);
 
 	cout << endl;
 	esperar();
@@ -264,7 +263,6 @@ void addPontoRecolha(Empresa *e){
 }
 
 void removerPontoRecolha(Empresa *e){
-	Morada ponto;
 	int id;
 
 	clrscr();
@@ -274,13 +272,13 @@ void removerPontoRecolha(Empresa *e){
 
 	cout << "Morada Recolha (id): ";
 	cin >> id;
-	ponto = e->getMapa()->getPonto(id);
+	Morada *ponto = e->getMapa()->getPonto(id);
 
-	if(ponto.getID() == -1){
-		throw PontoInexistente(ponto);
+	if(ponto->getID() == -1){
+		throw PontoInexistente(*ponto);
 	}
-	e->setClientesPI(ponto.getID());
-	e->getMapa()->setPontoInteresse(ponto,false);
+	e->setClientesPI(ponto->getID());
+	e->getMapa()->setPontoInteresse(*ponto,false);
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -542,7 +540,7 @@ void menuEmpresa(Empresa *e){
 
 int main(){
 
-	Morada * source = new Morada(56,-0.159533,0.67583);
+	Morada * source = new Morada(56,-0.159533,0.67583, "Patio ...");
 	Empresa *e = new Empresa("Transportes Escolares",source);
 	menuEmpresa(e);
 	delete(e);
