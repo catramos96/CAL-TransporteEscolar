@@ -22,7 +22,6 @@ public:
 	double getWeight() const;
 	int getID() const;
 	bool getIsBlocked() const;
-
 };
 
 template <class T>
