@@ -2,6 +2,12 @@
 
 ## A FAZER
 
+* morada -> identificada pelo nome da rua
+
+* verificar se uma dada criança está inscrita (no vieiculo ? ou na empresa?)
+
+* quantas crianças existem por rua
+
 * Acrescentar o nome das Ruas ao funcionamento do proj
 
 * Implementar Algoritmos de comparação total/parcial de strings
