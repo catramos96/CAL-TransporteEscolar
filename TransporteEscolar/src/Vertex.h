@@ -25,7 +25,7 @@ public:
 	Vertex(T in);
 	friend class Graph<T>;
 
-	void addEdge(Vertex<T> *dest, double w, int id);
+	void addEdge(Vertex<T> *dest, double w, int id, string n);
 	bool removeEdgeTo(Vertex<T> *d);
 
 	T getInfo() const;
@@ -70,13 +70,14 @@ bool Vertex<T>::removeEdgeTo(Vertex<T> *d) {
 }
 
 template <class T>
-Vertex<T>::Vertex(T in): info(in), visited(false), processing(false), indegree(0), dist(0) {
+Vertex<T>::Vertex(T in): info(in), visited(false), processing(false),
+indegree(0), dist(0) {
 	path = NULL;
 }
 
 template <class T>
-void Vertex<T>::addEdge(Vertex<T> *dest, double w, int id) {
-	Edge<T> edgeD(dest,w,id);
+void Vertex<T>::addEdge(Vertex<T> *dest, double w, int id, string n) {
+	Edge<T> edgeD(dest,w,id,n);
 	adj.push_back(edgeD);
 }
 

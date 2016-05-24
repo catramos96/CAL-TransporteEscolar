@@ -14,8 +14,9 @@ class Edge {
 	double weight;
 	int idEdge;
 	bool isBlocked;
+	string name;
 public:
-	Edge(Vertex<T> *d, double w, int id);
+	Edge(Vertex<T> *d, double w, int id, string n);
 	friend class Graph<T>;
 	friend class Vertex<T>;
 	Vertex<T> *getDest() const;
@@ -25,7 +26,7 @@ public:
 };
 
 template <class T>
-Edge<T>::Edge(Vertex<T> *d, double w, int id): dest(d), weight(w), idEdge(id), isBlocked(false){}
+Edge<T>::Edge(Vertex<T> *d, double w, int id, string n): dest(d), weight(w), idEdge(id), isBlocked(false), name(n){}
 
 template <class T>
 Vertex<T> *Edge<T>::getDest() const{

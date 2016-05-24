@@ -100,17 +100,32 @@ Mapa::Mapa(GraphViewer *gv){
 
 	int idAresta;
 	string temp;
+	int newIdAresta = 0;
+	vector<pair<unsigned int, string> > edgeIndex;
 
 	while(std::getline(inFile, line))
 	{
-		stringstream linestream(line);
+		stringstream linestream;
 		string data;
 		string temp;
+		string nome;
 
+		linestream << line;
 		linestream >> idAresta;
+
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> temp;
+
+		nome = data;
+
+		getline(linestream, data, ';');
+		temp = data;
+
+		pair<unsigned int, string> idPair;
+		idPair.first = idAresta;
+		idPair.second = nome;
+		edgeIndex.push_back(idPair);
+		newIdAresta++;
 
 		if(temp == "True")
 			twoWays.push_back(idAresta);
@@ -123,7 +138,7 @@ Mapa::Mapa(GraphViewer *gv){
 	if (!inFile)
 		cerr << "Unable to open file datafile.txt";
 
-	int newIdAresta = 0;
+	newIdAresta = 0;
 	idAresta=0;
 	int newIdNoOrigem, newIdNoDestino;
 	int idNoOrigem;
@@ -133,6 +148,7 @@ Mapa::Mapa(GraphViewer *gv){
 	{
 		stringstream linestream(line);
 		string data;
+		string edgeLabel;
 
 		linestream >> idAresta;
 
@@ -151,6 +167,11 @@ Mapa::Mapa(GraphViewer *gv){
 					newIdNoDestino = vertexIndex[i].first;
 		}
 
+		for(unsigned int j = 0; j < edgeIndex.size(); j++)
+		{
+			if(idAresta == edgeIndex[j].first)
+				edgeLabel = edgeIndex[j].second;
+		}
 
 		Vertex<Morada>* vSource = mapa.getVertexByID(newIdNoOrigem);
 		Vertex<Morada>* vDest = mapa.getVertexByID(newIdNoDestino);
@@ -160,15 +181,17 @@ Mapa::Mapa(GraphViewer *gv){
 		else{
 			if(vSource != NULL && vDest != NULL){
 				stringstream label;
+
 				label << weight;
-				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), weight, newIdAresta);
+				mapa.addEdge(vSource->getInfo(), vDest->getInfo(), weight, newIdAresta, edgeLabel);
 				gv->addEdge(newIdAresta, newIdNoOrigem, newIdNoDestino, EdgeType::DIRECTED);
-			//	label << newIdAresta;
-				gv->setEdgeLabel(newIdAresta,label.str());
+				//gv->setEdgeLabel(newIdAresta,label.str());
+				gv->setEdgeLabel(newIdAresta,edgeLabel);
 				newIdAresta++;
 				gv->addEdge(newIdAresta, newIdNoDestino, newIdNoOrigem, EdgeType::DIRECTED);
-				gv->setEdgeLabel(newIdAresta,label.str());
-				mapa.addEdge(vDest->getInfo(),vSource->getInfo(), weight, newIdAresta);
+				//gv->setEdgeLabel(newIdAresta,label.str());
+				//gv->setEdgeLabel(newIdAresta,edgeLabel);
+				mapa.addEdge(vDest->getInfo(),vSource->getInfo(), weight, newIdAresta,edgeLabel);
 				newIdAresta++;
 			}
 		}

@@ -42,7 +42,7 @@ class Graph {
 
 public:
 	bool addVertex(const T &in);
-	bool addEdge(const T &sourc, const T &dest, double w, int id);
+	bool addEdge(const T &sourc, const T &dest, double w, int id, string n);
 	bool removeVertex(const T &in);
 	bool removeEdge(const T &sourc, const T &dest);
 	vector<Vertex<T> * > getVertexSet() const;
@@ -128,7 +128,7 @@ bool Graph<T>::edgeExists(Edge<T>* e)
 }
 
 template <class T>
-bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, int id) {
+bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, int id, string n) {
 	typename vector<Vertex<T>*>::iterator it= vertexSet.begin();
 	typename vector<Vertex<T>*>::iterator ite= vertexSet.end();
 	int found=0;
@@ -145,7 +145,7 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, int id) {
 	if(found != 2)
 		return false;
 	vD->indegree++;
-	vS->addEdge(vD,w,id);
+	vS->addEdge(vD,w,id, n);
 	//edgeSet.push_back(e);
 
 	return true;
