@@ -54,6 +54,14 @@ public:
 	void update();
 	bool todosPontosRecolhaAtingiveis();
 	int changeNumCriancas(Morada m, int state);
+
+	// algoritmos com strings
+	int EditDistance(string street,string streetToSearch);
+	int kmp(string text, string pattern);
+	vector<int> prefixFunction(string pattern);
+	int min(int x, int y, int z);
+
+	void searchClient(string nome);
 };
 
 #endif /* SRC_EMPRESA_H_ */

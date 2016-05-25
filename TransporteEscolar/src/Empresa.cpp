@@ -672,6 +672,7 @@ void Empresa::carregarInfo(){
 			linha >> nrCliente;
 			getline(linha, tmp, ';');
 			nome = tmp;
+			nome.erase(nome.begin(), nome.begin()+1); // retira o primeiro espaco da palavra
 			linha >> id >> id2;
 			Morada *casa = mapa->getPonto(id);
 			Morada *escola = mapa->getPonto(id2);
@@ -689,4 +690,245 @@ void Empresa::carregarInfo(){
 	file.close();
 
 	distribuiCliVeiculos();
+}
+
+//============================================================================================//
+/**
+ * Funcao auxiliar ao algoritmo kmp.
+ */
+vector<int> Empresa::prefixFunction(string pattern) {
+
+	int m = pattern.length();
+	vector<int> pi;
+
+	for(int i = 0; i <= m; i++)
+		pi.push_back(0);
+
+	pi.at(0) = -1;
+
+	int j = 0;
+	int i = 1;
+	while (i <= m) {
+		if (pattern[j] == pattern[i]) {
+			pi[i] = j + 1;
+			i++;
+			j++;
+		}
+		else if (j > 0) // j follows a matching prefix
+			j = pi[j - 1];
+		else { // no match
+			pi[i] = 0;
+			i++;
+		}
+	}
+	return pi;
+}
+
+/**
+ * algoritmo kmp que encontra strings iguais num texto
+ */
+int Empresa::kmp(string text, string pattern) {
+	int n = text.length();
+	int m = pattern.length();
+
+	int res = 0;
+
+	vector<int> pi = prefixFunction(pattern);
+
+	int i = 0;
+	int j = 0;
+
+	while (i < n) {
+		if (pattern[j] == text[i]) {
+			if (j == m - 1){
+				return i - m + 1;	//retorna o local do texto onde encontrou a string
+				//res++;
+				//j = 0;
+			}else{
+				i++;
+				j++;
+			}
+		}
+		else if (j > 0)
+			j = pi[j + 1];
+		else
+			i++;
+	}
+
+	return -1; //nao encontra
+	//return res;
+}
+
+/**
+ * funcao que indica numa string 'filename', quantas strings 'toSearch' exitem
+ *
+ * --> nao deve ser necessaria <--
+ *
+int numStringMatching(string filename, string toSearch){
+	int num = 0;
+
+	//abrir ficheiro
+	fstream file;
+	string line;
+
+	file.open(filename.c_str() ,ifstream::in);
+
+	while(file.good()){
+		getline(file, line);
+		num += kmp(line,toSearch);
+	}
+
+	file.close();
+
+	return num;
+}
+*/
+/**
+ * 	j 0 1 2 3 4 5
+ * 	i - - - - - -
+ * 	0|0 1 2 3 4 5
+ * 	1|1
+ * 	2|2
+ * 	3|3
+ * 	4|4
+ * 	5|5
+ * 	6|6
+ *
+ *
+ */
+
+/**
+ * funcao auxiliar que divide uma frase em palavras individuais e coloca-a num vetor
+ *
+ * --> nao deve ser necessaria <--
+ *
+vector<string> splitLine(string line){
+
+	replace(line.begin(), line.end(), '.', ' ');
+	//replace(line.begin(), line.end(), '-', ' ');
+	replace(line.begin(), line.end(), ',', ' ');
+	replace(line.begin(), line.end(), '!', ' ');
+	replace(line.begin(), line.end(), '?', ' ');
+	replace(line.begin(), line.end(), ';', ' ');
+
+	string buf; // Have a buffer string
+	stringstream ss(line); // Insert the string into a stream
+
+	vector<string> tokens; // Create vector to hold our words
+
+	while (ss >> buf)
+		tokens.push_back(buf);
+
+	return tokens;
+}
+*/
+
+/**
+ * funcao auxiliar a funcao EditDistance que retorna o minimo de 3 numeros
+ */
+int Empresa::min(int x, int y, int z){
+	int min = x;
+
+	if(y < min)
+		min = y;
+	if(z < min)
+		min = z;
+
+	return min;
+}
+
+/**
+ * calculo das distâncias entre 2 strings
+ */
+int Empresa::EditDistance(string street,string streetToSearch) {
+	// inicialização
+	int m = street.length();
+	int n = streetToSearch.length();
+
+	int D[m+1][n+1];
+
+	for(int i = 0; i < m; i++)
+		for(int j = 0; j < n; j++)
+			D[i][j] = 0;
+
+	for(int i = 0; i < m; i++){
+		D[i][0] = i;
+	}
+
+	for(int j = 0; j < n; j++){
+		D[0][j] = j;
+	}
+
+	// recorrência
+	for(int i = 1; i <= m; i++){
+		for(int j = 1; j <= n; j++){
+			if(street[i-1] == streetToSearch[j-1])
+				D[i][j] = D[i-1][j-1];
+			else
+				D[i][j] = 1 + min(D[i-1][j-1],D[i-1][j],D[i][j-1]);
+		}
+	}
+
+	// finalização -> retorna a distância entre as 2 palavras
+	return D[m][n];
+}
+
+/**
+ * No total de um texto, numero médio da distancia a string 'toSearch'
+ *
+ * --> provavelmente nao vai ser precisa <--
+ *
+float numApproximateStringMatching(string filename,string toSearch){
+	float dist = 0;
+	int num = 0;
+	float total;
+	vector<string> palavras;
+
+	//abrir ficheiro
+	fstream file;
+	string line;
+
+	file.open(filename.c_str() ,ifstream::in);
+
+	while(file.good()){
+		getline(file, line);
+		//dividir por palavras
+		palavras = splitLine(line);
+
+		for(int i = 0; i < palavras.size(); i++){
+			dist = EditDistance(palavras.at(i),toSearch);
+			cout << palavras.at(i) << " " << dist << endl;
+			num++;
+			total += dist;
+		}
+	}
+
+	file.close();
+
+	cout <<  total << " / " << num << " = " << total/num << endl;
+
+	return total/num;
+}
+*/
+
+
+void Empresa::searchClient(string nome){
+
+	int n = nome.length();
+	int m = 0;
+	int max = 0;
+
+	for(size_t i = 0; i < clientes.size(); i++){
+		int dist = EditDistance(clientes.at(i)->getNome(), nome);
+
+		m = clientes.at(i)->getNome().length() - 1;
+		if(m > n)
+			max = m;
+		else
+			max = n;
+
+		//distancias plausiveis até metade da maior string
+		if(dist < max/2)
+			cout << clientes.at(i)->getID()<< " - " << clientes.at(i)->getNome() << endl;
+	}
 }

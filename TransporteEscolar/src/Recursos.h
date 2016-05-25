@@ -50,7 +50,8 @@ void displayMenuClientes(){
 	cout << "1 - Adicionar Clientes\n";
 	cout << "2 - Remover Clientes\n";
 	cout << "3 - Ver Clientes\n";
-	cout << "4 - Voltar Atras\n";
+	cout << "4 - Pesquisar Clientes\n";
+	cout << "5 - Voltar Atras\n";
 }
 
 /**

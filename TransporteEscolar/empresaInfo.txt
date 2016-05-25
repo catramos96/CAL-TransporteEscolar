@@ -11,15 +11,15 @@ Transportes 55
 270
 =========================
 24
-1  Ines Gomes;229 98
-2  Catarina Ramos;229 202
-3  Andreia Rodrigues;270 223
-4  Joao Carvalho;35 202
-5  Carlos Carvalho;215 98
-6  Diana Teixeira;229 98
-7  Antonio Lemos;215 202
-8  Jose Oliveira;38 223
-9  Maria Barros;229 223
+1 Ines Gomes;229 98
+2 Catarina Ramos;229 202
+3 Andreia Rodrigues;270 223
+4 Joao Carvalho;35 202
+5 Carlos Carvalho;215 98
+6 Diana Teixeira;229 98
+7 Antonio Lemos;215 202
+8 Jose Oliveira;38 223
+9 Maria Barros;229 223
 10 Patricia Barros;270 98
 11 Ines Guerra;270 223
 12 Eduardo Leite;38 223

@@ -92,6 +92,22 @@ void verClientes(Empresa *e){
 	throw VoltarAtras();
 }
 
+void procurarCLientes(Empresa *e){
+	clrscr();
+	displayTitulo("PROCURAR CLIENTE");
+
+	string nome;
+
+	cout << "Introduza o Nome : " << endl;
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	getline(cin, nome);
+	e->searchClient(nome);
+
+	cout << endl;
+	esperar();
+	throw VoltarAtras();
+}
+
 void menuClientes(Empresa *e){
 	int op;
 	do {
@@ -111,7 +127,11 @@ void menuClientes(Empresa *e){
 			verClientes(e);
 			break;
 		}
-		case 4: {//pesq. traj
+		case 4: {//pesq. nome
+			procurarCLientes(e);
+			break;
+		}
+		case 5: {
 			throw VoltarAtras();
 		}
 		}
