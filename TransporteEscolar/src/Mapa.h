@@ -8,6 +8,7 @@
 class Mapa{
 private:
 	Graph<Morada> mapa;
+	int maxID;
 public:
 //	Mapa();
 	Mapa(GraphViewer *gv);
@@ -30,6 +31,7 @@ public:
 	void cleanMapa(GraphViewer *gv);
 	void setBlockedEdge(int edgeId, bool state);
 	void displayBlockedEdges();
+	int getIDMax();
 };
 
 

@@ -2,7 +2,7 @@
 #include "Empresa.h"
 #include "Recursos.h"
 #include "Excecoes.h"
-#include "Mapa.h"
+#include "Gerador.h"
 #include "graphviewer.h"
 #include <iostream>
 #include <string>
@@ -471,7 +471,7 @@ void opMenuInicial(Empresa *e, int op) {
 		break;
 	}
 	case 6:{
-		e->guardarInfo();
+		//e->guardarInfo();
 		break;
 	}
 	}
@@ -538,7 +538,7 @@ void menuInicial(Empresa *e) {
 //==============================================================================================================
 void menuEmpresa(Empresa *e){
 	clrscr();
-	int id;
+/*	int id;
 	char resp;
 
 	do {
@@ -554,15 +554,30 @@ void menuEmpresa(Empresa *e){
 		e->setIsEscola(false);
 
 	e->carregarInfo();
-
+*/
 	menuInicial(e);
 }
 
 int main(){
+	int num;
+	string b;
+	bool esc;
 
-	Morada * source = new Morada(56,-0.159533,0.67583, "Patio ...");
-	Empresa *e = new Empresa("Transportes Escolares",source);
+	//compor isto depois
+	cout << "Numero de alunos : ";
+	cin >> num;
+	cout << "E escola ? (Y/N) ";
+	cin >> b;
+
+	if(b == "Y" || b == "y")
+		esc = true;
+	else
+		esc = false;
+
+	Gerador g = Gerador(num, esc);
+	Empresa *e = g.getEmpresa();
 	menuEmpresa(e);
 	delete(e);
+
 	return 0;
 }

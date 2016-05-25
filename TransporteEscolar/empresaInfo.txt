@@ -1,25 +1,20 @@
-Transportes 55
+Empresa 299
 =========================
-55-jj-12 10
-36-df-85 10
-37-ji-09 10
+a 50
 =========================
-35
-38
-215
-229
-270
 =========================
-24
-1 Ines Gomes;229 98
-2 Catarina Ramos;229 202
-3 Andreia Rodrigues;270 223
-4 Joao Carvalho;35 202
-5 Carlos Carvalho;215 98
-6 Diana Teixeira;229 98
-7 Antonio Lemos;215 202
-8 Jose Oliveira;38 223
-9 Maria Barros;229 223
+12
+1Penelope	Glover;114 150
+2Lauren	Baker;29 150
+3Zoe	Johnston;256 150
+4Tracey	Lawrence;228 150
+5Ryan	Gill;92 150
+6Jasmine	Fisher;159 150
+7Stewart	Knox;84 150
+8Molly	King;160 150
+9Charles	Ferguson;183 150
+10Audrey	Oliver;270 150
+00 Audrey	Oliver;15241 31039;270 150s;229 223
 10 Patricia Barros;270 98
 11 Ines Guerra;270 223
 12 Eduardo Leite;38 223

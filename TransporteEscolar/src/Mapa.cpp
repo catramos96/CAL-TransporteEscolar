@@ -35,7 +35,6 @@ Mapa::Mapa(GraphViewer *gv){
 		stringstream linestream(line);
 		string data;
 
-
 		linestream >> idNo;
 		getline(linestream, data, ';');  // discard lat in º
 		getline(linestream, data, ';');  // discard long in º
@@ -77,6 +76,8 @@ Mapa::Mapa(GraphViewer *gv){
 		newIdNo++;
 		first = false;
 	}
+
+	maxID = newIdNo;
 
 	inFile.close();
 
@@ -390,4 +391,8 @@ void Mapa::displayBlockedEdges(){
 
 	for(size_t i = 0; i < temp.size(); i++)
 		cout << temp.at(i).getID()<< endl;
+}
+
+int Mapa::getIDMax(){
+	return maxID;
 }

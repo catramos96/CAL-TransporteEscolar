@@ -5,6 +5,7 @@
 #include "Morada.h"
 #include "Veiculo.h"
 #include "Cliente.h"
+#include "Mapa.h"
 
 using namespace std;
 
@@ -19,7 +20,9 @@ private:
 	GraphViewer *gv;
 	bool isEscola;
 public:
-	Empresa(string nome, Morada *endereco);
+	Empresa();
+	void fillEmpresa(string nome, int id, bool isEsc, vector<int> escolasID, int numCriancas);
+	//Empresa(string nome, int id, bool isEsc, vector<int> escolasID, int numCriancas);
 	string getNome() const;
 	Morada* getEndereco() const;
 	void setIsEscola(bool b);

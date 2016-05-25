@@ -12,12 +12,69 @@ using namespace std;
  * @param nome Nome da empresa.
  * @param endereco Apontador para a morada do empresa.
  */
-Empresa::Empresa(string nome, Morada *endereco)
-{
-	isEscola = false;
-	this->nome = nome;
-	this->endereco = endereco;
+Empresa::Empresa(){
 	initialization();
+}
+
+void Empresa::fillEmpresa(string nome, int id, bool isEsc, vector<int> escolasID, int numCriancas)
+{
+	this->isEscola = isEsc;
+	this->nome = nome;
+	this->endereco = mapa->getPonto(id);
+
+	//cria escolas
+	for(size_t i = 0; i < escolasID.size(); i++){
+		escolas.push_back(mapa->getPonto(escolasID.at(i)));
+		//mapa->getPontoVertex(escolasID.at(i))->setIsSchool(true);
+	}
+
+	stringstream info;
+
+	//cria veiculos
+	int numVeic = numCriancas/50+1;
+	char n = 'a', next;
+	string str;
+	for(int j = 0; j < numVeic; j++){
+		next = n + j;
+		info << next;
+		info >> str;
+		Veiculo *v = new Veiculo(str, 50);
+		transportes.push_back(v);
+	}
+
+	//cria clientes
+	fstream names;
+
+	names.open("Info.txt");
+	if(names.fail()){
+		cout << "Error at opening the file\n";
+	}
+	string line, name;
+	int idC, id1, id2;
+	while(!names.eof()){
+		info.clear();
+		getline(names,line);
+		info << line;
+		info >> idC;
+		getline(info, line, ';');
+		nome = line;
+		nome.erase(nome.begin(), nome.begin()+1); // retira o primeiro espaco da palavra
+		info >> id1 >> id2;
+		Morada *casa = mapa->getPonto(id1);
+		Morada *escola = mapa->getPonto(id2);
+		Cliente *c = new Cliente(nome,casa);
+		if(isEscola)
+			c->setNovaEscola(endereco);
+		else
+			c->setNovaEscola(escola);
+		c->setID(idC);
+		addCliente(c);
+	}
+
+	//deixar este para depois
+	//cria pontos de interesse  -> algoritmo que diz quantas criancas existem por rua, escolhe um ponto dessa rua para ponto de ineteresse
+
+	names.close();
 }
 /**
  * Método que retorna o nome da empresa
@@ -176,9 +233,9 @@ bool Empresa::addCliente(Cliente *cliente)
 		lugares += transportes[i]->getNumLugares();
 	}
 
-	//Residencia nao e um ponto de interesse
-	if(mapa->isPontoInteresse(*cliente->getResidencia()) == false)
-		throw PontoRecolhaInvalido(*cliente->getResidencia());
+	//Residencia nao e um ponto de interesse -> temporariamente inativo
+	//if(mapa->isPontoInteresse(*cliente->getResidencia()) == false)
+	//throw PontoRecolhaInvalido(*cliente->getResidencia());
 
 	if(lugares < clientes.size())
 		throw VeiculosInsuficientes();
@@ -568,7 +625,7 @@ void Empresa::update(){
  * Metodo que lê de um ficheiro de texto as informações necesarias a preencher uma dada empresa.
  * Abre ficheiros diferentes caso a empresa seja uma escola.
  * Preenche informacoes sobre a empresa, os clientes e os veiculos.
- */
+ *
 void Empresa::guardarInfo() const{
 	fstream file;
 	if(isEscola)
@@ -608,7 +665,7 @@ void Empresa::guardarInfo() const{
 /**
  * Metodo que coloca a informacoeo num ficheiro de texto aquando a terminação do programa.
  * Atualiza as informacoes sobre os clientes e veiculos.
- */
+ *
 void Empresa::carregarInfo(){
 	fstream file;
 	string tmp;
@@ -691,7 +748,7 @@ void Empresa::carregarInfo(){
 
 	distribuiCliVeiculos();
 }
-
+*/
 //============================================================================================//
 /**
  * Funcao auxiliar ao algoritmo kmp.
@@ -782,7 +839,7 @@ int numStringMatching(string filename, string toSearch){
 
 	return num;
 }
-*/
+ */
 /**
  * 	j 0 1 2 3 4 5
  * 	i - - - - - -
@@ -821,7 +878,7 @@ vector<string> splitLine(string line){
 
 	return tokens;
 }
-*/
+ */
 
 /**
  * funcao auxiliar a funcao EditDistance que retorna o minimo de 3 numeros
@@ -909,7 +966,7 @@ float numApproximateStringMatching(string filename,string toSearch){
 
 	return total/num;
 }
-*/
+ */
 
 
 void Empresa::searchClient(string nome){
