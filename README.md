@@ -6,7 +6,7 @@ Para adicionar ao main:
 
 ### clientes: ###
 
-* procurar clientes (pesquisa aproximada : retorna lista de crianças com nome parecido e id)
+* procurar clientes (pesquisa aproximada : retorna lista de crianças com nome parecido e id) -> FEITO
 
 
 ### pontos de recolha: ###
@@ -19,21 +19,7 @@ Para adicionar ao main:
 
 ===============================================
 
-* morada -> identificada pelo nome da rua
-
-* verificar se uma dada criança está inscrita (no vieiculo ? ou na empresa?)
-
-* quantas crianças existem por rua
-
-* Acrescentar o nome das Ruas ao funcionamento do proj
-
-* Implementar Algoritmos de comparação total/parcial de strings
-
-* Implementar Menu de Procura de Ruas/Clientes no main
-
-* Procura Clientes/Rua ->algoritmo aproximado  
-
-* Procura de Moradas por Rua ->algoritmo exato
+* e preciso arranjar uns ficheiros com muitos nomes (tipo 5000) para termos um dicionario mais abrangente. 
 
 ## 1- Clonar o repositório para o computador: ##
 
