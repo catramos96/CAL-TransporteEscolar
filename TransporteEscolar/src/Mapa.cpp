@@ -199,6 +199,14 @@ Mapa::Mapa(GraphViewer *gv){
 
 	inFile.close();
 
+	for(unsigned int i = 0; i < mapa.getNumVertex(); i++)
+	{
+		string name = mapa.getVertexByID(i)->getAdjacentNumber(0).getName();
+		Morada m = mapa.getVertexByID(i)->getInfo();
+		m.setNome(name);
+		mapa.getVertexByID(i)->setInfo(m);
+	}
+
 	//inicializa o boleano isPI( é ponto de interesse) e isSchool ( é uma escola) a falso
 	mapa.resetIsPI();
 	mapa.resetIsSchool();

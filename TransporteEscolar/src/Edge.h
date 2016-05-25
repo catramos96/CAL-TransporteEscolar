@@ -23,6 +23,7 @@ public:
 	double getWeight() const;
 	int getID() const;
 	bool getIsBlocked() const;
+	string getName() const {return name;}
 };
 
 template <class T>

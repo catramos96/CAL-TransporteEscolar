@@ -29,6 +29,7 @@ public:
 	double getY() const;
 	int getNumCriancas() const;
 	void setNumCriancas(int n);
+	void setNome(string s);
 	string getNome() const;
 	//Sets
 	void setID(int id);

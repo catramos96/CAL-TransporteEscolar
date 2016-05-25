@@ -122,6 +122,7 @@ Morada & Morada::operator=(const Morada &m){
 	x = m.getX();
 	y = m.getY();
 	id = m.getID();
+	nome = m.getNome();
 
 	return *this;
 }
@@ -149,4 +150,9 @@ bool Morada::operator ==(const Morada &m) const{
 void Morada::setNumCriancas(int n){
 	numCriancas = n;
 }
+
+void Morada::setNome(string s){
+	nome = s;
+}
+
 
