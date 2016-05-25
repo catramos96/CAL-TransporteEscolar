@@ -1,5 +1,9 @@
 # Comandos do git #
 
+## Gerador ##
+
+O gerador é uma classe que gera uma Empresa e um ficheiro de texto com os ids, nomes, id da morada e id da escola aleatórios. Os nomes vêm do ficheiro de texto 'Names.txt' que tem 4000 nomes. Quando iniciamos o programa podemos escolher o numero de crianças e se a empresa e a própria escola. Por agora, ainda não há pontos de interesse. Porque para os nossos algoritmos ainda não é preciso. Mas quando estiverem os algoritmos a funcionar vou criar um ponto de interesse por rua e associo todas as crianças dessa rua a esse ponto de interesse.
+
 ## A FAZER
 
 Para adicionar ao main:
