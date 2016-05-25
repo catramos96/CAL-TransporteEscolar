@@ -581,7 +581,7 @@ void Empresa::guardarInfo() const{
 	}
 
 	//empresa
-	file << nome << " " << *endereco << endl;
+	file << nome << " " << endereco->getID() << endl;
 	file << "=========================" << endl;
 	//transportes
 	for (size_t i = 0; i < transportes.size(); i++) {
@@ -591,7 +591,7 @@ void Empresa::guardarInfo() const{
 	file << "=========================" << endl;
 	vector<Morada> recolha = mapa->getInterestPoints();
 	for (size_t i = 0; i < recolha.size(); ++i) {
-		file << recolha[i]<< endl;
+		file << recolha[i].getID() << endl;
 	}
 	file << "=========================" << endl;
 	//clientes
@@ -618,9 +618,9 @@ void Empresa::carregarInfo(){
 	else
 		file.open("empresaInfo.txt");
 
-	string nome;
+	string nome, rua;
 	string matricula;
-	double id,id2 ,coordx,coordy, nLugares,coordx2,coordy2,cliente_n;
+	double id,id2, nLugares, nrCliente;
 	char lixo;
 	string separador = "=========================";
 
@@ -629,14 +629,12 @@ void Empresa::carregarInfo(){
 	}
 
 	if(!file.eof()){
-		//empresa
+		//empresa -> confuso?
 		getline(file,tmp);
 		linha << tmp;
-		linha >> nome >> id >> lixo >> coordx >> lixo >> coordy >> lixo;
+		linha >> nome >> id;
 		setNome(nome);
 		getEndereco()->setID(id);
-		getEndereco()->setX(coordx);
-		getEndereco()->setY(coordy);
 		linha.clear();
 		getline(file,tmp); // "========================="
 
@@ -648,17 +646,15 @@ void Empresa::carregarInfo(){
 			addTransporte(new Veiculo(matricula, nLugares));
 			linha.clear();
 			getline(file,tmp);
-
 		}
 
 		//pontos de recolha
-		linha.clear();
+		//linha.clear();
 		getline(file,tmp);
 		while(tmp != separador){
 			linha << tmp;
-			linha >> id >> lixo >> coordx >> lixo >> coordy >> lixo;
+			linha >> id;
 			Morada *ponto = mapa->getPonto(id);
-			//Morada ponto(coordx,coordy,id,nome);
 			mapa->setPontoInteresse(*ponto,true);
 			linha.clear();
 			getline(file,tmp);
@@ -673,12 +669,10 @@ void Empresa::carregarInfo(){
 			linha.clear();
 			getline(file,tmp);
 			linha << tmp;
-			linha >> cliente_n;
+			linha >> nrCliente;
 			getline(linha, tmp, ';');
 			nome = tmp;
-			linha >> id >> lixo >> id2;
-			//Morada *casa = new Morada(coordx,coordy,id);
-			//Morada *escola = new Morada(coordx2,coordy2,id2);
+			linha >> id >> id2;
 			Morada *casa = mapa->getPonto(id);
 			Morada *escola = mapa->getPonto(id2);
 			mapa->getPontoVertex(escola->getID())->setIsSchool(true);
@@ -687,7 +681,7 @@ void Empresa::carregarInfo(){
 				c->setNovaEscola(endereco);
 			else
 				c->setNovaEscola(escola);
-			c->setID(cliente_n);
+			c->setID(nrCliente);
 			addCliente(c);
 		}
 		Cliente::id = id_tmp;

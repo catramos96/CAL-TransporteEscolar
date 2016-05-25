@@ -1,4 +1,4 @@
-Escola 55 Patio ... 
+Escola 55
 =========================
 55-jj-12 10
 36-df-85 10
@@ -10,7 +10,7 @@ Escola 55 Patio ...
 229  
 270  
 =========================
-4
+24
 1 Ines Gomes;229 55
 2 Catarina Ramos;35 55
 3 Andreia Rodrigues;270 55
