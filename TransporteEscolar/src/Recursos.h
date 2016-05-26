@@ -51,7 +51,8 @@ void displayMenuClientes(){
 	cout << "2 - Remover Clientes\n";
 	cout << "3 - Ver Clientes\n";
 	cout << "4 - Pesquisar Clientes\n";
-	cout << "5 - Voltar Atras\n";
+	cout << "5 - Pesquisar Clientes por Morada\n";
+	cout << "6 - Voltar Atras\n";
 }
 
 /**
@@ -62,7 +63,8 @@ void displayMenuPI(){
 	cout << "1 - Adicionar Ponto\n";
 	cout << "2 - Remover Ponto\n";
 	cout << "3 - Ver Pontos de recolha\n";
-	cout << "4 - Voltar Atras\n";
+	cout << "4 - Procurar Pontos Recolha\n";
+	cout << "5 - Voltar Atras\n";
 }
 
 void displayMenuArestas(){

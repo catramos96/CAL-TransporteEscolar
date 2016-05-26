@@ -32,6 +32,7 @@ public:
 	void setBlockedEdge(int edgeId, bool state);
 	void displayBlockedEdges();
 	int getIDMax();
+	vector<Morada> getAllMorada() const;
 };
 
 

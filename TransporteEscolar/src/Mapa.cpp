@@ -396,3 +396,13 @@ void Mapa::displayBlockedEdges(){
 int Mapa::getIDMax(){
 	return maxID;
 }
+
+vector<Morada> Mapa::getAllMorada() const{
+	vector<Morada> moradas;
+
+	for (int i = 0; i < mapa.getVertexSet().size(); ++i) {
+		moradas.push_back(mapa.getVertexSet()[i]->getInfo());
+	}
+
+	return moradas;
+}

@@ -64,7 +64,10 @@ public:
 	vector<int> prefixFunction(string pattern);
 	int min(int x, int y, int z);
 
-	void searchClient(string nome);
+	void searchClient(string nome);				//Aproximado
+	void searchClientesMorada(string morada);	//Exato
+	void searchPontoRecolha(string morada);		//Aproximado
+	void searchMorada(string morada);		//Aproximado
 };
 
 #endif /* SRC_EMPRESA_H_ */

@@ -108,12 +108,26 @@ void procurarCLientes(Empresa *e){
 	throw VoltarAtras();
 }
 
+void procurarClientesMorada(Empresa *e){
+	clrscr();
+		displayTitulo("PROCURAR CLIENTES POR MORADA");
+		string morada;
+
+			cout << "Introduza a morada : " << endl;
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			getline(cin, morada);
+			e->searchClientesMorada(morada);
+			cout << endl;
+		esperar();
+		throw VoltarAtras();
+}
+
 void menuClientes(Empresa *e){
 	int op;
 	do {
 		clrscr();
 		displayMenuClientes();
-		opccao(op, 1, 5);
+		opccao(op, 1, 6);
 		switch (op) {
 		case 1: { //add
 			addCliente(e);
@@ -131,7 +145,11 @@ void menuClientes(Empresa *e){
 			procurarCLientes(e);
 			break;
 		}
-		case 5: {
+		case 5:{//pesq.morada
+			procurarClientesMorada(e);
+			break;
+		}
+		case 6: {
 			throw VoltarAtras();
 		}
 		}
@@ -266,6 +284,13 @@ void addPontoRecolha(Empresa *e){
 	clrscr();
 	displayTitulo("ADICIONAR PONTO DE RECOLHA");
 
+	string morada;
+	cout << "Procurar Morada:  "<< endl;
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	getline(cin, morada);
+	e->searchMorada(morada);
+	cout << endl;
+
 	cout << "Morada Recolha (id): ";
 	cin >> id;
 	Morada *ponto = e->getMapa()->getPonto(id);
@@ -313,6 +338,19 @@ void verPontosRecolha(Empresa *e){
 	throw VoltarAtras();
 }
 
+void procurarPontosRecolha(Empresa *e){
+	clrscr();
+		displayTitulo("PROCURAR PONTOS DE RECOLHA");
+		string morada;
+		cout << "Introduza a morada de recolha : " << endl;
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		getline(cin, morada);
+		e->searchPontoRecolha(morada);
+		cout << endl;
+		esperar();
+		throw VoltarAtras();
+}
+
 void menuPontos(Empresa *e){
 	clrscr();
 	int op;
@@ -332,7 +370,11 @@ void menuPontos(Empresa *e){
 			verPontosRecolha(e);
 			break;
 		}
-		case 4:{
+		case 4: {
+			procurarPontosRecolha(e);
+			throw;
+		}
+		case 5:{
 			throw VoltarAtras();
 		}
 		}

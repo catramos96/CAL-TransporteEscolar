@@ -989,3 +989,57 @@ void Empresa::searchClient(string nome){
 			cout << clientes.at(i)->getID()<< " - " << clientes.at(i)->getNome() << endl;
 	}
 }
+
+
+void Empresa::searchClientesMorada(string morada){
+	for(size_t i = 0; i < clientes.size(); i++){
+		if(kmp(clientes[i]->getResidencia()->getNome(),morada) == 0)//moradas exatamante iguais
+		{
+				cout << clientes.at(i)->getID() << " - " << clientes.at(i)->getNome() << endl;
+		}
+	}
+}
+
+void Empresa::searchPontoRecolha(string morada){
+	int n = morada.length();
+	int m = 0;
+	int max = 0;
+
+	vector<Morada> pontosR = mapa->getInterestPoints();
+
+	for(size_t i = 0; i < pontosR.size(); i++){
+		int dist = EditDistance(pontosR.at(i).getNome(), morada);
+
+		m = pontosR.at(i).getNome().length() - 1;
+		if(m > n)
+			max = m;
+		else
+			max = n;
+
+		//distancias plausiveis até distancia 4/5 da morada original
+		if(dist < max - max/5)
+			cout << pontosR.at(i).getID()<< " - " << pontosR.at(i).getNome() << endl;
+	}
+}
+
+void Empresa::searchMorada(string morada){
+	int n = morada.length();
+		int m = 0;
+		int max = 0;
+
+		vector<Morada> moradas = mapa->getAllMorada();
+
+		for(size_t i = 0; i < moradas.size(); i++){
+			int dist = EditDistance(moradas.at(i).getNome(), morada);
+
+			m = moradas.at(i).getNome().length() - 1;
+			if(m > n)
+				max = m;
+			else
+				max = n;
+
+			//distancias plausiveis até distancia 4/5 da morada original
+			if(dist < max - max/5)
+				cout << moradas.at(i).getID()<< " - " << moradas.at(i).getNome() << endl;
+		}
+}
