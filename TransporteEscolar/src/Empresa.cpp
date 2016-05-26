@@ -993,7 +993,7 @@ void Empresa::searchClient(string nome){
 
 void Empresa::searchClientesMorada(string morada){
 	for(size_t i = 0; i < clientes.size(); i++){
-		if(kmp(clientes[i]->getResidencia()->getNome(),morada) == 0)//moradas exatamante iguais
+		if(kmp(clientes[i]->getResidencia()->getNome(),morada) != -1)//moradas exatamante iguais
 		{
 				cout << clientes.at(i)->getID() << " - " << clientes.at(i)->getNome() << endl;
 		}
