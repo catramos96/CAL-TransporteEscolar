@@ -10,16 +10,13 @@ private:
 	Graph<Morada> mapa;
 	int maxID;
 public:
-//	Mapa();
 	Mapa(GraphViewer *gv);
 	Graph<Morada> getMapa();
-//	void display();
 	void displayPath(GraphViewer *gv, vector<Morada> points, bool makePath);
 	bool setPontoInteresse(Morada m, bool b);
 	bool isPontoInteresse(Morada m);
 	int displayPontos() const;
 	Morada *getPonto(int id);
-	//vector<Morada> shortestPath(vector<Morada> points);
 	Vertex<Morada> * getPontoVertex(int id);
 	vector<Morada > getInterestPoints() const;
 	int getMinDistBetweenPoints(int pi, vector<Morada > points);

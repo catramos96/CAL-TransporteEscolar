@@ -5,7 +5,6 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
-
 using namespace std;
 
 Mapa::Mapa(GraphViewer *gv){
@@ -327,11 +326,6 @@ Morada *Mapa::getPonto(int id){
 Vertex<Morada> * Mapa::getPontoVertex(int id){
 
 	Vertex<Morada> * v = mapa.getVertexByID(id);
-/*	for (int var = 0; var < mapa.getNumVertex(); ++var) {
-		if(mapa.getVertexSet()[var]->getInfo().getID() == id)
-			return v = mapa.getVertexSet()[var];
-	}
-*/
 	return v;
 }
 
@@ -397,12 +391,22 @@ int Mapa::getIDMax(){
 	return maxID;
 }
 
+bool moradaRepetida(vector<string> ruas, string novaRua){
+	for(size_t i = 0; i < ruas.size(); i++)
+		if(ruas.at(i) == novaRua)
+			return true;
+	return false;
+}
+
 vector<Morada> Mapa::getAllMorada() const{
 	vector<Morada> moradas;
+	vector<string> ruas;
 
-	for (int i = 0; i < mapa.getVertexSet().size(); ++i) {
-		moradas.push_back(mapa.getVertexSet()[i]->getInfo());
-	}
+	for (int i = 0; i < mapa.getVertexSet().size(); ++i)
+		if(!moradaRepetida(ruas, mapa.getVertexSet()[i]->getInfo().getNome())){
+			moradas.push_back(mapa.getVertexSet()[i]->getInfo());
+			ruas.push_back(mapa.getVertexSet()[i]->getInfo().getNome());
+		}
 
 	return moradas;
 }

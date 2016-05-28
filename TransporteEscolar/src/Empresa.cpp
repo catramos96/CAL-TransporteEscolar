@@ -63,17 +63,12 @@ void Empresa::fillEmpresa(string nome, int id, bool isEsc, vector<int> escolasID
 		Morada *casa = mapa->getPonto(id1);
 		Morada *escola = mapa->getPonto(id2);
 		Cliente *c = new Cliente(nome,casa);
-		if(isEscola)
-			c->setNovaEscola(endereco);
-		else
-			c->setNovaEscola(escola);
+		if(!hasPR(casa))	//verifica se esta rua já tem um ponto de recolha, se não, passa a ser este ponto
+			mapa->setPontoInteresse(*casa,true);
+		c->setNovaEscola(escola);
 		c->setID(idC);
 		addCliente(c);
 	}
-
-	//deixar este para depois
-	//cria pontos de interesse  -> algoritmo que diz quantas criancas existem por rua, escolhe um ponto dessa rua para ponto de ineteresse
-
 	names.close();
 }
 /**
@@ -233,10 +228,6 @@ bool Empresa::addCliente(Cliente *cliente)
 		lugares += transportes[i]->getNumLugares();
 	}
 
-	//Residencia nao e um ponto de interesse -> temporariamente inativo
-	//if(mapa->isPontoInteresse(*cliente->getResidencia()) == false)
-	//throw PontoRecolhaInvalido(*cliente->getResidencia());
-
 	if(lugares < clientes.size())
 		throw VeiculosInsuficientes();
 
@@ -244,7 +235,7 @@ bool Empresa::addCliente(Cliente *cliente)
 	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
 		throw ResidenciaInvalida(*cliente->getResidencia());
 
-	//cliente jÃ¡ existe, id = ou residencia =
+	//cliente ja existe, id = ou residencia =
 	for(unsigned int i = 0; i < clientes.size(); i++)
 		if(*cliente == *clientes[i])
 			return false;
@@ -472,12 +463,16 @@ void Empresa::displayEscolas() const{
 /**
  * Metodo que permite fazer display dos pontos de recolha (display do mapa)
  */
-void Empresa::displayPontosRecolha() const{
+void Empresa::displayPontosRecolha(){
 	vector<Morada > pi = mapa->getInterestPoints();
+
+	//fazer algoritmo kmp para saber quantas criancas existem por ponto de recolha
 	for (size_t i = 0; i < pi.size(); ++i) {
-		cout << pi[i] << " n Clientes: " << getClientesPontoRecolha(&pi[i]).size() << endl;
+		vector<Cliente> cli = exactSearch(pi.at(i).getNome());
+		cout << pi[i] << " n Clientes: " << cli.size() << endl;
 	}
-	mapa->displayPath(gv,pi, 0);
+
+	mapa->displayPath(gv,pi,0);
 }
 
 /**
@@ -621,134 +616,14 @@ void Empresa::update(){
 	distribuiCliVeiculos();
 }
 
-/**
- * Metodo que lÃª de um ficheiro de texto as informaÃ§Ãµes necesarias a preencher uma dada empresa.
- * Abre ficheiros diferentes caso a empresa seja uma escola.
- * Preenche informacoes sobre a empresa, os clientes e os veiculos.
- *
-void Empresa::guardarInfo() const{
-	fstream file;
-	if(isEscola)
-		file.open("escolaInfo.txt");
-	else
-		file.open("empresaInfo.txt");
-
-	if(file.fail()){
-		cout << "Error at opening the file\n";
-	}
-
-	//empresa
-	file << nome << " " << endereco->getID() << endl;
-	file << "=========================" << endl;
-	//transportes
-	for (size_t i = 0; i < transportes.size(); i++) {
-		file << transportes[i]->getMatricula() << " " << transportes[i]->getNumLugares() << endl;
-	}
-	//pontos recolha
-	file << "=========================" << endl;
-	vector<Morada> recolha = mapa->getInterestPoints();
-	for (size_t i = 0; i < recolha.size(); ++i) {
-		file << recolha[i].getID() << endl;
-	}
-	file << "=========================" << endl;
-	//clientes
-	file << Cliente::id << endl;
-	for (size_t i = 0; i < clientes.size(); ++i) {
-		if(i == clientes.size() -1)
-			file << clientes[i]->getID() << "" <<clientes[i]->getNome()<< ";" << clientes[i]->getResidencia()->getID()<< " " << clientes[i]->getEscola()->getID();
-		else
-			file << clientes[i]->getID() << "" <<clientes[i]->getNome()<< ";" << clientes[i]->getResidencia()->getID()<< " " << clientes[i]->getEscola()->getID() << endl;
-	}
-	file.close();
+bool Empresa::hasPR(Morada *m){
+	vector<Morada > pontos = mapa->getInterestPoints();
+	for(size_t i = 0; i < pontos.size(); i++)
+		if(pontos.at(i).getNome() == m->getNome())
+			return true;
+	return false;
 }
 
-/**
- * Metodo que coloca a informacoeo num ficheiro de texto aquando a terminaÃ§Ã£o do programa.
- * Atualiza as informacoes sobre os clientes e veiculos.
- *
-void Empresa::carregarInfo(){
-	fstream file;
-	string tmp;
-	stringstream linha;
-	if(isEscola)
-		file.open("escolaInfo.txt");
-	else
-		file.open("empresaInfo.txt");
-
-	string nome, rua;
-	string matricula;
-	double id,id2, nLugares, nrCliente;
-	char lixo;
-	string separador = "=========================";
-
-	if(file.fail()){
-		cout << "Error at opening the file\n";
-	}
-
-	if(!file.eof()){
-		//empresa -> confuso?
-		getline(file,tmp);
-		linha << tmp;
-		linha >> nome >> id;
-		setNome(nome);
-		getEndereco()->setID(id);
-		linha.clear();
-		getline(file,tmp); // "========================="
-
-		//transportes
-		getline(file,tmp);
-		while(tmp != separador){
-			linha << tmp;
-			linha >> matricula >> nLugares;
-			addTransporte(new Veiculo(matricula, nLugares));
-			linha.clear();
-			getline(file,tmp);
-		}
-
-		//pontos de recolha
-		//linha.clear();
-		getline(file,tmp);
-		while(tmp != separador){
-			linha << tmp;
-			linha >> id;
-			Morada *ponto = mapa->getPonto(id);
-			mapa->setPontoInteresse(*ponto,true);
-			linha.clear();
-			getline(file,tmp);
-		}
-
-		//clientes
-		int id_tmp;
-		getline(file,tmp);//IDDD
-		linha << tmp;
-		linha >> id_tmp;
-		while(!file.eof()){
-			linha.clear();
-			getline(file,tmp);
-			linha << tmp;
-			linha >> nrCliente;
-			getline(linha, tmp, ';');
-			nome = tmp;
-			nome.erase(nome.begin(), nome.begin()+1); // retira o primeiro espaco da palavra
-			linha >> id >> id2;
-			Morada *casa = mapa->getPonto(id);
-			Morada *escola = mapa->getPonto(id2);
-			mapa->getPontoVertex(escola->getID())->setIsSchool(true);
-			Cliente *c = new Cliente(nome,casa);
-			if(isEscola)
-				c->setNovaEscola(endereco);
-			else
-				c->setNovaEscola(escola);
-			c->setID(nrCliente);
-			addCliente(c);
-		}
-		Cliente::id = id_tmp;
-	}
-	file.close();
-
-	distribuiCliVeiculos();
-}
-*/
 //============================================================================================//
 /**
  * Funcao auxiliar ao algoritmo kmp.
@@ -816,69 +691,6 @@ int Empresa::kmp(string text, string pattern) {
 	//return res;
 }
 
-/**
- * funcao que indica numa string 'filename', quantas strings 'toSearch' exitem
- *
- * --> nao deve ser necessaria <--
- *
-int numStringMatching(string filename, string toSearch){
-	int num = 0;
-
-	//abrir ficheiro
-	fstream file;
-	string line;
-
-	file.open(filename.c_str() ,ifstream::in);
-
-	while(file.good()){
-		getline(file, line);
-		num += kmp(line,toSearch);
-	}
-
-	file.close();
-
-	return num;
-}
- */
-/**
- * 	j 0 1 2 3 4 5
- * 	i - - - - - -
- * 	0|0 1 2 3 4 5
- * 	1|1
- * 	2|2
- * 	3|3
- * 	4|4
- * 	5|5
- * 	6|6
- *
- *
- */
-
-/**
- * funcao auxiliar que divide uma frase em palavras individuais e coloca-a num vetor
- *
- * --> nao deve ser necessaria <--
- *
-vector<string> splitLine(string line){
-
-	replace(line.begin(), line.end(), '.', ' ');
-	//replace(line.begin(), line.end(), '-', ' ');
-	replace(line.begin(), line.end(), ',', ' ');
-	replace(line.begin(), line.end(), '!', ' ');
-	replace(line.begin(), line.end(), '?', ' ');
-	replace(line.begin(), line.end(), ';', ' ');
-
-	string buf; // Have a buffer string
-	stringstream ss(line); // Insert the string into a stream
-
-	vector<string> tokens; // Create vector to hold our words
-
-	while (ss >> buf)
-		tokens.push_back(buf);
-
-	return tokens;
-}
- */
 
 /**
  * funcao auxiliar a funcao EditDistance que retorna o minimo de 3 numeros
@@ -930,46 +742,34 @@ int Empresa::EditDistance(string street,string streetToSearch) {
 	return D[m][n];
 }
 
-/**
- * No total de um texto, numero médio da distancia a string 'toSearch'
- *
- * --> provavelmente nao vai ser precisa <--
- *
-float numApproximateStringMatching(string filename,string toSearch){
-	float dist = 0;
-	int num = 0;
-	float total;
-	vector<string> palavras;
+void Empresa::displayClientesMorada(string morada){
+	vector<Cliente> cli = exactSearch(morada);
 
-	//abrir ficheiro
-	fstream file;
-	string line;
-
-	file.open(filename.c_str() ,ifstream::in);
-
-	while(file.good()){
-		getline(file, line);
-		//dividir por palavras
-		palavras = splitLine(line);
-
-		for(int i = 0; i < palavras.size(); i++){
-			dist = EditDistance(palavras.at(i),toSearch);
-			cout << palavras.at(i) << " " << dist << endl;
-			num++;
-			total += dist;
-		}
-	}
-
-	file.close();
-
-	cout <<  total << " / " << num << " = " << total/num << endl;
-
-	return total/num;
+	for(int i = 0; i < cli.size(); i++)
+		cout << clientes.at(i)->getID() << " - " << clientes.at(i)->getNome() << endl;
 }
- */
 
+void Empresa::proximitySearchMorada(vector<Morada> moradas, string toSearch){
+	int n = toSearch.length();
+	int m = 0;
+	int max = 0;
 
-void Empresa::searchClient(string nome){
+	for(size_t i = 0; i < moradas.size(); i++){
+		int dist = EditDistance(moradas.at(i).getNome(), toSearch);
+
+		m = moradas.at(i).getNome().length() - 1;
+		if(m > n)
+			max = m;
+		else
+			max = n;
+
+		//distancias plausiveis até metade da maior string
+		if(dist < max/2)
+			cout << moradas.at(i).getID()<< " - " << moradas.at(i).getNome() << endl;
+	}
+}
+
+void Empresa::proximitySearchClient(string nome){
 
 	int n = nome.length();
 	int m = 0;
@@ -990,56 +790,10 @@ void Empresa::searchClient(string nome){
 	}
 }
 
-
-void Empresa::searchClientesMorada(string morada){
-	for(size_t i = 0; i < clientes.size(); i++){
+vector<Cliente> Empresa::exactSearch(string morada){
+	vector<Cliente> res;
+	for(size_t i = 0; i < clientes.size(); i++)
 		if(kmp(clientes[i]->getResidencia()->getNome(),morada) != -1)//moradas exatamante iguais
-		{
-				cout << clientes.at(i)->getID() << " - " << clientes.at(i)->getNome() << endl;
-		}
-	}
-}
-
-void Empresa::searchPontoRecolha(string morada){
-	int n = morada.length();
-	int m = 0;
-	int max = 0;
-
-	vector<Morada> pontosR = mapa->getInterestPoints();
-
-	for(size_t i = 0; i < pontosR.size(); i++){
-		int dist = EditDistance(pontosR.at(i).getNome(), morada);
-
-		m = pontosR.at(i).getNome().length() - 1;
-		if(m > n)
-			max = m;
-		else
-			max = n;
-
-		//distancias plausiveis até distancia 4/5 da morada original
-		if(dist < max - max/5)
-			cout << pontosR.at(i).getID()<< " - " << pontosR.at(i).getNome() << endl;
-	}
-}
-
-void Empresa::searchMorada(string morada){
-	int n = morada.length();
-		int m = 0;
-		int max = 0;
-
-		vector<Morada> moradas = mapa->getAllMorada();
-
-		for(size_t i = 0; i < moradas.size(); i++){
-			int dist = EditDistance(moradas.at(i).getNome(), morada);
-
-			m = moradas.at(i).getNome().length() - 1;
-			if(m > n)
-				max = m;
-			else
-				max = n;
-
-			//distancias plausiveis até distancia 4/5 da morada original
-			if(dist < max - max/5)
-				cout << moradas.at(i).getID()<< " - " << moradas.at(i).getNome() << endl;
-		}
+			res.push_back(*clientes.at(i));
+	return res;
 }

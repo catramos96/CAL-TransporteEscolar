@@ -51,14 +51,14 @@ Gerador::Gerador(int numNames, bool isEscola){
 				i++;
 			}
 		}
-		//retira repetidas
 	}else
 		escolas.push_back(idEmpresa);
+
 
 	//clientes
 	string line;
 	int casa, esc;
-	for (size_t i = 1; i <= numNames; i++) {
+	for (int i = 1; i <= numNames; i++) {
 		getline(names, line);
 
 		//id da casa nao sobreposto ao das escolas ou da empresa
@@ -70,6 +70,7 @@ Gerador::Gerador(int numNames, bool isEscola){
 					repetido = true;
 			if(!repetido && casa != idEmpresa)
 				break;
+			repetido = false;
 		}
 
 		file << i << " " << line << ";" << casa << " " <<escolas.at(rand() % escolas.size());

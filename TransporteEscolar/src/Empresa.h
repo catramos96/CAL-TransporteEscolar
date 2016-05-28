@@ -51,12 +51,14 @@ public:
 	void displayClientes() const;
 	void displayVeiculos() const;
 	void displayEscolas() const;
-	void displayPontosRecolha() const;
+	void displayPontosRecolha();
 	void distribuiCliVeiculos();
 	void initialization();
 	void update();
 	bool todosPontosRecolhaAtingiveis();
 	int changeNumCriancas(Morada m, int state);
+
+	bool hasPR(Morada *m);
 
 	// algoritmos com strings
 	int EditDistance(string street,string streetToSearch);
@@ -64,10 +66,11 @@ public:
 	vector<int> prefixFunction(string pattern);
 	int min(int x, int y, int z);
 
-	void searchClient(string nome);				//Aproximado
-	void searchClientesMorada(string morada);	//Exato
-	void searchPontoRecolha(string morada);		//Aproximado
-	void searchMorada(string morada);		//Aproximado
+	void displayClientesMorada(string morada);
+
+	vector<Cliente> exactSearch(string morada); //Exato
+	void proximitySearchMorada(vector<Morada> moradas, string toSearch); //Aproximado
+	void proximitySearchClient(string nome);				//Aproximado
 };
 
 #endif /* SRC_EMPRESA_H_ */

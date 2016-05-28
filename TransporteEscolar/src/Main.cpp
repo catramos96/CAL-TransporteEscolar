@@ -101,7 +101,7 @@ void procurarCLientes(Empresa *e){
 	cout << "Introduza o Nome : " << endl;
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	getline(cin, nome);
-	e->searchClient(nome);
+	e->proximitySearchClient(nome);
 
 	cout << endl;
 	esperar();
@@ -110,16 +110,16 @@ void procurarCLientes(Empresa *e){
 
 void procurarClientesMorada(Empresa *e){
 	clrscr();
-		displayTitulo("PROCURAR CLIENTES POR MORADA");
-		string morada;
+	displayTitulo("PROCURAR CLIENTES POR MORADA");
+	string morada;
 
-			cout << "Introduza a morada : " << endl;
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			getline(cin, morada);
-			e->searchClientesMorada(morada);
-			cout << endl;
-		esperar();
-		throw VoltarAtras();
+	cout << "Introduza a morada : " << endl;
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	getline(cin, morada);
+	e->displayClientesMorada(morada);
+	cout << endl;
+	esperar();
+	throw VoltarAtras();
 }
 
 void menuClientes(Empresa *e){
@@ -209,7 +209,7 @@ void verVeiculos(Empresa *e){
 
 void trajetoVeiculoIda(Empresa *e){
 
-//	e->distribuiCliVeiculos();
+	//	e->distribuiCliVeiculos();
 
 	string m;
 	clrscr();
@@ -227,7 +227,7 @@ void trajetoVeiculoIda(Empresa *e){
 
 void trajetoVeiculoVolta(Empresa *e){
 
-//	e->distribuiCliVeiculos();
+	//	e->distribuiCliVeiculos();
 
 	string m;
 	clrscr();
@@ -288,7 +288,8 @@ void addPontoRecolha(Empresa *e){
 	cout << "Procurar Morada:  "<< endl;
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	getline(cin, morada);
-	e->searchMorada(morada);
+	vector<Morada> moradas = e->getMapa()->getAllMorada();
+	e->proximitySearchMorada(moradas,morada);
 	cout << endl;
 
 	cout << "Morada Recolha (id): ";
@@ -340,15 +341,16 @@ void verPontosRecolha(Empresa *e){
 
 void procurarPontosRecolha(Empresa *e){
 	clrscr();
-		displayTitulo("PROCURAR PONTOS DE RECOLHA");
-		string morada;
-		cout << "Introduza a morada de recolha : " << endl;
-		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		getline(cin, morada);
-		e->searchPontoRecolha(morada);
-		cout << endl;
-		esperar();
-		throw VoltarAtras();
+	displayTitulo("PROCURAR PONTOS DE RECOLHA");
+	string morada;
+	cout << "Introduza a morada de recolha : " << endl;
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	getline(cin, morada);
+	vector<Morada> pr = e->getMapa()->getInterestPoints();
+	e->proximitySearchMorada(pr,morada);
+	cout << endl;
+	esperar();
+	throw VoltarAtras();
 }
 
 void menuPontos(Empresa *e){
@@ -580,7 +582,7 @@ void menuInicial(Empresa *e) {
 //==============================================================================================================
 void menuEmpresa(Empresa *e){
 	clrscr();
-/*	int id;
+	/*	int id;
 	char resp;
 
 	do {
@@ -596,7 +598,7 @@ void menuEmpresa(Empresa *e){
 		e->setIsEscola(false);
 
 	e->carregarInfo();
-*/
+	 */
 	menuInicial(e);
 }
 
