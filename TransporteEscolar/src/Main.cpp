@@ -8,6 +8,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <time.h>
 
 using namespace std;
 /*
@@ -101,8 +102,14 @@ void procurarCLientes(Empresa *e){
 	cout << "Introduza o Nome : " << endl;
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	getline(cin, nome);
-	e->proximitySearchClient(nome);
+	clock_t t1 = clock();
 	//e->exactSearch4Test(nome);
+	//e->proximitySearchClient(nome);
+	for(unsigned int i = 0; i< 100; i++)
+		e->proximitySearchClient(nome);
+	clock_t t2 = clock();
+	double deltaT =(t2-t1)/CLOCKS_PER_SEC;
+	cout << "Tempo de execucao : " << deltaT << endl;
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
