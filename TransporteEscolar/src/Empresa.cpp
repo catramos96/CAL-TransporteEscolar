@@ -797,3 +797,14 @@ vector<Cliente> Empresa::exactSearch(string morada){
 			res.push_back(*clientes.at(i));
 	return res;
 }
+
+//true->encontrou igual
+bool Empresa::exactSearch4Test(string nome){
+
+	for(size_t i = 0; i < clientes.size(); i++)
+		if(kmp(clientes[i]->getNome(),nome) != -1){
+			cout << clientes.at(i)->getID() << " - " << clientes.at(i)->getNome() << endl;
+			return true;
+		}
+	return false;
+}

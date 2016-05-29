@@ -68,6 +68,8 @@ public:
 
 	void displayClientesMorada(string morada);
 
+	bool exactSearch4Test(string nome);
+
 	vector<Cliente> exactSearch(string morada); //Exato
 	void proximitySearchMorada(vector<Morada> moradas, string toSearch); //Aproximado
 	void proximitySearchClient(string nome);				//Aproximado

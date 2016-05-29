@@ -102,7 +102,7 @@ void procurarCLientes(Empresa *e){
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	getline(cin, nome);
 	e->proximitySearchClient(nome);
-
+	//e->exactSearch4Test(nome);
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -607,15 +607,20 @@ int main(){
 	string b;
 	bool esc;
 
-	//compor isto depois
 	cout << "Numero de alunos : ";
 	cin >> num;
-	cout << "E escola ? (Y/N) ";
+	cout << "E escola ? (S/N) ";
 	cin >> b;
 
-	if(b == "Y" || b == "y")
+/*	do {
+		cout << "E escola ? (S/N) ";
+		cin >> b;
+	}
+	while(b != 'S' && b != 'N' && b != 's' && b != 'n');*/
+
+	if(b == "S" || b == "s")
 		esc = true;
-	else
+	else if(b == "N" || b == "n")
 		esc = false;
 
 	Gerador g = Gerador(num, esc);
