@@ -108,7 +108,7 @@ void procurarCLientes(Empresa *e){
 	for(unsigned int i = 0; i< 100; i++)
 		e->proximitySearchClient(nome);
 	clock_t t2 = clock();
-	double deltaT =(t2-t1)/CLOCKS_PER_SEC;
+	double deltaT =(t2-t1);
 	cout << "Tempo de execucao : " << deltaT << endl;
 	cout << endl;
 	esperar();

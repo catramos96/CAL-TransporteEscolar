@@ -230,7 +230,7 @@ bool Empresa::addCliente(Cliente *cliente)
 
 	if(lugares < clientes.size())
 		throw VeiculosInsuficientes();
-
+/*
 	//residencia = escola
 	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
 		throw ResidenciaInvalida(*cliente->getResidencia());
@@ -245,8 +245,8 @@ bool Empresa::addCliente(Cliente *cliente)
 		if(*cliente->getResidencia() == *escolas[j])
 			return false;
 
-	changeNumCriancas(*cliente->getResidencia(),1);
-
+	changeNumCriancas(*cliente->getResidencia(),1);	//mudar isto
+*/
 	clientes.push_back(cliente);
 	addEscola(cliente->getEscola());
 	Cliente::id++;
@@ -688,7 +688,6 @@ int Empresa::kmp(string text, string pattern) {
 	}
 
 	return -1; //nao encontra
-	//return res;
 }
 
 
