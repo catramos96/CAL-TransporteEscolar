@@ -102,14 +102,7 @@ void procurarCLientes(Empresa *e){
 	cout << "Introduza o Nome : " << endl;
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	getline(cin, nome);
-	clock_t t1 = clock();
-	//e->exactSearch4Test(nome);
-	//e->proximitySearchClient(nome);
-	for(unsigned int i = 0; i< 100; i++)
-		e->proximitySearchClient(nome);
-	clock_t t2 = clock();
-	double deltaT =(t2-t1);
-	cout << "Tempo de execucao : " << deltaT << endl;
+	e->proximitySearchClient(nome);
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -593,39 +586,36 @@ int main(){
 	int op;
 	Empresa *e;
 
-	cout << " 1 - Usar ultimo ficheiro \n 2 - Criar novo ficheiro ";
-	cin >> op;
+	do{
+		cout << " 1 - Usar ultimo ficheiro \n 2 - Criar novo ficheiro ";
+		cin >> op;
 
-	if(op == 1){
-		e = new Empresa();
-		e->readLast();
-	}if(op == 2){
-		int num;
-		string b;
-		bool esc;
+		if(op == 1){
+			e = new Empresa();
+			e->readLast();
+		}else if(op == 2){
+			int num;
+			string b;
+			bool esc;
 
-		cout << "Numero de alunos : ";
-		cin >> num;
-		cout << "E escola ? (S/N) ";
-		cin >> b;
+			cout << "Numero de alunos : ";
+			cin >> num;
 
-		/*
-		 * compor isto
-		 *
-		 * do {
-		cout << "E escola ? (S/N) ";
-		cin >> b;
-	}
-	while(b != 'S' && b != 'N' && b != 's' && b != 'n');*/
+			do {
+				cout << "E escola ? (S/N) ";
+				cin >> b;
+			}
+			while(b != "S" && b != "N" && b != "s" && b != "n");
 
-		if(b == "S" || b == "s")
-			esc = true;
-		else if(b == "N" || b == "n")
-			esc = false;
+			if(b == "S" || b == "s")
+				esc = true;
+			else if(b == "N" || b == "n")
+				esc = false;
 
-		Gerador g = Gerador(num, esc);
-		e = g.getEmpresa();
-	}
+			Gerador g = Gerador(num, esc);
+			e = g.getEmpresa();
+		}
+	}while(!(op == 1 || op == 2));
 
 	menuInicial(e);
 	delete(e);

@@ -645,7 +645,7 @@ void Empresa::writeLastAndInfo(){
 	for(size_t j = 0; j < clientes.size(); j++){
 		file << clientes.at(j)->getID() << " " << clientes.at(j)->getNome() << ";" << clientes.at(j)->getResidencia()->getID() << " " <<clientes.at(j)->getEscola()->getID();
 		if(j != clientes.size()-1)
-			cout << endl;
+			file << endl;
 	}
 	file.close();
 }
