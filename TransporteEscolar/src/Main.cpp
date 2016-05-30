@@ -522,7 +522,7 @@ void opMenuInicial(Empresa *e, int op) {
 		break;
 	}
 	case 6:{
-		//e->guardarInfo();
+		e->writeLastAndInfo();
 		break;
 	}
 	}
@@ -587,53 +587,47 @@ void menuInicial(Empresa *e) {
 
 //Empresa
 //==============================================================================================================
-void menuEmpresa(Empresa *e){
-	clrscr();
-	/*	int id;
-	char resp;
-
-	do {
-		displayTitulo("EMPRESA - "+e->getNome());
-		cout << "A empresa pertence a uma escola ? (S/N)\n";
-		cin >> resp;
-	}
-	while(resp != 'S' && resp != 'N' && resp != 's' && resp != 'n');
-
-	if(resp == 'S' || resp == 's')
-		e->setIsEscola(true);
-	else
-		e->setIsEscola(false);
-
-	e->carregarInfo();
-	 */
-	menuInicial(e);
-}
 
 int main(){
-	int num;
-	string b;
-	bool esc;
 
-	cout << "Numero de alunos : ";
-	cin >> num;
-	cout << "E escola ? (S/N) ";
-	cin >> b;
+	int op;
+	Empresa *e;
 
-/*	do {
+	cout << " 1 - Usar ultimo ficheiro \n 2 - Criar novo ficheiro ";
+	cin >> op;
+
+	if(op == 1){
+		e = new Empresa();
+		e->readLast();
+	}if(op == 2){
+		int num;
+		string b;
+		bool esc;
+
+		cout << "Numero de alunos : ";
+		cin >> num;
+		cout << "E escola ? (S/N) ";
+		cin >> b;
+
+		/*
+		 * compor isto
+		 *
+		 * do {
 		cout << "E escola ? (S/N) ";
 		cin >> b;
 	}
 	while(b != 'S' && b != 'N' && b != 's' && b != 'n');*/
 
-	if(b == "S" || b == "s")
-		esc = true;
-	else if(b == "N" || b == "n")
-		esc = false;
+		if(b == "S" || b == "s")
+			esc = true;
+		else if(b == "N" || b == "n")
+			esc = false;
 
-	Gerador g = Gerador(num, esc);
-	Empresa *e = g.getEmpresa();
-	menuEmpresa(e);
+		Gerador g = Gerador(num, esc);
+		e = g.getEmpresa();
+	}
+
+	menuInicial(e);
 	delete(e);
-
 	return 0;
 }

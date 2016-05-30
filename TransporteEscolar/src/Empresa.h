@@ -21,8 +21,6 @@ private:
 	bool isEscola;
 public:
 	Empresa();
-	void fillEmpresa(string nome, int id, bool isEsc, vector<int> escolasID, int numCriancas);
-	//Empresa(string nome, int id, bool isEsc, vector<int> escolasID, int numCriancas);
 	string getNome() const;
 	Morada* getEndereco() const;
 	void setIsEscola(bool b);
@@ -43,8 +41,6 @@ public:
 	bool removeCliente(Cliente * cliente);
 	bool removerEscola(Morada *e);
 	bool removeCliente(int id);
-	void guardarInfo() const;
-	void carregarInfo() ;
 	bool displayTrajetosIda(string matricula);
 	bool displayTrajetosVolta(string matricula);
 	void displayMapa(vector<Morada> points);
@@ -58,21 +54,27 @@ public:
 	bool todosPontosRecolhaAtingiveis();
 	int changeNumCriancas(Morada m, int state);
 
-	bool hasPR(Morada *m);
+	//==========================================================================================//
+	// NOVOS MÉTODOS CRIADOS PARA O SEGUNDO TRABALHO
+	//==========================================================================================//
+
+	void readLast();	//le o ficheiro last.txt
+	void writeLastAndInfo();
+	void fillEmpresa(string nome, int id, bool isEsc, vector<int> escolasID, int numCriancas);
+	bool hasPR(Morada *m);	//verifica se um dado ponto é ponto de recolha
+	void displayClientesMorada(string morada);
+
+	vector<Cliente> exactSearch(string morada); //usa algoritmo Exato
+	void proximitySearchMorada(vector<Morada> moradas, string toSearch); //usa algoritmo Aproximado
+	void proximitySearchClient(string nome);				//usa algoritmo Aproximado
+
+	void exactSearch4Test(string nome);	//metodo usado para testes de tempos
 
 	// algoritmos com strings
-	int EditDistance(string street,string streetToSearch);
+	int distanceAlgorithm(string street,string streetToSearch);
 	int kmp(string text, string pattern);
 	vector<int> prefixFunction(string pattern);
 	int min(int x, int y, int z);
-
-	void displayClientesMorada(string morada);
-
-	bool exactSearch4Test(string nome);
-
-	vector<Cliente> exactSearch(string morada); //Exato
-	void proximitySearchMorada(vector<Morada> moradas, string toSearch); //Aproximado
-	void proximitySearchClient(string nome);				//Aproximado
 };
 
 #endif /* SRC_EMPRESA_H_ */

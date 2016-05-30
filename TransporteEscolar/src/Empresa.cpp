@@ -16,61 +16,6 @@ Empresa::Empresa(){
 	initialization();
 }
 
-void Empresa::fillEmpresa(string nome, int id, bool isEsc, vector<int> escolasID, int numCriancas)
-{
-	this->isEscola = isEsc;
-	this->nome = nome;
-	this->endereco = mapa->getPonto(id);
-
-	//cria escolas
-	for(size_t i = 0; i < escolasID.size(); i++){
-		escolas.push_back(mapa->getPonto(escolasID.at(i)));
-		//mapa->getPontoVertex(escolasID.at(i))->setIsSchool(true);
-	}
-
-	stringstream info;
-
-	//cria veiculos
-	int numVeic = numCriancas/50+1;
-	char n = 'a', next;
-	string str;
-	for(int j = 0; j < numVeic; j++){
-		next = n + j;
-		info << next;
-		info >> str;
-		Veiculo *v = new Veiculo(str, 50);
-		transportes.push_back(v);
-	}
-
-	//cria clientes
-	fstream names;
-
-	names.open("Info.txt");
-	if(names.fail()){
-		cout << "Error at opening the file\n";
-	}
-	string line, name;
-	int idC, id1, id2;
-	while(!names.eof()){
-		info.clear();
-		getline(names,line);
-		info << line;
-		info >> idC;
-		getline(info, line, ';');
-		nome = line;
-		nome.erase(nome.begin(), nome.begin()+1); // retira o primeiro espaco da palavra
-		info >> id1 >> id2;
-		Morada *casa = mapa->getPonto(id1);
-		Morada *escola = mapa->getPonto(id2);
-		Cliente *c = new Cliente(nome,casa);
-		if(!hasPR(casa))	//verifica se esta rua já tem um ponto de recolha, se não, passa a ser este ponto
-			mapa->setPontoInteresse(*casa,true);
-		c->setNovaEscola(escola);
-		c->setID(idC);
-		addCliente(c);
-	}
-	names.close();
-}
 /**
  * MÃ©todo que retorna o nome da empresa
  * @return nome da empresa.
@@ -230,7 +175,7 @@ bool Empresa::addCliente(Cliente *cliente)
 
 	if(lugares < clientes.size())
 		throw VeiculosInsuficientes();
-/*
+	/*
 	//residencia = escola
 	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
 		throw ResidenciaInvalida(*cliente->getResidencia());
@@ -246,7 +191,7 @@ bool Empresa::addCliente(Cliente *cliente)
 			return false;
 
 	changeNumCriancas(*cliente->getResidencia(),1);	//mudar isto
-*/
+	 */
 	clientes.push_back(cliente);
 	addEscola(cliente->getEscola());
 	Cliente::id++;
@@ -616,6 +561,152 @@ void Empresa::update(){
 	distribuiCliVeiculos();
 }
 
+//==========================================================================================//
+// NOVOS MÉTODOS CRIADOS PARA O SEGUNDO TRABALHO
+//==========================================================================================//
+
+void Empresa::readLast(){
+	//lê o ficheiro Last.txt e preenche a empresa com os dados recebidos
+	fstream file;
+	string line, nome, b;
+	stringstream info;
+	int id, numCriancas, esc;
+	bool isEscola = false;
+	vector<int> idEscolas;
+
+	file.open("Last.txt");
+	if(file.fail()){
+		cout << "Error at opening the file\n";
+	}
+
+	// primeiro -> nome da escola
+	getline(file,line);
+	info << line;
+	info >> nome;
+	//segundo -> id da escola
+	info.clear();
+	getline(file,line);
+	info << line;
+	info >> id;
+	//terceiro -> booleano isEscola
+	info.clear();
+	getline(file,line);
+	info << line;
+	info >> b;
+	if(b == "Y")
+		isEscola = true;
+	//quarto -> numero de criancas
+	info.clear();
+	getline(file,line);
+	info << line;
+	info >> numCriancas;
+	while(!file.eof()){
+		getline(file,line);
+		info.clear();
+		info << line;
+		info >> esc;
+		idEscolas.push_back(esc);
+	}
+
+	file.close();
+
+	fillEmpresa(nome, id, isEscola, idEscolas, numCriancas);
+}
+
+void Empresa::writeLastAndInfo(){
+	//preenche o ficheiro Last.txt
+	fstream file;
+
+	file.open("Last.txt");
+	if(file.fail()){
+		cout << "Error at opening the file\n";
+	}
+
+	file << nome << endl << endereco->getID() << endl;
+	if(isEscola)
+		file << "Y" << endl;
+	else
+		file << "N" << endl;
+	file << clientes.size() << endl;
+
+	for(size_t i = 0; i < escolas.size(); i++){
+		file << escolas.at(i)->getID();
+		if(i != escolas.size()-1)
+			file << endl;
+	}
+	file.close();
+
+	//reescreve o ficheiro Info.txt
+	file.open("Info.txt");
+	if(file.fail()){
+		cout << "Error at opening the file\n";
+	}
+
+	for(size_t j = 0; j < clientes.size(); j++){
+		file << clientes.at(j)->getID() << " " << clientes.at(j)->getNome() << ";" << clientes.at(j)->getResidencia()->getID() << " " <<clientes.at(j)->getEscola()->getID();
+		if(j != clientes.size()-1)
+			cout << endl;
+	}
+	file.close();
+}
+
+void Empresa::fillEmpresa(string nome, int id, bool isEsc, vector<int> escolasID, int numCriancas)
+{
+	this->isEscola = isEsc;
+	this->nome = nome;
+	this->endereco = mapa->getPonto(id);
+
+	//cria escolas
+	for(size_t i = 0; i < escolasID.size(); i++){
+		escolas.push_back(mapa->getPonto(escolasID.at(i)));
+		//mapa->getPontoVertex(escolasID.at(i))->setIsSchool(true);
+	}
+
+	stringstream info;
+
+	//cria veiculos
+	int numVeic = numCriancas/50+1;
+	char n = 'a', next;
+	string str;
+	for(int j = 0; j < numVeic; j++){
+		next = n + j;
+		info << next;
+		info >> str;
+		Veiculo *v = new Veiculo(str, 50);
+		transportes.push_back(v);
+	}
+
+	//cria clientes
+	fstream names;
+
+	names.open("Info.txt");
+	if(names.fail()){
+		cout << "Error at opening the file\n";
+	}
+	string line, name;
+	int idC, id1, id2;
+	while(!names.eof()){
+		info.clear();
+		getline(names,line);
+		info << line;
+		info >> idC;
+		getline(info, line, ';');
+		nome = line;
+		nome.erase(nome.begin(), nome.begin()+1); // retira o primeiro espaco da palavra
+		info >> id1 >> id2;
+		Morada *casa = mapa->getPonto(id1);
+		Morada *escola = mapa->getPonto(id2);
+		Cliente *c = new Cliente(nome,casa);
+		if(!hasPR(casa))	//verifica se esta rua já tem um ponto de recolha, se não, passa a ser este ponto
+			mapa->setPontoInteresse(*casa,true);
+		c->setNovaEscola(escola);
+		c->setID(idC);
+		addCliente(c);
+	}
+
+	names.close();
+}
+
 bool Empresa::hasPR(Morada *m){
 	vector<Morada > pontos = mapa->getInterestPoints();
 	for(size_t i = 0; i < pontos.size(); i++)
@@ -624,7 +715,6 @@ bool Empresa::hasPR(Morada *m){
 	return false;
 }
 
-//============================================================================================//
 /**
  * Funcao auxiliar ao algoritmo kmp.
  */
@@ -674,8 +764,6 @@ int Empresa::kmp(string text, string pattern) {
 		if (pattern[j] == text[i]) {
 			if (j == m - 1){
 				return i - m + 1;	//retorna o local do texto onde encontrou a string
-				//res++;
-				//j = 0;
 			}else{
 				i++;
 				j++;
@@ -686,7 +774,6 @@ int Empresa::kmp(string text, string pattern) {
 		else
 			i++;
 	}
-
 	return -1; //nao encontra
 }
 
@@ -708,7 +795,7 @@ int Empresa::min(int x, int y, int z){
 /**
  * calculo das distâncias entre 2 strings
  */
-int Empresa::EditDistance(string street,string streetToSearch) {
+int Empresa::distanceAlgorithm(string street,string streetToSearch) {
 	// inicialização
 	int m = street.length();
 	int n = streetToSearch.length();
@@ -754,7 +841,7 @@ void Empresa::proximitySearchMorada(vector<Morada> moradas, string toSearch){
 	int max = 0;
 
 	for(size_t i = 0; i < moradas.size(); i++){
-		int dist = EditDistance(moradas.at(i).getNome(), toSearch);
+		int dist = distanceAlgorithm(moradas.at(i).getNome(), toSearch);
 
 		m = moradas.at(i).getNome().length() - 1;
 		if(m > n)
@@ -775,7 +862,7 @@ void Empresa::proximitySearchClient(string nome){
 	int max = 0;
 
 	for(size_t i = 0; i < clientes.size(); i++){
-		int dist = EditDistance(clientes.at(i)->getNome(), nome);
+		int dist = distanceAlgorithm(clientes.at(i)->getNome(), nome);
 
 		m = clientes.at(i)->getNome().length() - 1;
 		if(m > n)
@@ -798,12 +885,8 @@ vector<Cliente> Empresa::exactSearch(string morada){
 }
 
 //true->encontrou igual
-bool Empresa::exactSearch4Test(string nome){
-
+void Empresa::exactSearch4Test(string nome){
 	for(size_t i = 0; i < clientes.size(); i++)
-		if(kmp(clientes[i]->getNome(),nome) != -1){
+		if(kmp(clientes[i]->getNome(),nome) != -1)
 			cout << clientes.at(i)->getID() << " - " << clientes.at(i)->getNome() << endl;
-			return true;
-		}
-	return false;
 }
