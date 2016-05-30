@@ -11,10 +11,7 @@
 #include <time.h>
 
 using namespace std;
-/*
- * VERIFICAR se quando se remove um cliente, se existe mais algum cliente que marca
- * a escola ou a aquela casa , caso contrario deixam de ser pontos de interesse no mapa
- */
+
 //CLIENTE
 //==============================================================================================================
 
@@ -93,6 +90,9 @@ void verClientes(Empresa *e){
 	throw VoltarAtras();
 }
 
+//-------------------------------------//
+// NOVO
+//-------------------------------------//
 void procurarCLientes(Empresa *e){
 	clrscr();
 	displayTitulo("PROCURAR CLIENTE");
@@ -102,12 +102,15 @@ void procurarCLientes(Empresa *e){
 	cout << "Introduza o Nome : " << endl;
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	getline(cin, nome);
-	e->proximitySearchClient(nome);
+	e->proximitySearchClient(nome);	//pesquisa aproximada na lista de clientes pelo nome introduzido
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
 }
 
+//-------------------------------------//
+// NOVO
+//-------------------------------------//
 void procurarClientesMorada(Empresa *e){
 	clrscr();
 	displayTitulo("PROCURAR CLIENTES POR MORADA");
@@ -116,7 +119,7 @@ void procurarClientesMorada(Empresa *e){
 	cout << "Introduza a morada : " << endl;
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	getline(cin, morada);
-	e->displayClientesMorada(morada);
+	e->displayClientesMorada(morada);	//pesquisa exata : retorna todos os clientes que moram nessa morada
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -209,8 +212,6 @@ void verVeiculos(Empresa *e){
 
 void trajetoVeiculoIda(Empresa *e){
 
-	//	e->distribuiCliVeiculos();
-
 	string m;
 	clrscr();
 	displayTitulo("VER TRAJETO DO VEICULO");
@@ -226,8 +227,6 @@ void trajetoVeiculoIda(Empresa *e){
 }
 
 void trajetoVeiculoVolta(Empresa *e){
-
-	//	e->distribuiCliVeiculos();
 
 	string m;
 	clrscr();
@@ -278,6 +277,10 @@ void menuVeiculos(Empresa *e){
 }
 //PONTOS DE RECOLHA
 //==============================================================================================================
+
+//-------------------------------------//
+// NOVO
+//-------------------------------------//
 void addPontoRecolha(Empresa *e){
 	int id;
 
@@ -288,7 +291,7 @@ void addPontoRecolha(Empresa *e){
 	cout << "Procurar Morada:  "<< endl;
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	getline(cin, morada);
-	vector<Morada> moradas = e->getMapa()->getAllMorada();
+	vector<Morada> moradas = e->getMapa()->getAllMorada();	//podemos adicionar uma morada pesquisada por proximidade (todas as ruas)
 	e->proximitySearchMorada(moradas,morada);
 	cout << endl;
 
@@ -330,15 +333,21 @@ void removerPontoRecolha(Empresa *e){
 	throw VoltarAtras();
 }
 
+//-------------------------------------//
+// NOVO
+//-------------------------------------//
 void verPontosRecolha(Empresa *e){
 	clrscr();
 	displayTitulo("PONTOS DE RECOLHA");
-	e->displayPontosRecolha();
+	e->displayPontosRecolha();	//usa pesquisa exata para indicar o numero de criancas por rua
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
 }
 
+//-------------------------------------//
+// NOVO
+//-------------------------------------//
 void procurarPontosRecolha(Empresa *e){
 	clrscr();
 	displayTitulo("PROCURAR PONTOS DE RECOLHA");
@@ -347,7 +356,7 @@ void procurarPontosRecolha(Empresa *e){
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	getline(cin, morada);
 	vector<Morada> pr = e->getMapa()->getInterestPoints();
-	e->proximitySearchMorada(pr,morada);
+	e->proximitySearchMorada(pr,morada);	//pesquisa aproximada dos pontos de recolha possiveis (nome da rua)
 	cout << endl;
 	esperar();
 	throw VoltarAtras();
@@ -587,13 +596,16 @@ int main(){
 	Empresa *e;
 
 	do{
-		cout << " 1 - Usar ultimo ficheiro \n 2 - Criar novo ficheiro ";
+		cout << " 1 - Usar ultimo ficheiro \n 2 - Criar novo ficheiro \n";
 		cin >> op;
 
-		if(op == 1){
+		if(op == 1)	//ultimo ficheiro -> lê last.txt com as informacoes da empresa
+		{
 			e = new Empresa();
 			e->readLast();
-		}else if(op == 2){
+		}
+		else if(op == 2)// vai para o gerador
+		{
 			int num;
 			string b;
 			bool esc;
