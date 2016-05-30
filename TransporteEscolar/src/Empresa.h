@@ -61,7 +61,7 @@ public:
 	void readLast();	//le o ficheiro last.txt
 	void writeLastAndInfo();
 	void fillEmpresa(string nome, int id, bool isEsc, vector<int> escolasID, int numCriancas);
-	bool hasPR(Morada *m);	//verifica se um dado ponto é ponto de recolha
+	void hasPR(Morada *m);	//verifica se um dado ponto é ponto de recolha
 	void displayClientesMorada(string morada);
 
 	vector<Cliente> exactSearch(string morada); //usa algoritmo Exato

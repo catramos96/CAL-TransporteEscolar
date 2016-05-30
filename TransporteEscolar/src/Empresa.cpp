@@ -164,9 +164,11 @@ bool Empresa::addTransporte(Veiculo * veiculo)
  * @param cliente Cliente a ser introduzido.
  * @return True ou false consoante Ã© ou nao possivel adicionar o cliente.
  */
-bool Empresa::addCliente(Cliente *cliente)
+bool Empresa::addCliente(Cliente*cliente)
 {
 	Cliente::id--; //para o caso de dar throw
+
+	//APENAS PARA CLIENTES ADICIONADOS NO DECORRER DO PROGRAMA
 	//veiculos insuficientes2
 	unsigned int lugares = 0;
 	for (size_t i = 0; i < transportes.size(); ++i) {
@@ -175,14 +177,10 @@ bool Empresa::addCliente(Cliente *cliente)
 
 	if(lugares < clientes.size())
 		throw VeiculosInsuficientes();
-	/*
-	//residencia = escola
-	if(cliente->getEscola()->getID() == cliente->getResidencia()->getID())
-		throw ResidenciaInvalida(*cliente->getResidencia());
 
-	//cliente ja existe, id = ou residencia =
+	//cliente ja existe, só existem 2 clientes com nomes iguais
 	for(unsigned int i = 0; i < clientes.size(); i++)
-		if(*cliente == *clientes[i])
+		if(cliente->getNome() == clientes[i]->getNome())
 			return false;
 
 	//residencia = escola(Empresa->escolas)
@@ -190,8 +188,8 @@ bool Empresa::addCliente(Cliente *cliente)
 		if(*cliente->getResidencia() == *escolas[j])
 			return false;
 
-	changeNumCriancas(*cliente->getResidencia(),1);	//mudar isto
-	 */
+	hasPR(cliente->getResidencia()); //cria ou atualiza pontos de recolha
+
 	clientes.push_back(cliente);
 	addEscola(cliente->getEscola());
 	Cliente::id++;
@@ -659,18 +657,17 @@ void Empresa::fillEmpresa(string nome, int id, bool isEsc, vector<int> escolasID
 	//cria escolas
 	for(size_t i = 0; i < escolasID.size(); i++){
 		escolas.push_back(mapa->getPonto(escolasID.at(i)));
-		//mapa->getPontoVertex(escolasID.at(i))->setIsSchool(true);
+		mapa->getPontoVertex(escolasID.at(i))->setIsSchool(true);
 	}
 
 	stringstream info;
 
 	//cria veiculos
 	int numVeic = numCriancas/50+1;
-	char n = 'a', next;
 	string str;
 	for(int j = 0; j < numVeic; j++){
-		next = n + j;
-		info << next;
+		info.clear();
+		info << j+1;
 		info >> str;
 		Veiculo *v = new Veiculo(str, 50);
 		transportes.push_back(v);
@@ -697,22 +694,27 @@ void Empresa::fillEmpresa(string nome, int id, bool isEsc, vector<int> escolasID
 		Morada *casa = mapa->getPonto(id1);
 		Morada *escola = mapa->getPonto(id2);
 		Cliente *c = new Cliente(nome,casa);
-		if(!hasPR(casa))	//verifica se esta rua já tem um ponto de recolha, se não, passa a ser este ponto
-			mapa->setPontoInteresse(*casa,true);
 		c->setNovaEscola(escola);
 		c->setID(idC);
 		addCliente(c);
 	}
-
 	names.close();
+
+	distribuiCliVeiculos(); //distribuicao das criancas
 }
 
-bool Empresa::hasPR(Morada *m){
-	vector<Morada > pontos = mapa->getInterestPoints();
-	for(size_t i = 0; i < pontos.size(); i++)
-		if(pontos.at(i).getNome() == m->getNome())
-			return true;
-	return false;
+void Empresa::hasPR(Morada *m){
+	vector<Morada> pontosRecolha = mapa->getInterestPoints();
+
+	for(size_t i = 0; i < pontosRecolha.size(); i++)
+		if(pontosRecolha.at(i).getNome() == m->getNome()){
+			changeNumCriancas(pontosRecolha.at(i),1);
+			return;
+		}
+	if(m->getNome().length() != 0){
+		mapa->setPontoInteresse(*m, true);
+		changeNumCriancas(*m,1);
+	}
 }
 
 /**
@@ -776,7 +778,6 @@ int Empresa::kmp(string text, string pattern) {
 	}
 	return -1; //nao encontra
 }
-
 
 /**
  * funcao auxiliar a funcao EditDistance que retorna o minimo de 3 numeros

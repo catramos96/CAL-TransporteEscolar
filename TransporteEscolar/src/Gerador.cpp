@@ -42,7 +42,7 @@ Gerador::Gerador(int numNames, bool isEscola){
 	vector<int> escolas;
 
 	if(!isEscola){
-		int numEsc = numNames/200+1;
+		int numEsc = numNames/150+1;
 		int i = 0;
 		while(i < numEsc){
 			id = rand() % rangeMax+1;
@@ -53,7 +53,6 @@ Gerador::Gerador(int numNames, bool isEscola){
 		}
 	}else
 		escolas.push_back(idEmpresa);
-
 
 	//clientes
 	string line;
